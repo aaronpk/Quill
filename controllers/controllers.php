@@ -32,10 +32,22 @@ $app->get('/new', function() use($app) {
       'micropub_scope' => $user->micropub_scope,
       'micropub_access_token' => $user->micropub_access_token,
       'response_date' => $user->last_micropub_response_date,
-      'test_response' => $test_response
+      'test_response' => $test_response,
+      'location_enabled' => $user->location_enabled
     ));
     $app->response()->body($html);
   }
+});
+
+$app->post('/prefs', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+    $user->location_enabled = $params['enabled'];
+    $user->save();
+  }
+  $app->response()->body(json_encode(array(
+    'result' => 'ok'
+  )));
 });
 
 $app->get('/creating-a-token-endpoint', function() use($app) {

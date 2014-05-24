@@ -24,6 +24,7 @@
 
           <input type="text" id="note_location_msg" value="" class="form-control" placeholder="" readonly="readonly">
           <input type="hidden" id="note_location">
+          <input type="hidden" id="location_enabled" value="<?= $this->location_enabled ?>">
 
           <div id="note_location_img" style="display: none;">
             <img src="" height="180" id="note_location_img_wide" class="img-responsive">
@@ -112,33 +113,38 @@ $(function(){
   var map_template_wide = "<?= static_map('{lat}', '{lng}', 180, 700, 15) ?>";
   var map_template_small = "<?= static_map('{lat}', '{lng}', 320, 480, 15) ?>";
 
+  function fetch_location() {
+    $("#note_location_loading").show();
+
+    navigator.geolocation.getCurrentPosition(function(position){
+
+      $("#note_location_loading").hide();
+      var geo = "geo:" + (Math.round(position.coords.latitude * 100000) / 100000) + "," + (Math.round(position.coords.longitude * 100000) / 100000) + ";u=" + position.coords.accuracy;
+      $("#note_location_msg").val(geo);
+      $("#note_location").val(geo);
+      $("#note_location_img_small").attr("src", map_template_small.replace('{lat}', position.coords.latitude).replace('{lng}', position.coords.longitude));
+      $("#note_location_img_wide").attr("src", map_template_wide.replace('{lat}', position.coords.latitude).replace('{lng}', position.coords.longitude));
+      $("#note_location_img").show();
+      $("#note_location_msg").addClass("img-visible");
+
+    }, function(err){
+      if(err.code == 1) {
+        location_error("The website was not able to get permission");
+      } else if(err.code == 2) {
+        location_error("Location information was unavailable");
+      } else if(err.code == 3) {
+        location_error("Timed out getting location");
+      }
+    });
+  }
+
   $("#note_location_chk").click(function(){
     if($(this).attr("checked") == "checked") {
       if(navigator.geolocation) {
-        $("#note_location_loading").show();
-
-        navigator.geolocation.getCurrentPosition(function(position){
-
-          $("#note_location_loading").hide();
-          console.log(position);
-          var geo = "geo:" + (Math.round(position.coords.latitude * 100000) / 100000) + "," + (Math.round(position.coords.longitude * 100000) / 100000) + ";u=" + position.coords.accuracy;
-          $("#note_location_msg").val(geo);
-          $("#note_location").val(geo);
-          $("#note_location_img_small").attr("src", map_template_small.replace('{lat}', position.coords.latitude).replace('{lng}', position.coords.longitude));
-          $("#note_location_img_wide").attr("src", map_template_wide.replace('{lat}', position.coords.latitude).replace('{lng}', position.coords.longitude));
-          $("#note_location_img").show();
-          $("#note_location_msg").addClass("img-visible");
-
-        }, function(err){
-          if(err.code == 1) {
-            location_error("The website was not able to get permission");
-          } else if(err.code == 2) {
-            location_error("Location information was unavailable");
-          } else if(err.code == 3) {
-            location_error("Timed out getting location");
-          }
+        $.post("/prefs", {
+          enabled: 1
         });
-
+        fetch_location();
       } else {
         location_error("Browser location is not supported");
       }
@@ -147,8 +153,17 @@ $(function(){
       $("#note_location_msg").removeClass("img-visible");
       $("#note_location_msg").val('');
       $("#note_location").val('');
+
+      $.post("/prefs", {
+        enabled: 0
+      });
     }
   });
+
+  if($("#location_enabled").val() == 1) {
+    $("#note_location_chk").attr("checked","checked");
+    fetch_location();
+  }
 
 });
 </script>
