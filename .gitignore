@@ -1,2 +1,4 @@
 vendor/
 .DS_Store
+lib/config.php
+
