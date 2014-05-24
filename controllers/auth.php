@@ -60,7 +60,7 @@ $app->get('/', function($format='html') use($app) {
 
   ob_start();
   render('index', array(
-    'title' => 'OwnYourGram',
+    'title' => 'IndiePost',
     'meta' => ''
   ));
   $html = ob_get_clean();
