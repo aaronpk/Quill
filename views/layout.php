@@ -39,7 +39,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">IndiePost</a>
+      <a class="navbar-brand" href="/">Quill</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -81,8 +81,8 @@
 
   <div class="footer">
     <p class="credits">&copy; <?=date('Y')?> by <a href="http://aaronparecki.com">Aaron Parecki</a>.
-      This code is <a href="https://github.com/aaronpk/IndiePost">open source</a>. 
-      Feel free to send a pull request, or <a href="https://github.com/aaronpk/IndiePost/issues">file an issue</a>.</p>
+      This code is <a href="https://github.com/aaronpk/Quill">open source</a>. 
+      Feel free to send a pull request, or <a href="https://github.com/aaronpk/Quill/issues">file an issue</a>.</p>
   </div>
 </div>
 

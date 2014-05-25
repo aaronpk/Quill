@@ -1,5 +1,5 @@
   <div class="jumbotron">
-    <h2>#IndiePost</h2>
+    <h2>Quill</h2>
     <p>How does it work?</p>
     <ol>
       <li>Sign in with your domain</li>
