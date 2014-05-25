@@ -5,7 +5,7 @@ function buildRedirectURI() {
 }
 
 function clientID() {
-  return 'https://indiepost.micropub.net';
+  return 'https://quill.p3k.io';
 }
 
 function build_url($parsed_url) { 

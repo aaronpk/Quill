@@ -18,7 +18,7 @@ $app = new \Slim\Slim(array(
 require 'controllers/auth.php';
 require 'controllers/controllers.php';
 
-session_name('indiepost');
+session_name('quill');
 session_set_cookie_params(86400*30);
 session_start();
 
