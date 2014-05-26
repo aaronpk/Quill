@@ -17,6 +17,8 @@
     <link rel="apple-touch-icon" sizes="114x114" href="/images/quill-icon-114.png">
     <link rel="apple-touch-icon" sizes="144x144" href="/images/quill-icon-144.png">
 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
     <script src="/js/jquery-1.7.1.min.js"></script>
   </head>
 
