@@ -1,10 +1,6 @@
 <?php
 chdir('..');
 require 'vendor/autoload.php';
-require 'lib/Savant.php';
-require 'lib/config.php';
-require 'lib/helpers.php';
-require 'lib/markdown.php';
 
 // Configure the Savant plugin
 \Slim\Extras\Views\Savant::$savantDirectory = 'vendor/saltybeagle/savant3';
