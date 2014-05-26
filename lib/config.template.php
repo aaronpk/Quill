@@ -7,5 +7,7 @@ class Config {
   public static $dbName = 'quill';
   public static $dbUsername = 'quill';
   public static $dbPassword = '';
+
+  public static $jwtSecret = 'xxx';
 }
 

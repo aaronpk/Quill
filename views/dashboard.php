@@ -1,6 +1,7 @@
+  <div class="narrow">
+    <?= partial('partials/header') ?>
 
-  <div style="max-width: 700px; margin: 0 auto;">
-      <form role="form">
+      <form role="form" style="margin-top: 20px;">
 
         <div class="form-group">
           <label for="note_content"><code>content</code></label>

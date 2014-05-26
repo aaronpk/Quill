@@ -67,11 +67,6 @@ $app->get('/', function($format='html') use($app) {
   $res->body($html);
 });
 
-$app->get('/signin', function() use($app) {
-  $html = render('signin', array('title' => 'Sign In'));
-  $app->response()->body($html);
-});
-
 $app->get('/auth/start', function() use($app) {
   $req = $app->request();
 

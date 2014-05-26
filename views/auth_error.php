@@ -1,4 +1,8 @@
-<h2><?= $this->error ?></h2>
+<div class="narrow">
+  <?= partial('partials/header') ?>
 
-<p><?= $this->errorDescription ?></p>
+  <h2><?= $this->error ?></h2>
 
+  <p><?= $this->errorDescription ?></p>
+
+<?div>

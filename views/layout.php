@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/style.css">
 
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/quill-icon-57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/quill-icon-72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/quill-icon-114.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/quill-icon-144.png">
+
     <script src="/js/jquery-1.7.1.min.js"></script>
   </head>
 
@@ -30,49 +35,6 @@
 
 </script>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">Quill</a>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <? if(session('me')) { ?>
-          <li><a href="/new">New Post</a></li>
-        <? } ?>
-        <li><a href="/docs">Docs</a></li>
-        <!-- <li><a href="/about">About</a></li> -->
-        <!-- <li><a href="/contact">Contact</a></li> -->
-      </ul>
-      <? if(session('me')) { ?>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="/user?domain=<?= urlencode(session('me')) ?>"><?= session('me') ?></a></li>
-          <li><a href="/signout">Sign Out</a></li>
-        </ul>
-      <? } else if(property_exists($this, 'authorizing')) { ?>
-        <ul class="nav navbar-right">
-          <li class="navbar-text"><?= $this->authorizing ?></li>
-        </ul>
-      <? } else { ?>
-        <ul class="nav navbar-right" style="font-size: 8pt;">
-          <li><a href="https://indieauth.com/setup">What's This?</a></li>
-        </ul>
-        <form action="/auth/start" method="get" class="navbar-form navbar-right">
-          <input type="text" name="me" placeholder="yourdomain.com" class="form-control" />
-          <button type="submit" class="btn">Sign In</button>
-          <input type="hidden" name="redirect_uri" value="https://<?= $_SERVER['SERVER_NAME'] ?>/indieauth" />
-        </form>
-      <? } ?>
-    </div>
-  </div>
-</div>
-
 <div class="page">
 
   <div class="container">
@@ -80,6 +42,33 @@
   </div>
 
   <div class="footer">
+    <div class="nav">
+      <ul class="nav navbar-nav">
+
+        <? if(session('me')) { ?>
+          <li><a href="/new">New Post</a></li>
+        <? } ?>
+
+        <li><a href="/docs">Docs</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <? if(session('me')) { ?>
+          <li><a href="/add-to-home?start">Add to Home Screen</a></li>
+          <li><span class="navbar-text"><?= preg_replace('/https?:\/\//','',session('me')) ?></span></li>
+          <li><a href="/signout">Sign Out</a></li>
+        <? } else if(property_exists($this, 'authorizing')) { ?>
+          <li class="navbar-text"><?= $this->authorizing ?></li>
+        <? } else { ?>
+          <form action="/auth/start" method="get" class="navbar-form">
+            <input type="text" name="me" placeholder="yourdomain.com" class="form-control" />
+            <button type="submit" class="btn">Sign In</button>
+            <input type="hidden" name="redirect_uri" value="https://<?= $_SERVER['SERVER_NAME'] ?>/indieauth" />
+          </form>
+        <? } ?>
+
+      </ul>
+    </div>
+
     <p class="credits">&copy; <?=date('Y')?> by <a href="http://aaronparecki.com">Aaron Parecki</a>.
       This code is <a href="https://github.com/aaronpk/Quill">open source</a>. 
       Feel free to send a pull request, or <a href="https://github.com/aaronpk/Quill/issues">file an issue</a>.</p>

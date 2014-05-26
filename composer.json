@@ -7,6 +7,7 @@
     "indieweb/mention-client": "0.*",
     "indieweb/date-formatter": "0.1.*",
     "indieauth/client": "0.1.3",
-    "mpratt/relativetime": ">=1.0"
+    "mpratt/relativetime": ">=1.0",
+    "firebase/php-jwt": "dev-master"    
   }
 }

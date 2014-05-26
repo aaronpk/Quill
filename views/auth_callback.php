@@ -1,3 +1,6 @@
+<div class="narrow">
+  <?= partial('partials/header') ?>
+
 <?php if($this->tokenEndpoint): ?>
 
   <?php if(!$this->auth): ?>
@@ -66,3 +69,5 @@
 
 
 <?php endif; ?>
+
+</div>

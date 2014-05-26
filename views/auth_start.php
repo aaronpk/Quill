@@ -1,3 +1,6 @@
+<div class="narrow">
+  <?= partial('partials/header') ?>
+
 <div id="authorization_endpoint">
   <h3>Authorization Endpoint</h3>
 
@@ -52,3 +55,4 @@
 
 <?php endif; ?>
 
+</div>

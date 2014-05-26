@@ -1,5 +1,8 @@
+<div class="narrow">
+  <?= partial('partials/header') ?>
+
 <?php ob_start() ?>
-## The Micropub Endpoint
+## Creating a Micropub Endpoint
 
 After a client has obtained an access token and discovered the user's Micropub endpoint
 it is ready to make requests to create posts.
@@ -88,3 +91,4 @@ and optionally an HTML or other body with more information. Below is a list of p
 
 
 <?= Markdown(ob_get_clean()) ?>
+</div>

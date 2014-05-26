@@ -11,6 +11,11 @@ https://quill.p3k.io/
 By submitting code to this project, you agree to irrevocably release it under the same license as this project.
 
 
+### Credits 
+
+Quill icon designed by [http://thenounproject.com/term/quill/17013/ Juan Pablo Bravo from the Noun Project]
+
+
 ### License
 
 Copyright 2013 by Aaron Parecki

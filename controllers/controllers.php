@@ -63,6 +63,47 @@ $app->get('/docs', function() use($app) {
   $app->response()->body($html);
 });
 
+$app->get('/add-to-home', function() use($app) {
+  $params = $app->request()->params();
+
+  if(array_key_exists('token', $params) && !session('add-to-home-started')) {
+
+    // Verify the token and sign the user in
+    try {
+      $data = JWT::decode($params['token'], Config::$jwtSecret);
+      $_SESSION['user_id'] = $data->user_id;
+      $_SESSION['me'] = $data->me;
+      $app->redirect('/new', 301);
+    } catch(DomainException $e) {
+      header('X-Error: DomainException');
+      $app->redirect('/', 301);
+    } catch(UnexpectedValueException $e) {
+      header('X-Error: UnexpectedValueException');
+      $app->redirect('/', 301);
+    }
+
+  } else {
+
+    if($user=require_login($app)) {
+      if(array_key_exists('start', $params)) {
+        $_SESSION['add-to-home-started'] = true;
+        
+        $token = JWT::encode(array(
+          'user_id' => $_SESSION['user_id'],
+          'me' => $_SESSION['me'],
+          'created_at' => time()
+        ), Config::$jwtSecret);
+
+        $app->redirect('/add-to-home?token='.$token, 301);
+      } else {
+        unset($_SESSION['add-to-home-started']);
+        $html = render('add-to-home', array('title' => 'Quill'));
+        $app->response()->body($html);
+      }
+    }
+  }
+});
+
 $app->post('/micropub/post', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();

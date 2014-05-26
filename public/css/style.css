@@ -1,14 +1,47 @@
 body {
-  padding-top: 70px;
+  padding-top: 10px;
+}
+
+.header {
+  font-family:; "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #888;
+  border-bottom: 6px #ddd solid;
+}
+
+.narrow {
+  max-width: 700px;
+  margin-right: auto;
+  margin-left: auto;  
 }
 
 .footer {
-  padding: 40px;
+  padding: 0;
   margin-top: 20px;
   text-align: center;
   color: #999;
   background-color: #f9f9f9;
   border-top: 1px #e5e5e5 solid;
+}
+
+.footer .nav {
+  max-width: 700px;
+  margin-right: auto;
+  margin-left: auto;  
+}
+
+.footer .credits {
+  padding: 20px;
+  font-size: 12px;
+}
+
+
+.jumbotron .tagline {
+  font-size: 23px;
+}
+.jumbotron p {
+  font-size: 18px;
 }
 
 
