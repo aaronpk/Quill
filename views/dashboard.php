@@ -1,7 +1,7 @@
   <div class="narrow">
     <?= partial('partials/header') ?>
 
-      <form role="form" style="margin-top: 20px;">
+      <form role="form" style="margin-top: 20px;" id="note_form">
 
         <div class="form-group">
           <label for="note_content"><code>content</code></label>
@@ -14,8 +14,13 @@
         </div>
 
         <div class="form-group">
-          <label for="note_category"><code>category</code> (comma-separated list of tags)</label>
+          <label for="note_category"><code>category</code> (optional, comma-separated list of tags)</label>
           <input type="text" id="note_category" value="" class="form-control" placeholder="e.g. web, personal">
+        </div>
+
+        <div class="form-group">
+          <label for="note_slug"><code>slug</code> (optional)</label>
+          <input type="text" id="note_slug" value="" class="form-control">
         </div>
 
         <div class="form-group">
@@ -33,9 +38,8 @@
           </div>
         </div>
 
+        <button class="btn btn-success" id="btn_post">Post</button>
       </form>
-
-      <button class="btn btn-success" id="btn_post">Post</button>
 
       <div class="alert alert-success hidden" id="test_success"><strong>Success! We found a Location header in the response!</strong><br>Your post should be on your website now!<br><a href="" id="post_href">View your post</a></div>
       <div class="alert alert-danger hidden" id="test_error"><strong>Your endpoint did not return a Location header.</strong><br>See <a href="/creating-a-micropub-endpoint">Creating a Micropub Endpoint</a> for more information.</div>
@@ -80,11 +84,14 @@ $(function(){
       content: $("#note_content").val(),
       in_reply_to: $("#note_in_reply_to").val(),
       location: $("#note_location").val(),
-      category: $("#note_category").val()
+      category: $("#note_category").val(),
+      slug: $("#note_slug").val()
     }, function(data){
       var response = JSON.parse(data);
 
       if(response.location != false) {
+        $("#note_form").slideUp();
+
         $("#test_success").removeClass('hidden');
         $("#test_error").addClass('hidden');
         $("#post_href").attr("href", response.location);
@@ -92,6 +99,7 @@ $(function(){
         $("#note_content").val("");
         $("#note_in_reply_to").val("");
         $("#note_category").val("");
+        $("#note_slug").val("");
 
       } else {
         $("#test_success").addClass('hidden');
