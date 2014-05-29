@@ -7,7 +7,15 @@
     <link rel="pingback" href="http://webmention.io/aaronpk/xmlrpc" />
     <link rel="webmention" href="http://webmention.io/aaronpk/webmention" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- standard viewport tag to set the viewport to the device's width
+      , Android 2.3 devices need this so 100% width works properly and
+      doesn't allow children to blow up the viewport width-->
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+    <!-- width=device-width causes the iPhone 5 to letterbox the app, so
+      we want to exclude it for iPhone 5 to allow full screen apps -->
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
+
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/style.css">
