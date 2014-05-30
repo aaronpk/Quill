@@ -27,6 +27,9 @@ function build_url($parsed_url) {
 function normalizeMeURL($url) {
   $me = parse_url($url);
 
+  if(array_key_exists('path', $me) && $me['path'] == '')
+    return false;
+
   // parse_url returns just "path" for naked domains
   if(count($me) == 1 && array_key_exists('path', $me)) {
     $me['host'] = $me['path'];
@@ -79,7 +82,7 @@ $app->get('/auth/start', function() use($app) {
     $html = render('auth_error', array(
       'title' => 'Sign In',
       'error' => 'Invalid "me" Parameter',
-      'errorDescription' => 'The ID you entered, <strong>' . $params['me'] . '</strong> is not valid.'
+      'errorDescription' => 'The URL you entered, "<strong>' . $params['me'] . '</strong>" is not valid.'
     ));
     $app->response()->body($html);
     return;

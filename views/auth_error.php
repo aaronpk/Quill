@@ -5,4 +5,4 @@
 
   <p><?= $this->errorDescription ?></p>
 
-<?div>
+</div>
