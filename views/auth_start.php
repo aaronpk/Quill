@@ -10,7 +10,7 @@
     <div class="bs-callout bs-callout-success">Found your authorization endpoint: <code><?= $this->authorizationEndpoint ?></code></div>
   <?php else: ?>
     <div class="bs-callout bs-callout-danger">Could not find your authorization endpoint!</div>
-    <p>You need to set your authorization endpoint in a <code>&lt;link&gt;</code> tag on your home page or in an HTTP header.</p>
+    <p>You need to set your authorization endpoint in a <code>&lt;link&gt;</code> tag on your home page.</p>
     <?= partial('partials/auth-endpoint-help') ?>
   <?php endif; ?>
 </div>
@@ -24,7 +24,7 @@
     <div class="bs-callout bs-callout-success">Found your token endpoint: <code><?= $this->tokenEndpoint ?></code></div>
   <?php else: ?>
     <div class="bs-callout bs-callout-danger">Could not find your token endpoint!</div>
-    <p>You need to set your token endpoint in a <code>&lt;link&gt;</code> tag on your home page or in an HTTP header.</p>
+    <p>You need to set your token endpoint in a <code>&lt;link&gt;</code> tag on your home page.</p>
     <?= partial('partials/token-endpoint-help') ?>
   <?php endif; ?>
 
@@ -39,7 +39,7 @@
     <div class="bs-callout bs-callout-success">Found your Micropub endpoint: <code><?= $this->micropubEndpoint ?></code></div>
   <?php else: ?>
     <div class="bs-callout bs-callout-danger">Could not find your Micropub endpoint!</div>
-    <p>You need to set your Micropub endpoint in a <code>&lt;link&gt;</code> tag on your home page or in an HTTP header.</p>
+    <p>You need to set your Micropub endpoint in a <code>&lt;link&gt;</code> tag on your home page.</p>
     <?= partial('partials/micropub-endpoint-help', $this) ?>
   <?php endif; ?>
 
