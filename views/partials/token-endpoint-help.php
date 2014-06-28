@@ -3,4 +3,3 @@
        it's easier to use an existing service such as <a href="https://tokens.indieauth.com">tokens.indieauth.com</a>. 
        To use this service as your token endpoint, use the markup provided below.</p>
     <p><pre><code>&lt;link rel="token_endpoint" href="https://tokens.indieauth.com/token"&gt;</code></pre></p>
-    <p><pre><code>Link: &lt;https://tokens.indieauth.com/token&gt;; rel="token_endpoint"</code></pre></p>
