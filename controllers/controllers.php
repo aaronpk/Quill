@@ -32,6 +32,7 @@ $app->get('/new', function() use($app) {
       'micropub_scope' => $user->micropub_scope,
       'micropub_access_token' => $user->micropub_access_token,
       'response_date' => $user->last_micropub_response_date,
+      'syndication_targets' => json_decode($user->syndication_targets, true),
       'test_response' => $test_response,
       'location_enabled' => $user->location_enabled
     ));
@@ -104,12 +105,28 @@ $app->get('/add-to-home', function() use($app) {
   }
 });
 
+$app->get('/micropub/syndications', function() use($app) {
+  if($user=require_login($app)) {
+    $data = get_syndication_targets($user);
+    $app->response()->body(json_encode(array(
+      'targets' => $data['targets'],
+      'response' => $data['response']
+    )));
+  }
+});
+
 $app->post('/micropub/post', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
+    // Remove any blank params
+    $params = array_filter($params, function($v){
+      return $v !== '';
+    });
+
     // Now send to the micropub endpoint
     $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token);
+    $request = $r['request'];
     $response = $r['response'];
 
     $user->last_micropub_response = json_encode($r);
@@ -126,6 +143,7 @@ $app->post('/micropub/post', function() use($app) {
     $user->save();
 
     $app->response()->body(json_encode(array(
+      'request' => htmlspecialchars($request),
       'response' => htmlspecialchars($response),
       'location' => $location,
       'error' => $r['error'],

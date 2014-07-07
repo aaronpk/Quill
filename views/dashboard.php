@@ -24,6 +24,24 @@
         </div>
 
         <div class="form-group">
+          <label for="note_syndicate-to"><code>syndicate-to</code> <a href="javascript:reload_syndications()">(refresh)</a></label>
+          <div id="syndication-container">
+            <?php
+            if($this->syndication_targets) {
+              echo '<ul>';
+              foreach($this->syndication_targets as $syn) {
+                echo '<li><button data-syndication="'.$syn['target'].'" class="btn btn-default btn-block"><img src="'.$syn['favicon'].'" width="16" height="16"> '.$syn['target'].'</button></li>';
+              }
+              echo '</ul>';
+            } else {
+              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site. 
+              You can provide a <a href="/docs#syndication">list of supported syndication targets</a> that will appear as checkboxes here.</div><?php
+            }
+            ?>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label for="note_location"><code>location</code></label>
           <input type="checkbox" id="note_location_chk" value="">
           <img src="/images/spinner.gif" id="note_location_loading" style="display: none;">
@@ -44,6 +62,11 @@
       <div class="alert alert-success hidden" id="test_success"><strong>Success! We found a Location header in the response!</strong><br>Your post should be on your website now!<br><a href="" id="post_href">View your post</a></div>
       <div class="alert alert-danger hidden" id="test_error"><strong>Your endpoint did not return a Location header.</strong><br>See <a href="/creating-a-micropub-endpoint">Creating a Micropub Endpoint</a> for more information.</div>
 
+
+      <div id="last_request_container" style="display: none;">
+        <h4>Request made to your Micropub endpoint</h4>
+        <pre id="test_request" style="width: 100%; min-height: 140px;"></pre>
+      </div>
 
       <?php if($this->test_response): ?>
         <h4>Last response from your Micropub endpoint <span id="last_response_date">(<?= relative_time($this->response_date) ?>)</span></h4>
@@ -80,17 +103,26 @@
 $(function(){
 
   $("#btn_post").click(function(){
+
+    var syndications = [];
+    $("#syndication-container button.btn-info").each(function(i,btn){
+      syndications.push($(btn).data('syndication'));
+    });
+
     $.post("/micropub/post", {
       content: $("#note_content").val(),
-      in_reply_to: $("#note_in_reply_to").val(),
+      'in-reply-to': $("#note_in_reply_to").val(),
       location: $("#note_location").val(),
       category: $("#note_category").val(),
-      slug: $("#note_slug").val()
+      slug: $("#note_slug").val(),
+      'syndicate-to': syndications.join(',')
     }, function(data){
       var response = JSON.parse(data);
 
       if(response.location != false) {
-        $("#note_form").slideUp();
+        $("#note_form").slideUp(200, function(){
+          $(window).scrollTop($("#test_success").position().top);
+        });
 
         $("#test_success").removeClass('hidden');
         $("#test_error").addClass('hidden');
@@ -107,8 +139,11 @@ $(function(){
       }
 
       $("#last_response_date").html("(just now)");
+      $("#test_request").html(response.request);
+      $("#last_request_container").show();
       $("#test_response").html(response.response);
-    })
+    });
+    return false;
   });
 
   function location_error(msg) {
@@ -174,10 +209,54 @@ $(function(){
     fetch_location();
   }
 
+  bind_syndication_buttons();
 });
+
+function reload_syndications() {
+  $.getJSON("/micropub/syndications", function(data){
+    if(data.targets) {
+      $("#syndication-container").html('<ul></ul>');
+      for(var i in data.targets) {
+        var target = data.targets[i].target;
+        var favicon = data.targets[i].favicon;
+        $("#syndication-container ul").append('<li><button data-syndication="'+target+'" class="btn btn-default btn-block"><img src="'+favicon+'" width="16" height="16"> '+target+'</button></li>');
+      }
+      bind_syndication_buttons();
+    } else {
+
+    }
+    console.log(data);
+  });
+}
+
+function bind_syndication_buttons() {
+  $("#syndication-container button").unbind("click").click(function(){
+    $(this).toggleClass('btn-info');
+    return false;
+  });
+}
+
 </script>
 <style type="text/css">
 
+  #syndication-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+  }
+  #syndication-container li {
+    padding: 0;
+    margin-bottom: 6px;
+  }
+  #syndication-container button {
+    max-width: 240px;
+    text-shadow: none;
+  }
+  #syndication-container button img {
+    float: left;
+    margin-left: 10px;
+  }
+  
   #last_response_date {
     font-size: 80%;
     font-weight: normal;
