@@ -57,6 +57,7 @@
 
         <? if(session('me')) { ?>
           <li><a href="/new">New Post</a></li>
+          <li><a href="/bookmark">Bookmark</a></li>
         <? } ?>
 
         <li><a href="/docs">Docs</a></li>

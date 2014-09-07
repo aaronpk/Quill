@@ -1,12 +1,35 @@
 <?php
 
 function require_login(&$app) {
+  $params = $app->request()->params();
+  if(array_key_exists('token', $params)) {
+    try {
+      $data = JWT::decode($params['token'], Config::$jwtSecret);
+      $_SESSION['user_id'] = $data->user_id;
+      $_SESSION['me'] = $data->me;
+    } catch(DomainException $e) {
+      header('X-Error: DomainException');
+      $app->redirect('/', 301);
+    } catch(UnexpectedValueException $e) {
+      header('X-Error: UnexpectedValueException');
+      $app->redirect('/', 301);
+    }
+  }
+
   if(!array_key_exists('user_id', $_SESSION)) {
     $app->redirect('/');
     return false;
   } else {
     return ORM::for_table('users')->find_one($_SESSION['user_id']);
   }
+}
+
+function generate_login_token() {
+  return JWT::encode(array(
+    'user_id' => $_SESSION['user_id'],
+    'me' => $_SESSION['me'],
+    'created_at' => time()
+  ), Config::$jwtSecret);
 }
 
 $app->get('/new', function() use($app) {
@@ -26,7 +49,7 @@ $app->get('/new', function() use($app) {
       }
     }
 
-    $html = render('dashboard', array(
+    $html = render('new-post', array(
       'title' => 'New Post',
       'micropub_endpoint' => $user->micropub_endpoint,
       'micropub_scope' => $user->micropub_scope,
@@ -35,6 +58,38 @@ $app->get('/new', function() use($app) {
       'syndication_targets' => json_decode($user->syndication_targets, true),
       'test_response' => $test_response,
       'location_enabled' => $user->location_enabled
+    ));
+    $app->response()->body($html);
+  }
+});
+
+
+$app->get('/bookmark', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $url = '';
+    $name = '';
+    $content = '';
+    $tags = '';
+
+    if(array_key_exists('url', $params))
+      $url = $params['url'];
+
+    if(array_key_exists('name', $params))
+      $name = $params['name'];
+
+    if(array_key_exists('content', $params))
+      $content = $params['content'];
+
+    $html = render('new-bookmark', array(
+      'title' => 'New Bookmark',
+      'bookmark_url' => $url,
+      'bookmark_name' => $name,
+      'bookmark_content' => $content,
+      'bookmark_tags' => $tags,
+      'token' => generate_login_token(),
+      'syndication_targets' => json_decode($user->syndication_targets, true)
     ));
     $app->response()->body($html);
   }

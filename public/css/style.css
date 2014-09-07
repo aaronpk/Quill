@@ -109,3 +109,84 @@ body {
   word-break: break-all;
   word-wrap: break-word;
 }
+
+
+
+
+  /* new posts */
+
+  #syndication-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+  }
+  #syndication-container li {
+    padding: 0;
+    margin-bottom: 6px;
+  }
+  #syndication-container button {
+    max-width: 240px;
+    text-shadow: none;
+  }
+  #syndication-container button img {
+    float: left;
+    margin-left: 10px;
+  }
+  
+  #last_response_date {
+    font-size: 80%;
+    font-weight: normal;
+  }
+
+  #btn_post {
+    margin-bottom: 10px;
+  }
+
+  @media all and (max-width: 480px) {
+    #note_location_img_wide {
+      display: none;
+    }
+    #note_location_img_small {
+      display: block;
+    }
+  }
+  @media all and (min-width: 480px) {
+    #note_location_img_wide {
+      display: block;
+    }
+    #note_location_img_small {
+      display: none;
+    }
+  }
+
+  .img-visible {
+    -webkit-border-bottom-right-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-radius-bottomright: 0;
+    -moz-border-radius-bottomleft: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  #note_location_img img {
+    margin-top: -1px;
+    border: 1px solid #ccc;
+    -webkit-border-bottom-right-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    -moz-border-radius-bottomleft: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  .callout {
+    border-left: 4px #5bc0de solid;
+    background-color: #f4f8fa;
+    padding: 20px;
+    margin-top: 10px;
+  }
+  .callout table {
+    margin-bottom: 0;
+  }
+
+

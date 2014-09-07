@@ -27,6 +27,10 @@ function partial($template, $data=array(), $debug=false) {
   return ob_get_clean();
 }
 
+function js_bookmarklet($partial, $context) {
+  return str_replace('+','%20',urlencode(str_replace(array("\n"),array(''),partial($partial, $context))));
+}
+
 function session($key) {
   if(array_key_exists($key, $_SESSION))
     return $_SESSION[$key];
