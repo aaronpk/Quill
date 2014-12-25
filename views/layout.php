@@ -31,6 +31,12 @@
   </head>
 
 <body role="document">
+<?php 
+if(property_exists($this, 'include_facebook')) {
+  echo partial('partials/fb-script');
+}
+?>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -65,7 +71,7 @@
       <ul class="nav navbar-nav navbar-right">
         <? if(session('me')) { ?>
           <li><a href="/add-to-home?start">Add to Home Screen</a></li>
-          <li><span class="navbar-text"><?= preg_replace('/https?:\/\//','',session('me')) ?></span></li>
+          <li><a href="/settings"><?= preg_replace(array('/https?:\/\//','/\/$/'),'',session('me')) ?></a></li>
           <li><a href="/signout">Sign Out</a></li>
         <? } else if(property_exists($this, 'authorizing')) { ?>
           <li class="navbar-text"><?= $this->authorizing ?></li>

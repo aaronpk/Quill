@@ -70,6 +70,26 @@ function get_timezone($lat, $lng) {
   return null;
 }
 
+function micropub_post_for_user(&$user, $params) {
+  // Now send to the micropub endpoint
+  $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token);
+
+  $user->last_micropub_response = json_encode($r);
+  $user->last_micropub_response_date = date('Y-m-d H:i:s');
+
+  // Check the response and look for a "Location" header containing the URL
+  if($r['response'] && preg_match('/Location: (.+)/', $r['response'], $match)) {
+    $r['location'] = $match[1];
+    $user->micropub_success = 1;
+  } else {
+    $r['location'] = false;
+  }
+
+  $user->save();
+
+  return $r;
+}
+
 function micropub_post($endpoint, $params, $access_token) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $endpoint);

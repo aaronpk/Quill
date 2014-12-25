@@ -1,0 +1,17 @@
+
+#quill-star {
+   position: absolute;
+
+   top: 50%;
+   left: 50%;
+   margin-top: -100px;
+   margin-left: -100px;
+
+   width: 200px;
+   height: 200px;
+
+}
+
+#quill-star.hidden {
+   display: none;
+}

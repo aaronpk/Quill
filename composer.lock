@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "3e034e0a6a692d5bbfecfdc95ee69db2",
+    "hash": "502847c033f5a54c69a6a1a51d26e894",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "53669d621149e49c2a428722a62acfef3342c260"
+                "reference": "83b8899cb73d85d648af93f37ec0ac89f4a5bbae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/53669d621149e49c2a428722a62acfef3342c260",
-                "reference": "53669d621149e49c2a428722a62acfef3342c260",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/83b8899cb73d85d648af93f37ec0ac89f4a5bbae",
+                "reference": "83b8899cb73d85d648af93f37ec0ac89f4a5bbae",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,8 @@
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "Authentication/"
+                    "Authentication/",
+                    "Exceptions/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -47,7 +48,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2013-09-03 20:55:18"
+            "time": "2014-11-18 17:58:25"
         },
         {
             "name": "indieauth/client",
@@ -368,6 +369,41 @@
             "time": "2013-09-23 22:51:48"
         },
         {
+            "name": "ruudk/twitter-oauth",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ruudk/twitteroauth.git",
+                "reference": "7f5a94eaa1572ddbc7f0a32ba3b865b8ac23712a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ruudk/twitteroauth/zipball/7f5a94eaa1572ddbc7f0a32ba3b865b8ac23712a",
+                "reference": "7f5a94eaa1572ddbc7f0a32ba3b865b8ac23712a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Ruud Kamphuis",
+                    "email": "ruud@1plus1media.nl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP 5.3 version of abraham/twitteroauth",
+            "homepage": "http://github.com/ruudk/twitteroauth",
+            "time": "2014-06-10 18:17:38"
+        },
+        {
             "name": "saltybeagle/savant3",
             "version": "dev-master",
             "source": {
@@ -446,21 +482,14 @@
             "time": "2012-12-13 02:15:50"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "saltybeagle/savant3": 20,
-        "firebase/php-jwt": 20
+        "firebase/php-jwt": 20,
+        "ruudk/twitter-oauth": 20
     },
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "platform": [],
+    "platform-dev": []
 }
