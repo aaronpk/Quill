@@ -277,6 +277,19 @@ $app->get('/favorite.js', function() use($app) {
   }
 });
 
+$app->post('/favorite', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $r = create_favorite($user, $params['url']);
+
+    $app->response()->body(json_encode(array(
+      'location' => $r['location'],
+      'error' => $r['error']
+    )));
+  }
+});
+
 $app->get('/micropub/syndications', function() use($app) {
   if($user=require_login($app)) {
     $data = get_syndication_targets($user);
