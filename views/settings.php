@@ -10,11 +10,8 @@
   <h3>Twitter</h3>
   <input type="button" id="twitter-button" value="Checking" class="btn">
 
-
-  <!--
   <h3>Instagram</h3>
-
-  -->
+  <input type="button" id="instagram-button" value="Checking" class="btn">
 
 </div>
 <script>
@@ -60,6 +57,10 @@ function save_facebook_token(token) {
 }
 
 $(function(){
+  $("#facebook-button").click(function(){
+    FB.login(window.quillHandleFbLogin, {scope:'publish_actions'});
+  });
+
   $.getJSON("/auth/twitter", function(data){
     // Check if we're already authorized with twitter
     if(data && data.result == 'ok') {
@@ -81,8 +82,26 @@ $(function(){
     }
   });
 
-  $("#facebook-button").click(function(){
-    FB.login(window.quillHandleFbLogin, {scope:'publish_actions'});
+  $.getJSON("/auth/instagram", function(data){
+    // Check if we're already authorized with Instagram
+    if(data && data.result == 'ok') {
+      $("#instagram-button").val("Connected").addClass("btn-success");
+    } else if(data && data.url) {
+      $("#instagram-button").val("Sign In").data("url", data.url).addClass("btn-warning");
+    } else {
+      $("#instagram-button").val("Error").addClass("btn-danger");
+    }
   });
+
+  $("#instagram-button").click(function(){
+    if($(this).data('url')) {
+      window.location = $(this).data('url');
+    } else {
+      $.getJSON("/auth/instagram", {login: 1}, function(data){
+        window.location = data.url;
+      });
+    }
+  });
+
 });
 </script>

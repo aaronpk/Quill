@@ -3,8 +3,51 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "502847c033f5a54c69a6a1a51d26e894",
+    "hash": "f2f8fdb671b52ce22dc0a5e133f9a13d",
     "packages": [
+        {
+            "name": "andreyco/instagram",
+            "version": "v3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Andreyco/Instagram-for-PHP.git",
+                "reference": "726e724c51301410873d9bae9c659a0597ca47e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Andreyco/Instagram-for-PHP/zipball/726e724c51301410873d9bae9c659a0597ca47e4",
+                "reference": "726e724c51301410873d9bae9c659a0597ca47e4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Andreyco\\Instagram\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-4-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Andrej Badin",
+                    "email": "contact@andrejbadin.com",
+                    "homepage": "http://andrejbadin.com"
+                }
+            ],
+            "description": "An easy-to-use PHP Class for accessing Instagram's API.",
+            "homepage": "https://github.com/Andreyco/Instagram",
+            "keywords": [
+                "api",
+                "instagram"
+            ],
+            "time": "2014-07-14 19:53:19"
+        },
         {
             "name": "firebase/php-jwt",
             "version": "dev-master",

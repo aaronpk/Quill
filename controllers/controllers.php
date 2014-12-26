@@ -333,3 +333,43 @@ $app->get('/auth/twitter/callback', function() use($app) {
     $app->redirect('/settings');
   }
 });
+
+$app->get('/auth/instagram', function() use($app) {
+  if($user=require_login($app, false)) {
+
+    $instagram = instagram_client();
+
+    // If there is an existing Instagram auth token, check if it's valid
+    if($user->instagram_access_token) {
+      $instagram->setAccessToken($user->instagram_access_token);
+      $igUser = $instagram->getUser();
+
+      if($igUser && $igUser->meta->code == 200) {
+        $app->response()->body(json_encode(array(
+          'result' => 'ok',
+          'username' => $igUser->data->username
+        )));
+        return;
+      }
+    }
+
+    $app->response()->body(json_encode(array(
+      'result' => 'error',
+      'url' => $instagram->getLoginUrl(array('basic','likes'))
+    )));
+  }
+});
+
+$app->get('/auth/instagram/callback', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $instagram = instagram_client();
+    $data = $instagram->getOAuthToken($params['code']);
+    $user->instagram_access_token = $data->access_token;
+    $user->save();
+
+    $app->redirect('/settings');
+  }
+});
+
