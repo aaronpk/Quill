@@ -4,8 +4,10 @@
   <h2>Signed In As</h2>
   <code><?= session('me') ?></code>
 
+  <!-- 
   <h3>Facebook</h3>
   <input type="button" id="facebook-button" value="Checking" class="btn">
+  -->
 
   <h3>Twitter</h3>
   <input type="button" id="twitter-button" value="Checking" class="btn">
@@ -15,6 +17,7 @@
 
 </div>
 <script>
+/*
 window.quillFbInit = function() {
   FB.getLoginStatus(function(response) {
     if (response.status === 'connected') {
@@ -55,11 +58,14 @@ function save_facebook_token(token) {
     $("#facebook-button").val("Connected").addClass("btn-success");
   });
 }
+*/
 
 $(function(){
+  /*
   $("#facebook-button").click(function(){
-    FB.login(window.quillHandleFbLogin, {scope:'publish_actions'});
+    FB.login(window.quillHandleFbLogin, {scope:'publish_actions,user_likes'});
   });
+  */
 
   $.getJSON("/auth/twitter", function(data){
     // Check if we're already authorized with twitter

@@ -33,7 +33,7 @@
 <body role="document">
 <?php 
 if(property_exists($this, 'include_facebook')) {
-  echo partial('partials/fb-script');
+  # echo partial('partials/fb-script');
 }
 ?>
 
@@ -64,13 +64,13 @@ if(property_exists($this, 'include_facebook')) {
         <? if(session('me')) { ?>
           <li><a href="/new">New Post</a></li>
           <li><a href="/bookmark">Bookmark</a></li>
+          <li><a href="/favorite">Favorite</a></li>
         <? } ?>
 
         <li><a href="/docs">Docs</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <? if(session('me')) { ?>
-          <li><a href="/add-to-home?start">Add to Home Screen</a></li>
           <li><a href="/settings"><?= preg_replace(array('/https?:\/\//','/\/$/'),'',session('me')) ?></a></li>
           <li><a href="/signout">Sign Out</a></li>
         <? } else if(property_exists($this, 'authorizing')) { ?>

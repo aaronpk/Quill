@@ -79,7 +79,7 @@ function micropub_post_for_user(&$user, $params) {
 
   // Check the response and look for a "Location" header containing the URL
   if($r['response'] && preg_match('/Location: (.+)/', $r['response'], $match)) {
-    $r['location'] = $match[1];
+    $r['location'] = trim($match[1]);
     $user->micropub_success = 1;
   } else {
     $r['location'] = false;

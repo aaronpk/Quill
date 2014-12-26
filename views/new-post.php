@@ -97,6 +97,10 @@
         </table>
       </div>
 
+      <hr>
+      <div style="text-align: right;">
+        <a href="/add-to-home?start">Add to Home Screen</a>
+      </div>
   </div>
 
 <script>

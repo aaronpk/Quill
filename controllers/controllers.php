@@ -104,6 +104,24 @@ $app->get('/bookmark', function() use($app) {
   }
 });
 
+$app->get('/favorite', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $url = '';
+
+    if(array_key_exists('url', $params))
+      $url = $params['url'];
+
+    $html = render('new-favorite', array(
+      'title' => 'New Favorite',
+      'url' => $url,
+      'token' => generate_login_token()
+    ));
+    $app->response()->body($html);
+  }
+});
+
 $app->post('/prefs', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
@@ -176,30 +194,84 @@ $app->get('/settings', function() use($app) {
   }
 });
 
+$app->get('/favorite-popup', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $html = $app->render('favorite-popup.php', array(
+      'url' => $params['url'], 
+      'token' => $params['token']
+    ));
+    $app->response()->body($html);
+  }
+});
+
+function create_favorite(&$user, $url) {
+  $micropub_request = array(
+    'like-of' => $url
+  );
+  $r = micropub_post_for_user($user, $micropub_request);
+
+  $facebook_id = false;
+  $instagram_id = false;
+  $tweet_id = false;
+
+  /*
+  // Facebook likes are posted via Javascript, so pass the FB ID to the javascript code
+  if(preg_match('/https?:\/\/(?:www\.)?facebook\.com\/(?:[^\/]+)\/posts\/(\d+)/', $url, $match)) {
+    $facebook_id = $match[1];
+  }
+
+  if(preg_match('/https?:\/\/(?:www\.)?facebook\.com\/photo\.php\?fbid=(\d+)/', $url, $match)) {
+    $facebook_id = $match[1];
+  }
+  */
+
+  if(preg_match('/https?:\/\/(?:www\.)?instagram\.com\/p\/([^\/]+)/', $url, $match)) {
+    $instagram_id = $match[1];
+    if($user->instagram_access_token) {
+      $instagram = instagram_client();
+      $instagram->setAccessToken($user->instagram_access_token);
+      $ch = curl_init('https://api.instagram.com/v1/media/shortcode/' . $instagram_id . '?access_token=' . $user->instagram_access_token);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $result = json_decode(curl_exec($ch));
+
+      $result = $instagram->likeMedia($result->data->id);
+    } else {
+      // TODO: indicate that the instagram post couldn't be liked because no access token was available
+    }
+  }
+
+  if(preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
+    $tweet_id = $match[1];
+    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret, 
+      $user->twitter_access_token, $user->twitter_token_secret);
+    $result = $twitter->post('favorites/create', array(
+      'id' => $tweet_id
+    ));
+  }
+
+  return $r;
+}
+
 $app->get('/favorite.js', function() use($app) {
   $app->response()->header("Content-type", "text/javascript");
   if($user=require_login($app, false)) {
     $params = $app->request()->params();
 
     if(array_key_exists('url', $params)) {
-      $micropub_request = array(
-        'like-of' => $params['url']
-      );
-      $r = micropub_post_for_user($user, $micropub_request);
-    }
+      $r = create_favorite($user, $params['url']);
 
-    if(preg_match('/https?:\/\/(?:www\.)?facebook\.com\/(?:[^\/]+)\/posts\/(\d+)/', $params['url'], $match)) {
-      $facebook_id = $match[1];
+      $app->response()->body($app->render('favorite-js.php', array(
+        'url' => $params['url'], 
+        'like_url' => $r['location'], 
+        'error' => $r['error'],
+        // 'facebook_id' => $facebook_id
+      )));
     } else {
-      $facebook_id = false;
+      $app->response()->body('alert("no url");');
     }
 
-    $app->response()->body($app->render('liked-js.php', array(
-      'url' => $params['url'], 
-      'like_url' => $r['location'], 
-      'error' => $r['error'],
-      'facebook_id' => $facebook_id
-    )));
   } else {
     $app->response()->body('alert("invalid token");');
   }
@@ -236,6 +308,7 @@ $app->post('/micropub/post', function() use($app) {
   }
 });
 
+/*
 $app->post('/auth/facebook', function() use($app) {
   if($user=require_login($app, false)) {
     $params = $app->request()->params();
@@ -252,11 +325,12 @@ $app->post('/auth/facebook', function() use($app) {
     )));
   }
 });
+*/
 
 $app->post('/auth/twitter', function() use($app) {
   if($user=require_login($app, false)) {
     $params = $app->request()->params();
-    // User just auth'd with facebook, store the access token
+    // User just auth'd with twitter, store the access token
     $user->twitter_access_token = $params['twitter_token'];
     $user->twitter_token_secret = $params['twitter_secret'];
     $user->save();
@@ -347,7 +421,8 @@ $app->get('/auth/instagram', function() use($app) {
       if($igUser && $igUser->meta->code == 200) {
         $app->response()->body(json_encode(array(
           'result' => 'ok',
-          'username' => $igUser->data->username
+          'username' => $igUser->data->username,
+          'url' => $instagram->getLoginUrl(array('basic','likes'))
         )));
         return;
       }

@@ -87,9 +87,9 @@ $(function(){
 
       if(response.location != false) {
 
-        // $("#test_success").removeClass('hidden');
+        $("#test_success").removeClass('hidden');
         $("#test_error").addClass('hidden');
-        // $("#post_href").attr("href", response.location);
+        $("#post_href").attr("href", response.location);
 
         // $("#note_bookmark").val("");
         // $("#note_content").val("");
