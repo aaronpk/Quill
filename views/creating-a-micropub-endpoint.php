@@ -18,7 +18,7 @@ The example code here is written in PHP but the idea is applicable in any langua
 The request will contain the following POST parameters:
 
 * `h=entry` - Indicates the type of object being created, in this case an <a href="http://indiewebcamp.com/h-entry">h-entry</a>.
-* `content` - The text content the user entered, in this case the caption on the Instagram photo.
+* `content` - The text content the user entered
 * `category` - A comma-separated list of tags that you entered
 * `location` - A "geo" URI including the latitude and longitude of the photo if included. (Will look like `geo:37.786971,-122.399677;u=50`, where u=50 indicates the "uncertainty" of the location in meters)
 * `in-reply-to` - If set, this is a URL that the post is in reply to
@@ -32,11 +32,11 @@ Authorization: Bearer XXXXXXXX
 
 ### Verifying Access Tokens
 
-Before you can begin processing the photo, you must first verify the access token is valid
+Before you can begin processing the request, you must first verify the access token is valid
 and contains at least the "post" scope.
 
 How exactly you do this is dependent on your architecture. You can query the token endpoint
-to check if an access token is still valid. See [https://tokens.indieauth.com/#verify tokens.indieauth.com]
+to check if an access token is still valid. See <a href="https://tokens.indieauth.com/#verify">tokens.indieauth.com</a>
 for more information.
 
 Once you have looked up the token info, you need to make a determination
@@ -58,7 +58,7 @@ one that can create posts on your website.
 
 A valid request to create a post will contain the parameters listed above. For now,
 you can verify the presence of everything in the list, or you can try to genericize your 
-micropub endpoint so that it can also create [http://ownyourgram.com/creating-a-micropub-endpoint photo posts].
+micropub endpoint so that it can also create <a href="http://ownyourgram.com/creating-a-micropub-endpoint">photo posts</a>.
 
 At a bare minimum, a Micropub request will contain the following:
 

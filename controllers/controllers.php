@@ -119,6 +119,11 @@ $app->get('/docs', function() use($app) {
   $app->response()->body($html);
 });
 
+$app->get('/privacy', function() use($app) {
+  $html = render('privacy', array('title' => 'Quill Privacy Policy'));
+  $app->response()->body($html);
+});
+
 $app->get('/add-to-home', function() use($app) {
   $params = $app->request()->params();
 
