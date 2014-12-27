@@ -10,5 +10,12 @@ class Config {
   public static $dbPassword = '';
 
   public static $jwtSecret = 'xxx';
+
+  public static $fbClientID = '';
+  public static $fbClientSecret = '';
+  public static $twitterClientID = '';
+  public static $twitterClientSecret = '';
+  public static $instagramClientID = '';
+  public static $instagramClientSecret = '';
 }
 
