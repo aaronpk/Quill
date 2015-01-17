@@ -46,10 +46,10 @@ Authorization: Bearer xxxxxxxxxx
 HTTP/1.1 200 OK
 Content-type: application/x-www-form-urlencoded
 
-syndicate-to=syndicate-to=twitter.com%2Faaronpk%2Cfacebook.com%2Faaronpk
+syndicate-to[]=twitter.com%2Faaronpk&syndicate-to[]=facebook.com%2Faaronpk
 </code></pre>
 
-  <p>The response should be a form-encoded reply with a single field, <code>syndicate-to</code>. The value is a comma-separated list of syndication targets. The actual values are up to your Micropub endpoint, but a good convention is to use the domain name of the service (e.g. twitter.com), or domain name and username (e.g. twitter.com/aaronpk).</p>
+  <p>The response should be a form-encoded reply with an array, <code>syndicate-to</code> of all the supported syndication targets. The actual values are up to your Micropub endpoint, but a good convention is to use the domain name of the service (e.g. twitter.com), or domain name and username (e.g. twitter.com/aaronpk).</p>
 
   <p>If you do include the domain name, Quill will be able to show icons for recognized services next to the checkboxes.</p>
 
