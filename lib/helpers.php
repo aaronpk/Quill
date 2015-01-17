@@ -142,15 +142,21 @@ function get_syndication_targets(&$user) {
 
   $r = micropub_get($user->micropub_endpoint, array('q'=>'syndicate-to'), $user->micropub_access_token);
   if($r['data'] && array_key_exists('syndicate-to', $r['data'])) {
-    $targetURLs = preg_split('/, ?/', $r['data']['syndicate-to']);
-    foreach($targetURLs as $t) {
+    if(is_array($r['data']['syndicate-to'])) {
+      $targetURLs = $r['data']['syndicate-to'];
+    } elseif(is_string($r['data']['syndicate-to'])) {
+      $targetURLs = preg_split('/, ?/', $r['data']['syndicate-to']);
+    } else {
+      $targetURLs = array();
+    }
 
+    foreach($targetURLs as $t) {
       // If the syndication target doesn't have a scheme, add http
       if(!preg_match('/^http/', $t))
-        $tmp = 'http://' . $t;
+        $t = 'http://' . $t;
 
       // Parse the target expecting it to be a URL
-      $url = parse_url($tmp);
+      $url = parse_url($t);
 
       // If there's a host, and the host contains a . then we can assume there's a favicon
       // parse_url will parse strings like http://twitter into an array with a host of twitter, which is not resolvable
