@@ -100,6 +100,7 @@ function micropub_post($endpoint, $params, $access_token) {
   $post = http_build_query(array_merge(array(
     'h' => 'entry'
   ), $params));
+  $post = preg_replace('/%5B[0-9]+%5D/', '%5B%5D', $post);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HEADER, true);
@@ -145,6 +146,7 @@ function get_syndication_targets(&$user) {
     if(is_array($r['data']['syndicate-to'])) {
       $targetURLs = $r['data']['syndicate-to'];
     } elseif(is_string($r['data']['syndicate-to'])) {
+      // support comma separated as a fallback
       $targetURLs = preg_split('/, ?/', $r['data']['syndicate-to']);
     } else {
       $targetURLs = array();
@@ -153,10 +155,12 @@ function get_syndication_targets(&$user) {
     foreach($targetURLs as $t) {
       // If the syndication target doesn't have a scheme, add http
       if(!preg_match('/^http/', $t))
-        $t = 'http://' . $t;
+        $t2 = 'http://' . $t;
+      else
+        $t2 = $t;
 
       // Parse the target expecting it to be a URL
-      $url = parse_url($t);
+      $url = parse_url($t2);
 
       // If there's a host, and the host contains a . then we can assume there's a favicon
       // parse_url will parse strings like http://twitter into an array with a host of twitter, which is not resolvable

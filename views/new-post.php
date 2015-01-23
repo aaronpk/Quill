@@ -126,7 +126,7 @@ $(function(){
       location: $("#note_location").val(),
       category: $("#note_category").val(),
       slug: $("#note_slug").val(),
-      'syndicate-to': syndications.join(',')
+      'syndicate-to': syndications
     }, function(data){
       var response = JSON.parse(data);
 
