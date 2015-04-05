@@ -43,9 +43,14 @@ function generate_login_token() {
 
 $app->get('/new', function() use($app) {
   if($user=require_login($app)) {
+    $params = $app->request()->params();
 
     $entry = false;
     $photo_url = false;
+    $in_reply_to = '';
+
+    if(array_key_exists('reply', $params))
+       $in_reply_to = $params['reply'];
 
     $test_response = '';
     if($user->last_micropub_response) {
@@ -60,6 +65,7 @@ $app->get('/new', function() use($app) {
 
     $html = render('new-post', array(
       'title' => 'New Post',
+      'in_reply_to' => $in_reply_to,
       'micropub_endpoint' => $user->micropub_endpoint,
       'micropub_scope' => $user->micropub_scope,
       'micropub_access_token' => $user->micropub_access_token,
