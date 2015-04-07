@@ -10,7 +10,7 @@
 
         <div class="form-group">
           <label for="note_in_reply_to"><code>in-reply-to</code> (optional, a URL you are replying to)</label>
-          <input type="text" id="note_in_reply_to" value="" class="form-control">
+          <input type="text" id="note_in_reply_to" value="<?= $this->in_reply_to ?>" class="form-control">
         </div>
 
         <div class="form-group">
