@@ -1,0 +1,23 @@
+CREATE TABLE `users` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) DEFAULT NULL,
+  `authorization_endpoint` varchar(255) DEFAULT NULL,
+  `token_endpoint` varchar(255) DEFAULT NULL,
+  `micropub_endpoint` varchar(255) DEFAULT NULL,
+  `micropub_access_token` text,
+  `micropub_scope` varchar(255) DEFAULT NULL,
+  `micropub_response` text,
+  `micropub_success` tinyint(4) DEFAULT '0',
+  `date_created` datetime DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `last_micropub_response` text,
+  `last_micropub_response_date` datetime DEFAULT NULL,
+  `location_enabled` tinyint(4) NOT NULL DEFAULT '0',
+  `syndication_targets` text,
+  `facebook_access_token` text,
+  `twitter_access_token` text,
+  `twitter_token_secret` text,
+  `twitter_username` varchar(255) DEFAULT NULL,
+  `instagram_access_token` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
