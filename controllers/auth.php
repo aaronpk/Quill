@@ -1,7 +1,7 @@
 <?php
 
 function buildRedirectURI() {
-  return 'http://' . $_SERVER['SERVER_NAME'] . '/auth/callback';
+  return Config::$base_url . 'auth/callback';
 }
 
 function clientID() {
@@ -203,7 +203,7 @@ $app->get('/auth/callback', function() use($app) {
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
 
   if($tokenEndpoint) {
-    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $params['me'], buildRedirectURI(), clientID(), $params['state'], true);
+    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $params['me'], buildRedirectURI(), clientID(), k($params,'state'), true);
 
   } else {
     $token = array('auth'=>false, 'response'=>false);
