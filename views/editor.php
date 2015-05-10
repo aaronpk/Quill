@@ -41,9 +41,20 @@
   </head>
 <body>
 
+<div class="toolbar">
+  <div class="toolbar-left">
+    <span class="item"><a href="/"><img src="/editor/quill-logo-36.png" width="36" height="31"></a></span>
+    <span class="item text"><span id="draft-status">Draft</span></span>
+  </div>
+  <div class="toolbar-right">
+
+  </div>
+  <div class="clear"></div>
+</div>
+
 <div class="container">
   <input id="post-name" type="text" value="" placeholder="Title">
-  <div id="content" class="editable"><p class="placeholder">Tell your story...</p></div>
+  <div id="content" class="editable"><p class="placeholder">Write something nice...</p></div>
 </div>
 
 <script src="/editor/editor.js"></script>

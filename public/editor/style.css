@@ -22,6 +22,38 @@ h1, h2, h3, h4, h5, h6, th, td, caption { font-weight:normal; }
 
 img { border: 0; }
 
+/* ************************************** */
+/* Toolbar */
+
+.toolbar {
+  padding: 13px;
+  border-bottom: 1px #eee solid;
+  background-color: rgba(255,255,255,0.97);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+.toolbar-left {
+  float: left;
+}
+.toolbar-right {
+  float: right;
+}
+.toolbar-left .item {
+  margin-right: 8px;
+  display: inline-block;
+}
+#draft-status {
+  font-size: 18px;
+  color: #aaa;
+}
+.toolbar .clear {
+  clear: both;
+}
+
+
+/* ************************************** */
 /* Editor CSS */
 
 body {
@@ -39,6 +71,8 @@ body, input {
 .container {
   width: 960px;
   margin: 0 auto;
+  margin-top: 63px;
+  z-index: 0;
 }
 
 #post-name {

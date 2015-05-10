@@ -17,6 +17,7 @@ CACHE MANIFEST
 /editor/medium-editor/js/medium-editor.min.js
 /editor/medium-editor/js/medium-editor-insert-plugin.min.js
 /editor/localforage/localforage.js
+/editor/quill-logo-36.png
 
 NETWORK:
 *
