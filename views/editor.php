@@ -43,11 +43,12 @@
 
 <div class="toolbar">
   <div class="toolbar-left">
-    <span class="item"><a href="/"><img src="/editor/quill-logo-36.png" width="36" height="31"></a></span>
+    <span class="item"><a href="/"><img src="/editor/quill-logo-36.png" width="36" height="31" class="logo"></a></span>
     <span class="item text"><span id="draft-status">Draft</span></span>
   </div>
   <div class="toolbar-right">
-
+    <button class="btn" id="publish_btn">Publish</button>
+    <button class="btn" id="new_btn">New</button>
   </div>
   <div class="clear"></div>
 </div>

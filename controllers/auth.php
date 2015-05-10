@@ -74,7 +74,7 @@ $app->get('/auth/start', function() use($app) {
   $req = $app->request();
 
   $params = $req->params();
-  
+
   // the "me" parameter is user input, and may be in a couple of different forms:
   // aaronparecki.com http://aaronparecki.com http://aaronparecki.com/
   // Normlize the value now (move this into a function in IndieAuth\Client later)
@@ -86,6 +86,10 @@ $app->get('/auth/start', function() use($app) {
     ));
     $app->response()->body($html);
     return;
+  }
+
+  if(k($params, 'redirect')) {
+    $_SESSION['redirect_after_login'] = $params['redirect'];
   }
 
   $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($me);
@@ -244,7 +248,13 @@ $app->get('/auth/callback', function() use($app) {
   unset($_SESSION['auth_state']);
 
   if($redirectToDashboardImmediately) {
-    $app->redirect('/new', 301);
+    if(k($_SESSION, 'redirect_after_login')) {
+      $dest = $_SESSION['redirect_after_login'];
+      unset($_SESSION['redirect_after_login']);
+      $app->redirect($dest, 301);
+    } else {
+      $app->redirect('/new', 301);
+    }
   } else {
     $html = render('auth_callback', array(
       'title' => 'Sign In',
@@ -254,7 +264,8 @@ $app->get('/auth/callback', function() use($app) {
       'tokenEndpoint' => $tokenEndpoint,
       'auth' => $token['auth'],
       'response' => $token['response'],
-      'curl_error' => (array_key_exists('error', $token) ? $token['error'] : false)
+      'curl_error' => (array_key_exists('error', $token) ? $token['error'] : false),
+      'destination' => (k($_SESSION, 'redirect_after_login') ?: '/new')
     ));
     $app->response()->body($html);
   }

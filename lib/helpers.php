@@ -74,7 +74,7 @@ function micropub_post_for_user(&$user, $params) {
   // Now send to the micropub endpoint
   $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token);
 
-  $user->last_micropub_response = json_encode($r);
+  $user->last_micropub_response = substr(json_encode($r), 0, 1024);
   $user->last_micropub_response_date = date('Y-m-d H:i:s');
 
   // Check the response and look for a "Location" header containing the URL

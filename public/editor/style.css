@@ -39,19 +39,40 @@ img { border: 0; }
 }
 .toolbar-right {
   float: right;
+  margin-right: 40px;
 }
 .toolbar-left .item {
   margin-right: 8px;
   display: inline-block;
 }
+.toolbar-left .logo {
+  vertical-align: middle;
+}
 #draft-status {
-  font-size: 18px;
   color: #aaa;
+  font-family: sans-serif;
+  font-size: 16px;
 }
 .toolbar .clear {
   clear: both;
 }
 
+.toolbar .btn {
+  height: 38px;
+  -webkit-border-radius: 999px;
+  -moz-border-radius: 999px;
+  border-radius: 999px;
+  display: inline-block;
+  padding: 0 24px;
+  background: rgba(0,0,0,0);
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+  border: 1px #93dee5 solid;
+  color: #60b1b8;
+  vertical-align: middle;
+  cursor: pointer;
+}
 
 /* ************************************** */
 /* Editor CSS */

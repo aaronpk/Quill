@@ -27,7 +27,7 @@
         <h3>Success!</h3>
 
         <p>All required values were found! You are now signed in.</p>
-        <p><a href="/new" class="btn btn-primary">Continue</a></p>
+        <p><a href="<?= $this->destination ?>" class="btn btn-primary">Continue</a></p>
 
       <?php else: ?>
 

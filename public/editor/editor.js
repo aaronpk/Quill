@@ -29,7 +29,42 @@ $(function () {
   $('.editable').focus(function(){
     $('.placeholder').removeClass('placeholder');
   });
+
+  $.post('/editor/test-login', {}, function(response) {
+    $('#publish_btn').text(response.logged_in ? 'Publish' : 'Sign In');
+  });
+
+  $('#publish_btn').click(function(){
+    if($('#publish_btn').text() == 'Publish') {
+
+      $.post('/editor/publish', {
+        name: $("#post-name").val(),
+        body: editor.serialize().content.value
+      }, function(response) {
+        if(response.location) {
+          reset_page().then(function(){
+            window.location = response.location;
+          });
+        }
+      });
+
+    } else {
+      var url = prompt("Enter your URL");
+      window.location = '/auth/start?me=' + encodeURIComponent(url) + '&redirect=/editor';
+    }
+  });
+
+  $('#new_btn').click(function(){
+    reset_page();
+  });
 });
+
+function reset_page() {
+  $("#post-name").val('');
+  $("#content").html('<p class="placeholder">Write something nice...</p>');
+  $("#draft-status").text("New");
+  return localforage.setItem('currentdraft', {});
+}
 
 /* ************************************************ */
 /* autosave loop */

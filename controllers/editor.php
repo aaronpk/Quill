@@ -6,6 +6,26 @@ $app->get('/editor', function() use($app) {
   $app->response()->body($html);
 });
 
+$app->post('/editor/publish', function() use($app) {
+
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $micropub_request = array(
+      'h' => 'entry',
+      'name' => $params['name'],
+      'content' => $params['body']
+    );
+
+    $r = micropub_post_for_user($user, $micropub_request);
+
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode([
+      'location' => $r['location']
+    ]));
+  }
+});
+
 $app->post('/editor/upload', function() use($app) {
   // Fake a file uploader by echo'ing back the data URI
   $fn = $_FILES['files']['tmp_name'][0];
@@ -21,6 +41,7 @@ $app->post('/editor/upload', function() use($app) {
     ]
   ]));
 });
+
 $app->post('/editor/delete-file', function() use($app) {
   $app->response()['Content-type'] = 'application/json';
   $app->response()->body(json_encode(['result'=>'deleted']));
@@ -31,6 +52,12 @@ $app->get('/editor/oembed', function() use($app) {
   $json = file_get_contents($url);
   $app->response()['Content-type'] = 'application/json';
   $app->response()->body($json);  
+});
+
+$app->post('/editor/test-login', function() use($app) {
+  $logged_in = array_key_exists('user_id', $_SESSION);
+  $app->response()['Content-type'] = 'application/json';
+  $app->response()->body(json_encode(['logged_in'=>$logged_in]));
 });
 
 // $app->get('/appcache.manifest', function() use($app) {
