@@ -33,9 +33,9 @@ $app->get('/editor/oembed', function() use($app) {
   $app->response()->body($json);  
 });
 
-$app->get('/appcache.manifest', function() use($app) {
-  $content = partial('partials/appcache');
+// $app->get('/appcache.manifest', function() use($app) {
+//   $content = partial('partials/appcache');
 
-  $app->response()['Content-type'] = 'text/cache-manifest';
-  $app->response()->body($content);
-});
+//   $app->response()['Content-type'] = 'text/cache-manifest';
+//   $app->response()->body($content);
+// });

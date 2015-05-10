@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" manifest="appcache.manifest">
+<html lang="en" manifest_="appcache.manifest">
   <head>
     <title>Quill Editor</title>
     <meta charset="utf-8">
@@ -31,7 +31,6 @@
     <script src="/editor/medium-editor/js/medium-editor.min.js"></script>
     <script src="/editor/medium-editor/js/medium-editor-insert-plugin.min.js"></script>
     <script src="/editor/localforage/localforage.js"></script>
-    <script src="/editor/editor.js"></script>
 
     <link rel="apple-touch-icon" sizes="57x57" href="/images/quill-icon-57.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/images/quill-icon-72.png">
@@ -43,10 +42,11 @@
 <body>
 
 <div class="container">
-<input id="post-name" type="text" value="Lorem Ipsum">
-<div id="content" class="editable">
-  <?= partial('/partials/sample-html') ?>
+  <input id="post-name" type="text" value="" placeholder="Title">
+  <div id="content" class="editable"><p class="placeholder">Tell your story...</p></div>
 </div>
+
+<script src="/editor/editor.js"></script>
 
 </body>
 </html>

@@ -95,3 +95,7 @@ blockquote {
   border-bottom: 1px solid #dbdbdb;
   border-top: 1px solid #dbdbdb;
 }
+
+.editable .placeholder {
+  color: #ccc;
+}

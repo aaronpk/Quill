@@ -26,4 +26,7 @@ $(function () {
       }
     }
   });
+  $('.editable').focus(function(){
+    $('.placeholder').removeClass('placeholder');
+  });
 });
