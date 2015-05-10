@@ -78,7 +78,6 @@ $app->get('/new', function() use($app) {
   }
 });
 
-
 $app->get('/bookmark', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();

@@ -1,0 +1,97 @@
+/* CSS Mini Reset */
+
+html, body, div, form, fieldset, legend, label
+{
+  margin: 0;
+  padding: 0; 
+}
+
+table
+{
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th, td
+{
+  text-align: left;
+  vertical-align: top;
+}
+
+h1, h2, h3, h4, h5, h6, th, td, caption { font-weight:normal; }
+
+img { border: 0; }
+
+/* Editor CSS */
+
+body {
+  font-size: 22px;
+  line-height: 30px;
+}
+body, input {
+  font-family: Georgia,Cambria,"Times New Roman",Times,serif;  
+}
+
+*:focus {
+  outline: none;
+}
+
+.container {
+  width: 960px;
+  margin: 0 auto;
+}
+
+#post-name {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  font-weight: bold;
+  font-size: 42px;
+}
+
+#content {
+  min-height: 300px;
+}
+
+/* editor's h1 is actually h3 */
+h3 {
+  font-weight: bold;
+  font-size: 36px;
+}
+h4 {
+  font-weight: bold;
+  font-size: 30px;
+}
+
+p {
+  margin-bottom: 30px;
+}
+
+pre {
+  font-family: 'Menlo', monospace;
+  font-size: 15px;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: #666;
+}
+
+blockquote {
+  display: block;
+  padding-left: 20px;
+  border-left: 6px solid #dbdbdb;
+  margin-left: -15px;
+  padding-left: 15px;
+  font-style: italic;
+  color: #555;
+}
+
+.editable,
+.secondEditable {
+  outline: none;
+  margin: 0 0 20px 0;
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid #dbdbdb;
+  border-top: 1px solid #dbdbdb;
+}
