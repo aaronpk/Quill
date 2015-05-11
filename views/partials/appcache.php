@@ -19,9 +19,9 @@ CACHE MANIFEST
 /editor/localforage/localforage.js
 /editor/quill-logo-36.png
 /editor/editor.js
-/editor/font-awesome/fonts/fontawesome-webfont.woff2
-/editor/font-awesome/fonts/fontawesome-webfont.woff
-/editor/font-awesome/fonts/fontawesome-webfont.ttf
+/editor/font-awesome/fonts/fontawesome-webfont.woff2?v=4.3.0
+/editor/font-awesome/fonts/fontawesome-webfont.woff?v=4.3.0
+/editor/font-awesome/fonts/fontawesome-webfont.ttf?v=4.3.0
 
 NETWORK:
 *
