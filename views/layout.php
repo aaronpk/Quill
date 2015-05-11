@@ -62,7 +62,8 @@ if(property_exists($this, 'include_facebook')) {
       <ul class="nav navbar-nav">
 
         <? if(session('me')) { ?>
-          <li><a href="/new">New Post</a></li>
+          <li><a href="/editor">Editor</a></li>
+          <li><a href="/new">New Note</a></li>
           <li><a href="/bookmark">Bookmark</a></li>
           <li><a href="/favorite">Favorite</a></li>
         <? } ?>
