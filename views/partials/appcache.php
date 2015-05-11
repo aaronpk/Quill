@@ -18,6 +18,10 @@ CACHE MANIFEST
 /editor/medium-editor/js/medium-editor-insert-plugin.min.js
 /editor/localforage/localforage.js
 /editor/quill-logo-36.png
+/editor/editor.js
+/editor/font-awesome/fonts/fontawesome-webfont.woff2
+/editor/font-awesome/fonts/fontawesome-webfont.woff
+/editor/font-awesome/fonts/fontawesome-webfont.ttf
 
 NETWORK:
 *
