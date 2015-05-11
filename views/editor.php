@@ -89,7 +89,7 @@
 
 <div class="container">
   <input id="post-name" type="text" value="" placeholder="Title">
-  <div id="content" class="editable"><p class="placeholder">Write something nice...</p></div>
+  <div id="content" class="editable"></div>
 </div>
 
 <div id="new_version_available">

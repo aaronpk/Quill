@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# v15
+# v17
 
 /editor
 /editor/style.css
@@ -18,7 +18,7 @@ CACHE MANIFEST
 /editor/medium-editor/js/medium-editor-insert-plugin.min.js
 /editor/localforage/localforage.js
 /editor/quill-logo-36.png
-/editor/editor.js
+# /editor/editor.js
 /editor/font-awesome/fonts/fontawesome-webfont.woff2?v=4.3.0
 /editor/font-awesome/fonts/fontawesome-webfont.woff?v=4.3.0
 /editor/font-awesome/fonts/fontawesome-webfont.ttf?v=4.3.0

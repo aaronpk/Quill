@@ -1,5 +1,6 @@
 var editor = new MediumEditor('.editable', {
   buttons: ['bold', 'italic', 'anchor', 'header1', 'header2', 'quote', 'unorderedlist', 'pre'],
+  placeholder: 'Write something nice...',
   paste: {
     // This example includes the default options for paste, if nothing is passed this is what it used
     forcePlainText: false,
@@ -10,7 +11,7 @@ var editor = new MediumEditor('.editable', {
   }
 });
 
-$(function () {
+$(function() {
   $('.editable').mediumInsert({
     editor: editor,
     beginning: true,
@@ -25,9 +26,6 @@ $(function () {
         oembedProxy: '/editor/oembed'
       }
     }
-  });
-  $('.editable').focus(function(){
-    $('.placeholder').removeClass('placeholder');
   });
 
   $.post('/editor/test-login', {}, function(response) {
@@ -91,7 +89,6 @@ $(function () {
 
 function reset_page() {
   $("#post-name").val('');
-  $("#content").html('<p class="placeholder">Write something nice...</p>');
   $("#draft-status").text("New");
   return localforage.setItem('currentdraft', {});
 }
