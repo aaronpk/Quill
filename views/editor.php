@@ -47,15 +47,25 @@
     <span class="item text"><span id="draft-status">Draft</span></span>
   </div>
   <div class="toolbar-right">
-    <button class="btn" id="publish_btn">Publish</button>
+    <button class="btn" id="publish_btn"><span>Publish</span> <i class="fa fa-caret-down"></i></button>
     <button class="btn" id="new_btn">New</button>
   </div>
   <div class="clear"></div>
 </div>
 
+<div class="publish-dropdown hidden">
+  <div class="arrow"></div>
+</div>
+
 <div class="container">
   <input id="post-name" type="text" value="" placeholder="Title">
   <div id="content" class="editable"><p class="placeholder">Write something nice...</p></div>
+</div>
+
+<div id="new_version_available">
+  <div class="inner">
+    There is a new version available! Refresh to load the new version.
+  </div>
 </div>
 
 <script src="/editor/editor.js"></script>

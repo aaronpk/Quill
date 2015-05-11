@@ -31,11 +31,19 @@ $(function () {
   });
 
   $.post('/editor/test-login', {}, function(response) {
-    $('#publish_btn').text(response.logged_in ? 'Publish' : 'Sign In');
+    $('#publish_btn span').text(response.logged_in ? 'Publish' : 'Sign In');
   });
 
   $('#publish_btn').click(function(){
-    if($('#publish_btn').text() == 'Publish') {
+    if($('.publish-dropdown').hasClass('hidden')) {
+      $('.publish-dropdown').removeClass('hidden');
+    } else {
+      $('.publish-dropdown').addClass('hidden');
+    }
+  });
+
+  $('#--publish_btn').click(function(){
+    if($('#publish_btn span').text() == 'Publish') {
 
       $.post('/editor/publish', {
         name: $("#post-name").val(),
@@ -57,6 +65,7 @@ $(function () {
   $('#new_btn').click(function(){
     reset_page();
   });
+
 });
 
 function reset_page() {
@@ -65,6 +74,16 @@ function reset_page() {
   $("#draft-status").text("New");
   return localforage.setItem('currentdraft', {});
 }
+
+function onUpdateReady() {
+  // Show the notice that says there is a new version of the app
+  $("#new_version_available").show();    
+}
+
+window.applicationCache.addEventListener('updateready', onUpdateReady);
+if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+  onUpdateReady();
+}  
 
 /* ************************************************ */
 /* autosave loop */
