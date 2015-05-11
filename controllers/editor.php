@@ -21,7 +21,8 @@ $app->post('/editor/publish', function() use($app) {
 
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode([
-      'location' => $r['location']
+      'location' => $r['location'],
+      'response' => trim(htmlspecialchars($r['response']))
     ]));
   }
 });

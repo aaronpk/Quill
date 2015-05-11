@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# v3
+# v15
 
 /editor
 /editor/style.css

@@ -47,7 +47,7 @@
     <span class="item text"><span id="draft-status">Draft</span></span>
   </div>
   <div class="toolbar-right">
-    <button class="btn" id="publish_btn"><span>Publish</span> <i class="fa fa-caret-down"></i></button>
+    <button class="btn" id="publish_btn">Publish <i class="fa fa-caret-down"></i></button>
     <button class="btn" id="new_btn">New</button>
   </div>
   <div class="clear"></div>
@@ -55,6 +55,36 @@
 
 <div class="publish-dropdown hidden">
   <div class="arrow"></div>
+  <div class="dropdown-content action-publish">
+
+    <div style="float:right"><button class="btn btn-medium" id="publish-confirm">Publish Now</button></div>
+    <div style="clear:right;"></div>
+
+    <div class="helptext" id="publish-help">
+      <div>Clicking "Publish Now" will send a request to your Micropub endpoint.</div><br>
+      <div>The request will include two fields, "name" and "content", where the content will be the full HTML for this post.</div>
+    </div>
+
+    <div class="helptext hidden" id="publish-in-progress">
+      Posting... <!-- TODO replace this with a CSS animated spinner -->
+    </div>
+
+    <div class="helptext hidden" id="publish-success">
+      <div>It worked! The post is on your site!</div><br>
+      <div><a href="" id="publish-success-url">View your post</a></div>
+    </div>
+
+    <div class="helptext hidden" id="publish-error">
+      <div>Something went wrong! Below is the response from your Micropub endpoint.</div><br>
+      <pre id="publish-error-debug"></pre>
+    </div>
+
+  </div>
+  <div class="dropdown-content action-signin hidden">
+    <div class="helptext">You need to sign in before you can publish! Don't worry, your draft will still be here when you finish signing in.</div>
+    <input type="url" class="form-field-small" placeholder="yourdomain.com" id="signin-domain">
+    <button class="btn btn-small" id="signin-btn">Sign In</button>
+  </div>
 </div>
 
 <div class="container">

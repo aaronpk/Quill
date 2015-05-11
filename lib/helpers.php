@@ -100,7 +100,7 @@ function micropub_post($endpoint, $params, $access_token) {
   $post = http_build_query(array_merge(array(
     'h' => 'entry'
   ), $params));
-  $post = preg_replace('/%5B[0-9]+%5D/', '%5B%5D', $post);
+  $post = preg_replace('/%5B[0-9]+%5D/', '%5B%5D', $post); // change [0] to []
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HEADER, true);

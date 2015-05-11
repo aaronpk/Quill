@@ -31,7 +31,13 @@ $(function () {
   });
 
   $.post('/editor/test-login', {}, function(response) {
-    $('#publish_btn span').text(response.logged_in ? 'Publish' : 'Sign In');
+    if(response.logged_in) {
+      $('.publish-dropdown .action-publish').removeClass('hidden');
+      $('.publish-dropdown .action-signin').addClass('hidden');
+    } else {
+      $('.publish-dropdown .action-publish').addClass('hidden');
+      $('.publish-dropdown .action-signin').removeClass('hidden');      
+    }
   });
 
   $('#publish_btn').click(function(){
@@ -42,28 +48,43 @@ $(function () {
     }
   });
 
-  $('#--publish_btn').click(function(){
-    if($('#publish_btn span').text() == 'Publish') {
-
-      $.post('/editor/publish', {
-        name: $("#post-name").val(),
-        body: editor.serialize().content.value
-      }, function(response) {
-        if(response.location) {
-          reset_page().then(function(){
-            window.location = response.location;
-          });
-        }
-      });
-
-    } else {
-      var url = prompt("Enter your URL");
-      window.location = '/auth/start?me=' + encodeURIComponent(url) + '&redirect=/editor';
+  $('#new_btn').click(function(){
+    if(confirm('This will discard your current post. Are you sure?')) {
+      reset_page();
     }
   });
 
-  $('#new_btn').click(function(){
-    reset_page();
+  $('#signin-domain').on('keydown', function(e){
+    if(e.keyCode == 13) {
+      $('#signin-btn').click();
+    }
+  });
+  $('#signin-btn').click(function(){
+    window.location = '/auth/start?me=' + encodeURIComponent($('#signin-domain').val()) + '&redirect=/editor';
+  });
+  $('#publish-confirm').click(function(){
+    $('#publish-help').addClass('hidden');
+    $('#publish-in-progress').removeClass('hidden');
+
+    $.post('/editor/publish', {
+      name: $("#post-name").val(),
+      body: editor.serialize().content.value
+    }, function(response) {
+      if(response.location) {
+        reset_page().then(function(){
+          $('#publish-success-url').attr('href', response.location);
+          $('#publish-in-progress').addClass('hidden');
+          $('#publish-error-debug').html('').addClass('hidden');
+          $('#publish-error').addClass('hidden');
+          $('#publish-success').removeClass('hidden');
+        });
+      } else {
+        $('#publish-in-progress').addClass('hidden');
+        $('#publish-error-debug').html(response.response).removeClass('hidden');
+        $('#publish-error').removeClass('hidden');
+        $('#publish-success').addClass('hidden');
+      }
+    });    
   });
 
 });
