@@ -61,9 +61,9 @@ $app->post('/editor/test-login', function() use($app) {
   $app->response()->body(json_encode(['logged_in'=>$logged_in]));
 });
 
-// $app->get('/appcache.manifest', function() use($app) {
-//   $content = partial('partials/appcache');
+$app->get('/appcache.manifest', function() use($app) {
+  $content = partial('partials/appcache');
 
-//   $app->response()['Content-type'] = 'text/cache-manifest';
-//   $app->response()->body($content);
-// });
+  $app->response()['Content-type'] = 'text/cache-manifest';
+  $app->response()->body($content);
+});

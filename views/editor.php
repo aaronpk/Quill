@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" manifest_="appcache.manifest">
+<html lang="en" manifest="appcache.manifest">
   <head>
     <title>Quill Editor</title>
     <meta charset="utf-8">
