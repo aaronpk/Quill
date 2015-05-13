@@ -31,7 +31,7 @@ $app->post('/editor/upload', function() use($app) {
   // Fake a file uploader by echo'ing back the data URI
   $fn = $_FILES['files']['tmp_name'][0];
   $imageData = base64_encode(file_get_contents($fn));
-  $src = 'data: '.mime_content_type($fn).';base64,'.$imageData;
+  $src = 'data:'.mime_content_type($fn).';base64,'.$imageData;
 
   $app->response()['Content-type'] = 'application/json';
   $app->response()->body(json_encode([
