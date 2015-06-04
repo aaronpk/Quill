@@ -213,6 +213,10 @@ body, input {
   min-height: 300px;
 }
 
+.medium-editor-insert-plugin .medium-insert-buttons {
+  color: #bbb;
+}
+
 /* editor's h1 is actually h3 */
 h3 {
   font-weight: bold;

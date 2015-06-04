@@ -15,12 +15,12 @@
       we want to exclude it for iPhone 5 to allow full screen apps -->
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
 
-    <link rel="stylesheet" href="/editor/style.css">
     <link rel="stylesheet" href="/editor/medium-editor/css/medium-editor.min.css">
     <link rel="stylesheet" href="/editor/medium-editor/css/themes/default.min.css">
     <link rel="stylesheet" href="/editor/medium-editor/css/medium-editor-insert-plugin.min.css">
     <link rel="stylesheet" href="/editor/medium-editor/css/medium-editor-insert-plugin-frontend.min.css">
     <link href="/editor/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="/editor/style.css">
 
     <script src="/editor/jquery-1.11.3.min.js"></script>
     <script src="/editor/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
