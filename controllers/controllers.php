@@ -127,6 +127,24 @@ $app->get('/favorite', function() use($app) {
   }
 });
 
+$app->get('/repost', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $url = '';
+
+    if(array_key_exists('url', $params))
+      $url = $params['url'];
+
+    $html = render('new-repost', array(
+      'title' => 'New Repost',
+      'url' => $url,
+      'token' => generate_login_token()
+    ));
+    $app->response()->body($html);
+  }
+});
+
 $app->post('/prefs', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
@@ -252,13 +270,31 @@ function create_favorite(&$user, $url) {
     }
   }
 
-  if(preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
+  if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
     $tweet_id = $match[1];
     $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret, 
       $user->twitter_access_token, $user->twitter_token_secret);
     $result = $twitter->post('favorites/create', array(
       'id' => $tweet_id
     ));
+  }
+
+  return $r;
+}
+
+function create_repost(&$user, $url) {
+  $micropub_request = array(
+    'repost-of' => $url
+  );
+  $r = micropub_post_for_user($user, $micropub_request);
+
+  $tweet_id = false;
+
+  if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
+    $tweet_id = $match[1];
+    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret, 
+      $user->twitter_access_token, $user->twitter_token_secret);
+    $result = $twitter->post('statuses/retweet/'.$tweet_id);
   }
 
   return $r;
@@ -292,6 +328,19 @@ $app->post('/favorite', function() use($app) {
     $params = $app->request()->params();
 
     $r = create_favorite($user, $params['url']);
+
+    $app->response()->body(json_encode(array(
+      'location' => $r['location'],
+      'error' => $r['error']
+    )));
+  }
+});
+
+$app->post('/repost', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $r = create_repost($user, $params['url']);
 
     $app->response()->body(json_encode(array(
       'location' => $r['location'],
