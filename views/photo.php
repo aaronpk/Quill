@@ -17,7 +17,7 @@
 
         <div class="form-group">
           <label for="note_content"><code>content</code> (optional)</label>
-          <textarea name="note_content" id="note_content" value="" class="form-control" style="height: 4em;"><? if(isset($this->note_content)) echo $this->note_content ?></textarea>
+          <textarea name="note_content" id="note_content" value="" class="form-control" style="height: 4em;"><?php if(isset($this->note_content)) echo $this->note_content ?></textarea>
         </div>
 
         <button class="btn btn-success" id="btn_post">Post</button>
@@ -25,22 +25,22 @@
         <div style="clear:both;"></div>
       </form>
 
-      <? if(!empty($this->location)): ?>
+      <?php if(!empty($this->location)): ?>
         <div class="alert alert-success">
           <strong>Success!</strong> Photo posted to: <em><a href="<?= $this->location ?>"><?= $this->location ?></a></em>
         </div>
-      <? endif ?>
+      <?php endif ?>
 
-      <? if(!empty($this->error)): ?>
+      <?php if(!empty($this->error)): ?>
         <div class="alert alert-danger">
           <strong>Error:</strong> <em><?= $this->error ?></em>
         </div>
-      <? endif ?>
+      <?php endif ?>
 
-      <? if(!empty($this->response)): ?>
+      <?php if(!empty($this->response)): ?>
         <h4>Response:</h4>
         <pre><?= $this->response ?></pre>
-      <? endif ?>
+      <?php endif ?>
   </div>
   <script>
   $(function(){

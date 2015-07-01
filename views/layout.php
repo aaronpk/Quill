@@ -61,30 +61,30 @@ if(property_exists($this, 'include_facebook')) {
     <div class="nav">
       <ul class="nav navbar-nav">
 
-        <? if(session('me')) { ?>
+        <?php if(session('me')) { ?>
           <li><a href="/editor">Editor</a></li>
           <li><a href="/new">Note</a></li>
           <li><a href="/bookmark">Bookmark</a></li>
           <li><a href="/favorite">Favorite</a></li>
           <li><a href="/photo">Photo</a></li>
           <li><a href="/email">Email</a></li>
-        <? } ?>
+        <?php } ?>
 
         <li><a href="/docs">Docs</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <? if(session('me')) { ?>
+        <?php if(session('me')) { ?>
           <li><a href="/settings"><?= preg_replace(array('/https?:\/\//','/\/$/'),'',session('me')) ?></a></li>
           <li><a href="/signout">Sign Out</a></li>
-        <? } else if(property_exists($this, 'authorizing')) { ?>
+        <?php } else if(property_exists($this, 'authorizing')) { ?>
           <li class="navbar-text"><?= $this->authorizing ?></li>
-        <? } else { ?>
+        <?php } else { ?>
           <form action="/auth/start" method="get" class="navbar-form">
             <input type="text" name="me" placeholder="yourdomain.com" class="form-control" />
             <button type="submit" class="btn">Sign In</button>
             <input type="hidden" name="redirect_uri" value="https://<?= $_SERVER['SERVER_NAME'] ?>/indieauth" />
           </form>
-        <? } ?>
+        <?php } ?>
 
       </ul>
     </div>
