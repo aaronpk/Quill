@@ -118,6 +118,8 @@ $app->get('/auth/start', function() use($app) {
     && $user->authorization_endpoint == $authorizationEndpoint
     && !array_key_exists('restart', $params)) {
 
+    // TODO: fix this by caching the endpoints maybe in the session instead of writing them to the DB here.
+    // Then remove the line below that blanks out the access token
     $user->micropub_endpoint = $micropubEndpoint;
     $user->authorization_endpoint = $authorizationEndpoint;
     $user->token_endpoint = $tokenEndpoint;
@@ -134,6 +136,7 @@ $app->get('/auth/start', function() use($app) {
     $user->micropub_endpoint = $micropubEndpoint;
     $user->authorization_endpoint = $authorizationEndpoint;
     $user->token_endpoint = $tokenEndpoint;
+    $user->micropub_access_token = ''; // blank out the access token if they attempt to sign in again
     $user->save();
 
     $html = render('auth_start', array(
