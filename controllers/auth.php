@@ -107,11 +107,16 @@ $app->get('/auth/start', function() use($app) {
     $authorizationURL = false;
   }
 
-  // If the user has already signed in before and has a micropub access token, skip 
-  // the debugging screens and redirect immediately to the auth endpoint.
+  // If the user has already signed in before and has a micropub access token, 
+  // and the endpoints are all the same, skip the debugging screens and redirect 
+  // immediately to the auth endpoint.
   // This will still generate a new access token when they finish logging in.
   $user = ORM::for_table('users')->where('url', $me)->find_one();
-  if($user && $user->micropub_access_token && !array_key_exists('restart', $params)) {
+  if($user && $user->micropub_access_token 
+    && $user->micropub_endpoint == $micropubEndpoint
+    && $user->token_endpoint == $tokenEndpoint
+    && $user->authorization_endpoint == $authorizationEndpoint
+    && !array_key_exists('restart', $params)) {
 
     $user->micropub_endpoint = $micropubEndpoint;
     $user->authorization_endpoint = $authorizationEndpoint;
