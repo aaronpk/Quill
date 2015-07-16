@@ -4,10 +4,15 @@ class Config {
   public static $base_url = 'http://quill.dev/';
   public static $gaid = '';
 
+  // MySQL (default)
   public static $dbHost = '127.0.0.1';
   public static $dbName = 'quill';
   public static $dbUsername = 'quill';
   public static $dbPassword = '';
+
+  // Sqlite
+  // public static $dbType = 'sqlite';
+  // public static $dbFilePath = './example.db';
 
   public static $jwtSecret = 'xxx';
 
