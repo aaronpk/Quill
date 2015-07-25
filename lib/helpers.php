@@ -1,8 +1,12 @@
 <?php
 
-ORM::configure('mysql:host=' . Config::$dbHost . ';dbname=' . Config::$dbName);
-ORM::configure('username', Config::$dbUsername);
-ORM::configure('password', Config::$dbPassword);
+if(Config::$dbType == 'sqlite') {
+  ORM::configure('sqlite:' . Config::$dbFilePath);
+} else {
+  ORM::configure('mysql:host=' . Config::$dbHost . ';dbname=' . Config::$dbName);
+  ORM::configure('username', Config::$dbUsername);
+  ORM::configure('password', Config::$dbPassword);  
+}
 
 function render($page, $data) {
   global $app;
