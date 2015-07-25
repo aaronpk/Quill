@@ -1,4 +1,5 @@
 <?php
+use Firebase\JWT\JWT;
 
 function require_login(&$app, $redirect=true) {
   $params = $app->request()->params();
