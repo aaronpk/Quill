@@ -232,6 +232,36 @@ $app->get('/add-to-home', function() use($app) {
   }
 });
 
+$app->get('/email', function() use($app) {
+  if($user=require_login($app)) {
+
+    $test_response = '';
+    if($user->last_micropub_response) {
+      try {
+        if(@json_decode($user->last_micropub_response)) {
+          $d = json_decode($user->last_micropub_response);
+          $test_response = $d->response;
+        }
+      } catch(Exception $e) {
+      }
+    }
+
+    if(!$user->email_username) {
+      $host = parse_url($user->url, PHP_URL_HOST);
+      $user->email_username = $host . '.' . rand(100000,999999);
+      $user->save();
+    }
+
+    $html = render('email', array(
+      'title' => 'Post-by-Email',
+      'micropub_endpoint' => $user->micropub_endpoint,
+      'test_response' => $test_response,
+      'user' => $user
+    ));
+    $app->response()->body($html);    
+  }
+});
+
 $app->get('/settings', function() use($app) {
   if($user=require_login($app)) {
     $html = render('settings', array('title' => 'Settings', 'include_facebook' => true, 'authorizing' => false));

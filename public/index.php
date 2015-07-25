@@ -14,6 +14,7 @@ $app = new \Slim\Slim(array(
 require 'controllers/auth.php';
 require 'controllers/controllers.php';
 require 'controllers/editor.php';
+require 'controllers/hooks.php';
 
 session_name('quill');
 session_set_cookie_params(86400*30);
