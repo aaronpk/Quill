@@ -10,7 +10,8 @@
     "mpratt/relativetime": ">=1.0",
     "firebase/php-jwt": "dev-master",
     "ruudk/twitter-oauth": "dev-master",
-    "andreyco/instagram": "3.*"
+    "andreyco/instagram": "3.*",
+    "p3k/multipart": "*"
   },
   "autoload": {
     "files": [
