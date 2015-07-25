@@ -74,9 +74,9 @@ function get_timezone($lat, $lng) {
   return null;
 }
 
-function micropub_post_for_user(&$user, $params) {
+function micropub_post_for_user(&$user, $params, $file_path = NULL) {
   // Now send to the micropub endpoint
-  $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token);
+  $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token, $file_path);
 
   $user->last_micropub_response = substr(json_encode($r), 0, 1024);
   $user->last_micropub_response_date = date('Y-m-d H:i:s');
@@ -94,21 +94,33 @@ function micropub_post_for_user(&$user, $params) {
   return $r;
 }
 
-function micropub_post($endpoint, $params, $access_token) {
+function micropub_post($endpoint, $params, $access_token, $file_path = NULL) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $endpoint);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'Authorization: Bearer ' . $access_token
-  ));
   curl_setopt($ch, CURLOPT_POST, true);
-  $post = http_build_query(array_merge(array(
-    'h' => 'entry'
-  ), $params));
-  $post = preg_replace('/%5B[0-9]+%5D/', '%5B%5D', $post); // change [0] to []
+
+  $httpheaders = array('Authorization: Bearer ' . $access_token);
+  $params = array_merge(array('h' => 'entry'), $params);
+
+  if(!$file_path) {
+    $post = http_build_query($params);
+    $post = preg_replace('/%5B[0-9]+%5D/', '%5B%5D', $post); // change [0] to []
+  } else {
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimetype = finfo_file($finfo, $file_path);
+    $multipart = new p3k\Multipart();
+    $multipart->addArray($params);
+    $multipart->addFile('photo', $file_path, $mimetype);
+    $post = $multipart->data();
+    array_push($httpheaders, 'Content-Type: ' . $multipart->contentType());
+  }
+
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $httpheaders);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HEADER, true);
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
   $response = curl_exec($ch);
   $error = curl_error($ch);
   $sent_headers = curl_getinfo($ch, CURLINFO_HEADER_OUT);
@@ -219,4 +231,57 @@ function instagram_client() {
   ));
 }
 
+function validate_photo(&$file) {
+  try {
 
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && count($_POST) < 1 ) {
+      throw new RuntimeException('File upload size exceeded.');
+    }
+   
+    // Undefined | Multiple Files | $_FILES Corruption Attack
+    // If this request falls under any of them, treat it invalid.
+    if (
+        !isset($file['error']) ||
+        is_array($file['error'])
+    ) {
+        throw new RuntimeException('Invalid parameters.');
+    }
+
+    // Check $file['error'] value.
+    switch ($file['error']) {
+        case UPLOAD_ERR_OK:
+            break;
+        case UPLOAD_ERR_NO_FILE:
+            throw new RuntimeException('No file sent.');
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            throw new RuntimeException('Exceeded filesize limit.');
+        default:
+            throw new RuntimeException('Unknown errors.');
+    }
+
+    // You should also check filesize here.
+    if ($file['size'] > 1000000) {
+        throw new RuntimeException('Exceeded filesize limit.');
+    }
+
+    // DO NOT TRUST $file['mime'] VALUE !!
+    // Check MIME Type by yourself.
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    if (false === $ext = array_search(
+        $finfo->file($file['tmp_name']),
+        array(
+            'jpg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+        ),
+        true
+    )) {
+        throw new RuntimeException('Invalid file format.');
+    }
+
+  } catch (RuntimeException $e) {
+
+      return $e->getMessage();
+  }
+}
