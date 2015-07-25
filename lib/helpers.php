@@ -261,7 +261,7 @@ function validate_photo(&$file) {
     }
 
     // You should also check filesize here.
-    if ($file['size'] > 1000000) {
+    if ($file['size'] > 4000000) {
         throw new RuntimeException('Exceeded filesize limit.');
     }
 

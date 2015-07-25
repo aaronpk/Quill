@@ -179,6 +179,23 @@ body {
     border-bottom-left-radius: 4px;
   }
 
+  .uploadBtn {
+      position: relative;
+      overflow: hidden;
+      margin: 10px;
+  }
+  .uploadBtn input {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      font-size: 20px;
+      cursor: pointer;
+      opacity: 0;
+      filter: alpha(opacity=0);
+  }  
+
   .callout {
     border-left: 4px #5bc0de solid;
     background-color: #f4f8fa;
