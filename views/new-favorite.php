@@ -22,7 +22,7 @@
       <div style="clear: both;"></div>
 
       <hr>
-      <div style="text-align: right;">
+      <div style="text-align: right;" id="bookmarklet">
         Bookmarklet: <a href="javascript:<?= js_bookmarklet('partials/favorite-bookmarklet', $this) ?>" class="btn btn-default btn-xs">favorite</a>
       </div>
 
@@ -30,6 +30,12 @@
 
 <script>
 $(function(){
+
+  var autosubmit = window.location.search.match('autosubmit=true');
+
+  if(autosubmit) {
+    $(".footer, #bookmarklet").hide();
+  }
 
   // ctrl-s to save
   $(window).on('keydown', function(e){ 
@@ -52,9 +58,13 @@ $(function(){
 
       if(response.location != false) {
 
-        $("#test_success").removeClass('hidden');
-        $("#test_error").addClass('hidden');
-        $("#post_href").attr("href", response.location);
+        if(autosubmit) {
+          $("#btn_post").hide();
+        } else {
+          $("#test_success").removeClass('hidden');
+          $("#test_error").addClass('hidden');
+          $("#post_href").attr("href", response.location);
+        }
 
         window.location = response.location;
       } else {
@@ -65,6 +75,10 @@ $(function(){
     });
     return false;
   });
+
+  if(autosubmit) {
+    $("#btn_post").click();
+  }
 
   bind_syndication_buttons();
 });
