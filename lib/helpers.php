@@ -99,8 +99,14 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL) {
   curl_setopt($ch, CURLOPT_URL, $endpoint);
   curl_setopt($ch, CURLOPT_POST, true);
 
+  // Send the access token in both the header and post body to support more clients
+  // https://github.com/aaronpk/Quill/issues/4
+  // http://indiewebcamp.com/irc/2015-02-14#t1423955287064
   $httpheaders = array('Authorization: Bearer ' . $access_token);
-  $params = array_merge(array('h' => 'entry'), $params);
+  $params = array_merge(array(
+    'h' => 'entry',
+    'access_token' => $access_token
+  ), $params);
 
   if(!$file_path) {
     $post = http_build_query($params);
