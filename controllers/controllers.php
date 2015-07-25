@@ -72,7 +72,8 @@ $app->get('/new', function() use($app) {
       'response_date' => $user->last_micropub_response_date,
       'syndication_targets' => json_decode($user->syndication_targets, true),
       'test_response' => $test_response,
-      'location_enabled' => $user->location_enabled
+      'location_enabled' => $user->location_enabled,
+      'authorizing' => false
     ));
     $app->response()->body($html);
   }
@@ -103,7 +104,8 @@ $app->get('/bookmark', function() use($app) {
       'bookmark_content' => $content,
       'bookmark_tags' => $tags,
       'token' => generate_login_token(),
-      'syndication_targets' => json_decode($user->syndication_targets, true)
+      'syndication_targets' => json_decode($user->syndication_targets, true),
+      'authorizing' => false
     ));
     $app->response()->body($html);
   }
@@ -121,7 +123,8 @@ $app->get('/favorite', function() use($app) {
     $html = render('new-favorite', array(
       'title' => 'New Favorite',
       'url' => $url,
-      'token' => generate_login_token()
+      'token' => generate_login_token(),
+      'authorizing' => false
     ));
     $app->response()->body($html);
   }
@@ -139,7 +142,8 @@ $app->get('/repost', function() use($app) {
     $html = render('new-repost', array(
       'title' => 'New Repost',
       'url' => $url,
-      'token' => generate_login_token()
+      'token' => generate_login_token(),
+      'authorizing' => false
     ));
     $app->response()->body($html);
   }
@@ -160,17 +164,17 @@ $app->get('/creating-a-token-endpoint', function() use($app) {
   $app->redirect('http://indiewebcamp.com/token-endpoint', 301);
 });
 $app->get('/creating-a-micropub-endpoint', function() use($app) {
-  $html = render('creating-a-micropub-endpoint', array('title' => 'Creating a Micropub Endpoint'));
+  $html = render('creating-a-micropub-endpoint', array('title' => 'Creating a Micropub Endpoint', 'authorizing' => false));
   $app->response()->body($html);
 });
 
 $app->get('/docs', function() use($app) {
-  $html = render('docs', array('title' => 'Documentation'));
+  $html = render('docs', array('title' => 'Documentation', 'authorizing' => false));
   $app->response()->body($html);
 });
 
 $app->get('/privacy', function() use($app) {
-  $html = render('privacy', array('title' => 'Quill Privacy Policy'));
+  $html = render('privacy', array('title' => 'Quill Privacy Policy', 'authorizing' => false));
   $app->response()->body($html);
 });
 
@@ -217,7 +221,7 @@ $app->get('/add-to-home', function() use($app) {
 
 $app->get('/settings', function() use($app) {
   if($user=require_login($app)) {
-    $html = render('settings', array('title' => 'Settings', 'include_facebook' => true));
+    $html = render('settings', array('title' => 'Settings', 'include_facebook' => true, 'authorizing' => false));
     $app->response()->body($html);
   }
 });

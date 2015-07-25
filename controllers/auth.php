@@ -64,7 +64,8 @@ $app->get('/', function($format='html') use($app) {
   ob_start();
   render('index', array(
     'title' => 'Quill',
-    'meta' => ''
+    'meta' => '',
+    'authorizing' => false
   ));
   $html = ob_get_clean();
   $res->body($html);
