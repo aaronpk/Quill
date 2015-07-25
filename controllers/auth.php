@@ -4,10 +4,6 @@ function buildRedirectURI() {
   return Config::$base_url . 'auth/callback';
 }
 
-function clientID() {
-  return 'https://quill.p3k.io';
-}
-
 function build_url($parsed_url) { 
   $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : ''; 
   $host     = isset($parsed_url['host']) ? $parsed_url['host'] : ''; 
@@ -103,7 +99,7 @@ $app->get('/auth/start', function() use($app) {
     $_SESSION['auth_state'] = $state;
 
     $scope = 'post';
-    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI(), clientID(), $state, $scope);
+    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI(), Config::$base_url, $state, $scope);
   } else {
     $authorizationURL = false;
   }
@@ -216,7 +212,7 @@ $app->get('/auth/callback', function() use($app) {
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
 
   if($tokenEndpoint) {
-    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $params['me'], buildRedirectURI(), clientID(), k($params,'state'), true);
+    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $params['me'], buildRedirectURI(), Config::$base_url, k($params,'state'), true);
 
   } else {
     $token = array('auth'=>false, 'response'=>false);
