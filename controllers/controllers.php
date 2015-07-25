@@ -1,11 +1,10 @@
 <?php
-use Firebase\JWT\JWT;
 
 function require_login(&$app, $redirect=true) {
   $params = $app->request()->params();
   if(array_key_exists('token', $params)) {
     try {
-      $data = JWT::decode($params['token'], Config::$jwtSecret);
+      $data = JWT::decode($params['token'], Config::$jwtSecret, array('HS256'));
       $_SESSION['user_id'] = $data->user_id;
       $_SESSION['me'] = $data->me;
     } catch(DomainException $e) {
@@ -194,12 +193,14 @@ $app->get('/privacy', function() use($app) {
 
 $app->get('/add-to-home', function() use($app) {
   $params = $app->request()->params();
+  header("Cache-Control: no-cache, must-revalidate");
 
   if(array_key_exists('token', $params) && !session('add-to-home-started')) {
+    unset($_SESSION['add-to-home-started']);
 
     // Verify the token and sign the user in
     try {
-      $data = JWT::decode($params['token'], Config::$jwtSecret);
+      $data = JWT::decode($params['token'], Config::$jwtSecret, array('HS256'));
       $_SESSION['user_id'] = $data->user_id;
       $_SESSION['me'] = $data->me;
       $app->redirect('/new', 301);
