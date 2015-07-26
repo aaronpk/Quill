@@ -15,6 +15,7 @@
         <div class="form-group">
           <label for="note_bookmark"><code>bookmark</code></label>
           <input type="text" id="note_bookmark" value="<?= $this->bookmark_url ?>" class="form-control">
+          <p class="help-block">Note: This will be changing to <code>bookmark-of</code> in the near future. It is best for your code to accept both for now.</p>
         </div>
 
         <div class="form-group">
