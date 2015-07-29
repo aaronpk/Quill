@@ -74,6 +74,21 @@ function get_timezone($lat, $lng) {
   return null;
 }
 
+if(!function_exists('http_build_url')) {
+  function http_build_url($parsed_url) { 
+    $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : ''; 
+    $host     = isset($parsed_url['host']) ? $parsed_url['host'] : ''; 
+    $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : ''; 
+    $user     = isset($parsed_url['user']) ? $parsed_url['user'] : ''; 
+    $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : ''; 
+    $pass     = ($user || $pass) ? "$pass@" : ''; 
+    $path     = isset($parsed_url['path']) ? $parsed_url['path'] : ''; 
+    $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : ''; 
+    $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : ''; 
+    return "$scheme$user$pass$host$port$path$query$fragment"; 
+  } 
+}
+
 function micropub_post_for_user(&$user, $params, $file_path = NULL) {
   // Now send to the micropub endpoint
   $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token, $file_path);
@@ -140,8 +155,16 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL) {
 }
 
 function micropub_get($endpoint, $params, $access_token) {
+  $url = parse_url($endpoint);
+  if(!k($url, 'query')) {
+    $url['query'] = http_build_query($params);
+  } else {
+    $url['query'] .= '&' . http_build_query($params);
+  }
+  $endpoint = http_build_url($url);
+
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $endpoint . '?' . http_build_query($params));
+  curl_setopt($ch, CURLOPT_URL, $endpoint);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Authorization: Bearer ' . $access_token
   ));
