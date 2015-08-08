@@ -157,10 +157,14 @@ $app->get('/auth/callback', function() use($app) {
   // Double check there is a "me" parameter
   // Should only fail for really hacked up requests
   if(!array_key_exists('me', $params) || !($me = normalizeMeURL($params['me']))) {
+    if(array_key_exists('me', $params))
+      $error = 'The ID you entered, <strong>' . $params['me'] . '</strong> is not valid.';
+    else
+      $error = 'There was no "me" parameter in the callback.';
     $html = render('auth_error', array(
       'title' => 'Auth Callback',
       'error' => 'Invalid "me" Parameter',
-      'errorDescription' => 'The ID you entered, <strong>' . $params['me'] . '</strong> is not valid.'
+      'errorDescription' => $error
     ));
     $app->response()->body($html);
     return;
