@@ -62,7 +62,7 @@ function k($a, $k, $default=null) {
 function get_timezone($lat, $lng) {
   try {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'http://timezone-api.geoloqi.com/timezone/'.$lat.'/'.$lng);
+    curl_setopt($ch, CURLOPT_URL, 'http://atlas.p3k.io/api/timezone?latitude='.$lat.'&longitude='.$lng);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
     $tz = @json_decode($response);
