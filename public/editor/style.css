@@ -206,7 +206,8 @@ body, input {
   margin-bottom: 20px;
   border: 0;
   font-weight: bold;
-  font-size: 42px;
+  font-size: 38px;
+  width: 100%;
 }
 
 #content {

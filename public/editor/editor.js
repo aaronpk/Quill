@@ -41,6 +41,10 @@ $(function() {
   $('#publish_btn').click(function(){
     if($('.publish-dropdown').hasClass('hidden')) {
       $('.publish-dropdown').removeClass('hidden');
+      $('#publish-confirm').show();
+      $('#publish-success').addClass('hidden');
+      $('#publish-error').addClass('hidden');
+      $('#publish-help').removeClass('hidden');
     } else {
       $('.publish-dropdown').addClass('hidden');
     }
@@ -89,13 +93,15 @@ $(function() {
 
 function reset_page() {
   $("#post-name").val('');
+  $("#content").html('');
   $("#draft-status").text("New");
+  $("#publish-confirm").hide();
   return localforage.setItem('currentdraft', {});
 }
 
 function onUpdateReady() {
   // Show the notice that says there is a new version of the app
-  $("#new_version_available").show();    
+  $("#new_version_available").show();
 }
 
 window.applicationCache.addEventListener('updateready', onUpdateReady);
@@ -128,6 +134,8 @@ $(function(){
       $("#post-name").val(val.title);
       $("#content").html(val.body);
       $("#draft-status").text("Restored");
+      // drop the cursor into the editor which clears the placeholder text
+      $("#content").focus().click();
     }
   });
 });
