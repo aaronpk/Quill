@@ -1,6 +1,6 @@
 var editor = new MediumEditor('.editable', {
   buttons: ['bold', 'italic', 'anchor', 'header1', 'header2', 'quote', 'unorderedlist', 'pre'],
-  placeholder: 'Write something nice...',
+  placeholder: {text: 'Write something nice...'},
   paste: {
     // This example includes the default options for paste, if nothing is passed this is what it used
     forcePlainText: false,
