@@ -93,6 +93,7 @@ $(function() {
     $.post('/settings/html-content', {
       html: 1
     }, function(data){
+      $('.micropub-html-warning').hide();
     });
   });
 
