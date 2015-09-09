@@ -41,6 +41,7 @@ img { border: 0; }
   display: block;
 }
 #micropub-html-btn {
+  font-size: 14px;
   border-radius: 6px;
   padding: 0 12px;
   height: 28px;

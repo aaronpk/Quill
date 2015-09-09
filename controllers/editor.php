@@ -68,7 +68,7 @@ $app->post('/editor/test-login', function() use($app) {
 });
 
 $app->get('/appcache.manifest', function() use($app) {
-  $content = partial('-partials/appcache');
+  $content = partial('partials/appcache');
 
   $app->response()['Content-type'] = 'text/cache-manifest';
   $app->response()->body($content);

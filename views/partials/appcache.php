@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# v18
+# v24
 
 /editor
 /editor/style.css
@@ -25,3 +25,4 @@ CACHE MANIFEST
 
 NETWORK:
 *
+
