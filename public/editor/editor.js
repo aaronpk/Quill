@@ -89,6 +89,18 @@ $(function() {
     });    
   });
 
+  $("#micropub-html-btn").click(function(){
+    $.post('/settings/html-content', {
+      html: 1
+    }, function(data){
+    });
+  });
+
+  $.getJSON('/settings/html-content', function(data){
+    if(data.html == '0') {
+      $('.micropub-html-warning').show();
+    }
+  });
 });
 
 function reset_page() {

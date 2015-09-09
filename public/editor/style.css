@@ -22,6 +22,32 @@ h1, h2, h3, h4, h5, h6, th, td, caption { font-weight:normal; }
 
 img { border: 0; }
 
+.micropub-html-warning {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 68px;
+  margin-bottom: -80px;
+  font-size: 12px;
+  font-family: sans-serif;
+  line-height: 16px;
+  background: #fcf8e3;
+  border: 1px #faebcc solid;
+}
+.micropub-html-warning div {
+  padding: 10px 20px;
+}
+.micropub-html-warning button {
+  display: block;
+}
+#micropub-html-btn {
+  border-radius: 6px;
+  padding: 0 12px;
+  height: 28px;
+  background: #e4f8fa;
+  float: right;
+}
+
 /* ************************************** */
 /* Toolbar */
 

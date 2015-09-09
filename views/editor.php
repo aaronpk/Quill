@@ -53,6 +53,14 @@
   <div class="clear"></div>
 </div>
 
+<div class="micropub-html-warning hidden"><div>
+  <button class="btn btn-default" id="micropub-html-btn">Upgrade me!</button>
+  <b>Upcoming change!</b>
+  The Micropub spec now requires HTML content be sent as a nested object, <code>content[html]=&lt;b&gt;example&lt;/b&gt;</code>.
+  You can <a href="http://indiewebcamp.com/Micropub-brainstorming#HTML_Escaping">read more about the change here</a>.
+  When you are ready to receive the content as an object, click the button to switch.
+</div></div>
+
 <div class="publish-dropdown hidden">
   <div class="arrow"></div>
   <div class="dropdown-content action-publish">

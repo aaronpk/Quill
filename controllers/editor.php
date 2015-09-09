@@ -11,10 +11,16 @@ $app->post('/editor/publish', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
+    $content = $params['body'];
+
+    if($user->micropub_optin_html_content) {
+      $content = ['html' => $params['body']];
+    }
+
     $micropub_request = array(
       'h' => 'entry',
       'name' => $params['name'],
-      'content' => $params['body']
+      'content' => $content
     );
 
     $r = micropub_post_for_user($user, $micropub_request);
@@ -62,7 +68,7 @@ $app->post('/editor/test-login', function() use($app) {
 });
 
 $app->get('/appcache.manifest', function() use($app) {
-  $content = partial('partials/appcache');
+  $content = partial('-partials/appcache');
 
   $app->response()['Content-type'] = 'text/cache-manifest';
   $app->response()->body($content);

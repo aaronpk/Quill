@@ -271,6 +271,24 @@ $app->get('/settings', function() use($app) {
   }
 });
 
+$app->post('/settings/html-content', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+    $user->micropub_optin_html_content = $params['html'] ? 1 : 0;
+    $user->save();
+    $app->response()->body(json_encode(array(
+      'html' => $user->micropub_optin_html_content
+    )));
+  }
+});
+$app->get('/settings/html-content', function() use($app) {
+  if($user=require_login($app)) {
+    $app->response()->body(json_encode(array(
+      'html' => $user->micropub_optin_html_content
+    )));
+  }
+});
+
 $app->get('/favorite-popup', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
