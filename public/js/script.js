@@ -5,12 +5,17 @@
     var minutes = zero_pad(Math.floor(seconds / 60) % 60);
     return (seconds < 0 ? '-' : '+') + hours + ":" + minutes;
   }
+
   function zero_pad(num) {
     num = "" + num;
     if(num.length == 1) {
       num = "0" + num;
     }
     return num;
+  }
+
+  function csv_to_array(val) {
+    return val.split(/[, ]+/);
   }
 
 

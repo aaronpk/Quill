@@ -43,7 +43,7 @@
               }
               echo '</ul>';
             } else {
-              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site. 
+              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site.
               You can provide a <a href="/docs#syndication">list of supported syndication targets</a> that will appear as checkboxes here.</div><?php
             }
             ?>
@@ -63,10 +63,10 @@
 $(function(){
 
   // ctrl-s to save
-  $(window).on('keydown', function(e){ 
+  $(window).on('keydown', function(e){
     if(e.keyCode == 83 && e.ctrlKey){
       $("#btn_post").click();
-    } 
+    }
   });
 
   $("#btn_post").click(function(){
@@ -81,7 +81,7 @@ $(function(){
       name: $("#note_name").val(),
       content: $("#note_content").val(),
       category: $("#note_category").val(),
-      'syndicate-to': syndications.join(',')
+      'syndicate-to': syndications
     }, function(data){
       var response = JSON.parse(data);
 

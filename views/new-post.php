@@ -34,7 +34,7 @@
               }
               echo '</ul>';
             } else {
-              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site. 
+              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site.
               You can provide a <a href="/docs#syndication">list of supported syndication targets</a> that will appear as checkboxes here.</div><?php
             }
             ?>
@@ -107,10 +107,10 @@
 $(function(){
 
   // ctrl-s to save
-  $(window).on('keydown', function(e){ 
+  $(window).on('keydown', function(e){
     if(e.keyCode == 83 && e.ctrlKey){
       $("#btn_post").click();
-    } 
+    }
   });
 
   $("#btn_post").click(function(){
@@ -124,7 +124,7 @@ $(function(){
       content: $("#note_content").val(),
       'in-reply-to': $("#note_in_reply_to").val(),
       location: $("#note_location").val(),
-      category: $("#note_category").val(),
+      category: csv_to_array($("#note_category").val()),
       slug: $("#note_slug").val(),
       'syndicate-to': syndications
     }, function(data){
@@ -226,5 +226,3 @@ $(function(){
 <?= partial('partials/syndication-js') ?>
 
 </script>
-
-

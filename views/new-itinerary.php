@@ -105,7 +105,6 @@
 }
 </style>
 
-<script src="/js/script.js"></script>
 <script>
 $(function(){
 
@@ -176,7 +175,7 @@ $(function(){
       });
     });
 
-    var category = $("#note_category").val().split(/[, ]+/)
+    var category = csv_to_array($("#note_category").val());
 
     $.post("/itinerary", {
       data: JSON.stringify({

@@ -4,8 +4,8 @@
     <title><?= $this->title ?></title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="pingback" href="http://webmention.io/aaronpk/xmlrpc" />
-    <link rel="webmention" href="http://webmention.io/aaronpk/webmention" />
+    <link rel="pingback" href="https://webmention.io/aaronpk/xmlrpc" />
+    <link rel="webmention" href="https://webmention.io/aaronpk/webmention" />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <!-- standard viewport tag to set the viewport to the device's width
@@ -28,10 +28,11 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="/js/script.js"></script>
   </head>
 
 <body role="document">
-<?php 
+<?php
 if(property_exists($this, 'include_facebook')) {
   # echo partial('partials/fb-script');
 }
@@ -67,7 +68,6 @@ if(property_exists($this, 'include_facebook')) {
           <li><a href="/bookmark">Bookmark</a></li>
           <li><a href="/favorite">Favorite</a></li>
           <li><a href="/photo">Photo</a></li>
-          <li><a href="/email">Email</a></li>
         <?php } ?>
 
         <li><a href="/docs">Docs</a></li>
@@ -90,7 +90,7 @@ if(property_exists($this, 'include_facebook')) {
     </div>
 
     <p class="credits">&copy; <?=date('Y')?> by <a href="http://aaronparecki.com">Aaron Parecki</a>.
-      This code is <a href="https://github.com/aaronpk/Quill">open source</a>. 
+      This code is <a href="https://github.com/aaronpk/Quill">open source</a>.
       Feel free to send a pull request, or <a href="https://github.com/aaronpk/Quill/issues">file an issue</a>.</p>
   </div>
 </div>
