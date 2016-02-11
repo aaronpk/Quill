@@ -41,6 +41,16 @@ function generate_login_token() {
   ), Config::$jwtSecret);
 }
 
+$app->get('/dashboard', function() use($app) {
+  if($user=require_login($app)) {
+    $html = render('dashboard', array(
+      'title' => 'Dashboard',
+      'authorizing' => false
+    ));
+    $app->response()->body($html);
+  }
+});
+
 $app->get('/new', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
