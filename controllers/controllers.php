@@ -130,6 +130,18 @@ $app->get('/favorite', function() use($app) {
   }
 });
 
+$app->get('/itinerary', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $html = render('new-itinerary', array(
+      'title' => 'Itinerary',
+      'authorizing' => false
+    ));
+    $app->response()->body($html);
+  }
+});
+
 $app->get('/photo', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
@@ -217,7 +229,7 @@ $app->get('/add-to-home', function() use($app) {
     if($user=require_login($app)) {
       if(array_key_exists('start', $params)) {
         $_SESSION['add-to-home-started'] = true;
-        
+
         $token = JWT::encode(array(
           'user_id' => $_SESSION['user_id'],
           'me' => $_SESSION['me'],
@@ -260,7 +272,7 @@ $app->get('/email', function() use($app) {
       'test_response' => $test_response,
       'user' => $user
     ));
-    $app->response()->body($html);    
+    $app->response()->body($html);
   }
 });
 
@@ -294,7 +306,7 @@ $app->get('/favorite-popup', function() use($app) {
     $params = $app->request()->params();
 
     $html = $app->render('favorite-popup.php', array(
-      'url' => $params['url'], 
+      'url' => $params['url'],
       'token' => $params['token']
     ));
     $app->response()->body($html);
@@ -339,7 +351,7 @@ function create_favorite(&$user, $url) {
 
   if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
     $tweet_id = $match[1];
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret, 
+    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
       $user->twitter_access_token, $user->twitter_token_secret);
     $result = $twitter->post('favorites/create', array(
       'id' => $tweet_id
@@ -373,7 +385,7 @@ function create_repost(&$user, $url) {
 
   if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
     $tweet_id = $match[1];
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret, 
+    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
       $user->twitter_access_token, $user->twitter_token_secret);
     $result = $twitter->post('statuses/retweet/'.$tweet_id);
   }
@@ -390,8 +402,8 @@ $app->get('/favorite.js', function() use($app) {
       $r = create_favorite($user, $params['url']);
 
       $app->response()->body($app->render('favorite-js.php', array(
-        'url' => $params['url'], 
-        'like_url' => $r['location'], 
+        'url' => $params['url'],
+        'like_url' => $r['location'],
         'error' => $r['error'],
         // 'facebook_id' => $facebook_id
       )));
@@ -460,6 +472,20 @@ $app->post('/repost', function() use($app) {
     $app->response()->body(json_encode(array(
       'location' => $r['location'],
       'error' => $r['error']
+    )));
+  }
+});
+
+$app->post('/itinerary', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $r = micropub_post_for_user($user, json_decode($params['data'], true), null, true);
+
+    $app->response()->body(json_encode(array(
+      'location' => $r['location'],
+      'error' => $r['error'],
+      'response' => $r['response']
     )));
   }
 });
@@ -545,7 +571,7 @@ $app->get('/auth/twitter', function() use($app) {
     // If there is an existing Twitter token, check if it is valid
     // Otherwise, generate a Twitter login link
     $twitter_login_url = false;
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret, 
+    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
       $user->twitter_access_token, $user->twitter_token_secret);
 
     if(array_key_exists('login', $params)) {
@@ -582,7 +608,7 @@ $app->get('/auth/twitter/callback', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret, 
+    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
       $_SESSION['twitter_auth']['oauth_token'], $_SESSION['twitter_auth']['oauth_token_secret']);
     $credentials = $twitter->getAccessToken($params['oauth_verifier']);
 
@@ -634,4 +660,3 @@ $app->get('/auth/instagram/callback', function() use($app) {
     $app->redirect('/settings');
   }
 });
-

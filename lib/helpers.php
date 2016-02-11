@@ -75,23 +75,23 @@ function get_timezone($lat, $lng) {
 }
 
 if(!function_exists('http_build_url')) {
-  function http_build_url($parsed_url) { 
-    $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : ''; 
-    $host     = isset($parsed_url['host']) ? $parsed_url['host'] : ''; 
-    $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : ''; 
-    $user     = isset($parsed_url['user']) ? $parsed_url['user'] : ''; 
-    $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : ''; 
-    $pass     = ($user || $pass) ? "$pass@" : ''; 
-    $path     = isset($parsed_url['path']) ? $parsed_url['path'] : ''; 
-    $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : ''; 
-    $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : ''; 
-    return "$scheme$user$pass$host$port$path$query$fragment"; 
-  } 
+  function http_build_url($parsed_url) {
+    $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+    $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+    $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+    $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+    $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+    $pass     = ($user || $pass) ? "$pass@" : '';
+    $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+    $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+    $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+    return "$scheme$user$pass$host$port$path$query$fragment";
+  }
 }
 
-function micropub_post_for_user(&$user, $params, $file_path = NULL) {
+function micropub_post_for_user(&$user, $params, $file_path = NULL, $json = false) {
   // Now send to the micropub endpoint
-  $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token, $file_path);
+  $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token, $file_path, $json);
 
   $user->last_micropub_response = substr(json_encode($r), 0, 1024);
   $user->last_micropub_response_date = date('Y-m-d H:i:s');
@@ -109,7 +109,7 @@ function micropub_post_for_user(&$user, $params, $file_path = NULL) {
   return $r;
 }
 
-function micropub_post($endpoint, $params, $access_token, $file_path = NULL) {
+function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $json = false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $endpoint);
   curl_setopt($ch, CURLOPT_POST, true);
@@ -118,14 +118,23 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL) {
   // https://github.com/aaronpk/Quill/issues/4
   // http://indiewebcamp.com/irc/2015-02-14#t1423955287064
   $httpheaders = array('Authorization: Bearer ' . $access_token);
-  $params = array_merge(array(
-    'h' => 'entry',
-    'access_token' => $access_token
-  ), $params);
+
+  if(!$json) {
+    $params = array_merge(array(
+      'h' => 'entry',
+      'access_token' => $access_token
+    ), $params);
+  }
 
   if(!$file_path) {
-    $post = http_build_query($params);
-    $post = preg_replace('/%5B[0-9]+%5D/', '%5B%5D', $post); // change [0] to []
+    if($json) {
+      $params['access_token'] = $access_token;
+      $httpheaders[] = 'Content-type: application/json';
+      $post = json_encode($params);
+    } else {
+      $post = http_build_query($params);
+      $post = preg_replace('/%5B[0-9]+%5D/', '%5B%5D', $post); // change [0] to []
+    }
   } else {
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimetype = finfo_file($finfo, $file_path);
