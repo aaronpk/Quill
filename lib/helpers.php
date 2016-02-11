@@ -218,7 +218,7 @@ function get_syndication_targets(&$user) {
 
       // If there's a host, and the host contains a . then we can assume there's a favicon
       // parse_url will parse strings like http://twitter into an array with a host of twitter, which is not resolvable
-      if(array_key_exists('host', $url) && strpos($url['host'], '.') !== false) {
+      if($url && array_key_exists('host', $url) && strpos($url['host'], '.') !== false) {
         $targets[] = array(
           'target' => $t,
           'favicon' => 'http://' . $url['host'] . '/favicon.ico'
