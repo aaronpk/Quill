@@ -13,7 +13,7 @@ By submitting code to this project, you agree to irrevocably release it under th
 
 ### Credits 
 
-Quill icon designed by [http://thenounproject.com/term/quill/17013/ Juan Pablo Bravo from the Noun Project]
+Quill icon designed by [Juan Pablo Bravo from the Noun Project](http://thenounproject.com/term/quill/17013/).
 
 
 ### License
