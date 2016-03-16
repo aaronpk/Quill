@@ -177,7 +177,7 @@ $(function(){
 
     var category = csv_to_array($("#note_category").val());
 
-    $.post("/itinerary", {
+    $.post("/micropub/postjson", {
       data: JSON.stringify({
         "type": "h-entry",
         "properties": {

@@ -140,6 +140,18 @@ $app->get('/favorite', function() use($app) {
   }
 });
 
+$app->get('/event', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $html = render('event', array(
+      'title' => 'Event',
+      'authorizing' => false
+    ));
+    $app->response()->body($html);
+  }
+});
+
 $app->get('/itinerary', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
@@ -486,20 +498,6 @@ $app->post('/repost', function() use($app) {
   }
 });
 
-$app->post('/itinerary', function() use($app) {
-  if($user=require_login($app)) {
-    $params = $app->request()->params();
-
-    $r = micropub_post_for_user($user, json_decode($params['data'], true), null, true);
-
-    $app->response()->body(json_encode(array(
-      'location' => $r['location'],
-      'error' => $r['error'],
-      'response' => $r['response']
-    )));
-  }
-});
-
 $app->get('/micropub/syndications', function() use($app) {
   if($user=require_login($app)) {
     $data = get_syndication_targets($user);
@@ -527,6 +525,20 @@ $app->post('/micropub/post', function() use($app) {
       'location' => $r['location'],
       'error' => $r['error'],
       'curlinfo' => $r['curlinfo']
+    )));
+  }
+});
+
+$app->post('/micropub/postjson', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $r = micropub_post_for_user($user, json_decode($params['data'], true), null, true);
+
+    $app->response()->body(json_encode(array(
+      'location' => $r['location'],
+      'error' => $r['error'],
+      'response' => $r['response']
     )));
   }
 });

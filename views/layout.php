@@ -29,6 +29,7 @@
 
     <script src="/js/jquery-1.7.1.min.js"></script>
     <script src="/js/script.js"></script>
+    <script src="/js/date.js"></script>
   </head>
 
 <body role="document">
