@@ -83,6 +83,7 @@ $app->get('/new', function() use($app) {
       'syndication_targets' => json_decode($user->syndication_targets, true),
       'test_response' => $test_response,
       'location_enabled' => $user->location_enabled,
+      'user' => $user,
       'authorizing' => false
     ));
     $app->response()->body($html);

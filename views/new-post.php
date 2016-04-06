@@ -4,6 +4,7 @@
       <form role="form" style="margin-top: 20px;" id="note_form">
 
         <div class="form-group">
+          <div id="note_content_remaining" class="pcheck206"><img src="/images/twitter.ico"> <span>140</span></div>
           <label for="note_content"><code>content</code></label>
           <textarea id="note_content" value="" class="form-control" style="height: 4em;"></textarea>
         </div>
@@ -103,8 +104,33 @@
       </div>
   </div>
 
+<style type="text/css">
+#note_content_remaining {
+  float: right;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+
+.pcheck206 { color: #6ba15c; } /* tweet fits within the limit even after adding RT @username */
+.pcheck207 { color: #c4b404; } /* danger zone, tweet will overflow when RT @username is added */
+.pcheck200,.pcheck208 { color: #59cb3a; } /* exactly fits 140 chars, both with or without RT */
+.pcheck413 { color: #a73b3b; } /* over max tweet length */
+
+</style>
+
 <script>
 $(function(){
+
+  $("#note_content").on('change keyup', function(e){
+    var text = $("#note_content").val();
+    var tweet_length = tw_text_proxy(text).length;
+    var tweet_check = tw_length_check(text, 140, "<?= $this->user->twitter_username ?>");
+    var remaining = 140 - tweet_length;
+    $("#note_content_remaining span").html(remaining);
+    $("#note_content_remaining").removeClass("pcheck200 pcheck206 pcheck207 pcheck208 pcheck413");
+    $("#note_content_remaining").addClass("pcheck"+tweet_check);
+  });
 
   // ctrl-s to save
   $(window).on('keydown', function(e){
