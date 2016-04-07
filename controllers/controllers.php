@@ -56,7 +56,6 @@ $app->get('/new', function() use($app) {
     $params = $app->request()->params();
 
     $entry = false;
-    $photo_url = false;
     $in_reply_to = '';
 
     if(array_key_exists('reply', $params))

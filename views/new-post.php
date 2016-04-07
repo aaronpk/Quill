@@ -143,6 +143,16 @@ $(function(){
     $("#note_content_remaining").addClass("pcheck"+tweet_check);
   });
 
+  $("#note_in_reply_to").on('change', function(){
+    if(match=$("#note_in_reply_to").val().match(/twitter\.com\/([^\/]+)\/status/)) {
+      $("#note_content").val( "@"+match[1]+" "+$("#note_content").val() );
+    }    
+  });
+
+  if($("#note_in_reply_to").val() != "") {
+    $("#note_in_reply_to").change();
+  }
+
   // ctrl-s to save
   $(window).on('keydown', function(e){
     if(e.keyCode == 83 && e.ctrlKey){
