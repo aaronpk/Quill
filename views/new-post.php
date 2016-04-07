@@ -133,6 +133,8 @@ function previewPhoto(event) {
 
 $(function(){
 
+  var userHasSetCategory = false;
+
   $("#note_content").on('change keyup', function(e){
     var text = $("#note_content").val();
     var tweet_length = tw_text_proxy(text).length;
@@ -141,12 +143,26 @@ $(function(){
     $("#note_content_remaining span").html(remaining);
     $("#note_content_remaining").removeClass("pcheck200 pcheck206 pcheck207 pcheck208 pcheck413");
     $("#note_content_remaining").addClass("pcheck"+tweet_check);
+
+    // If the user didn't enter any categories, add them from the post
+    if(!userHasSetCategory) {
+      $("#note_category").val($("#note_content").val().match(/#[a-z0-9]+/g).map(function(tag){ return tag.replace('#',''); }).join(", "));
+    }
   });
 
   $("#note_in_reply_to").on('change', function(){
     if(match=$("#note_in_reply_to").val().match(/twitter\.com\/([^\/]+)\/status/)) {
       $("#note_content").val( "@"+match[1]+" "+$("#note_content").val() );
     }    
+  });
+
+  $("#note_category").on('keydown keyup', function(){
+    userHasSetCategory = true;
+  });
+  $("#note_category").on('change', function(){
+    if($("#note_category").val() == "") {
+      userHasSetCategory = false;
+    }
   });
 
   if($("#note_in_reply_to").val() != "") {
