@@ -323,3 +323,26 @@ function validate_photo(&$file) {
       return $e->getMessage();
   }
 }
+
+// Reads the exif rotation data and actually rotates the photo.
+// Only does anything if the exif library is loaded, otherwise is a noop.
+function correct_photo_rotation($filename) {
+  if(class_exists('IMagick')) {
+    $image = new IMagick($filename);
+    $orientation = $image->getImageOrientation();
+    switch($orientation) {
+      case IMagick::ORIENTATION_BOTTOMRIGHT:
+        $image->rotateImage(new ImagickPixel('#00000000'), 180);
+        break;
+      case IMagick::ORIENTATION_RIGHTTOP:
+        $image->rotateImage(new ImagickPixel('#00000000'), 90);
+        break;
+      case IMagick::ORIENTATION_LEFTBOTTOM:
+        $image->rotateImage(new ImagickPixel('#00000000'), -90);
+        break;
+    }
+    $image->setImageOrientation(IMagick::ORIENTATION_TOPLEFT);
+    $image->writeImage($filename);
+  }
+}
+

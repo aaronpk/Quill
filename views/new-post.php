@@ -10,18 +10,25 @@
         </div>
 
         <div class="form-group">
-          <label for="note_in_reply_to"><code>in-reply-to</code> (optional, a URL you are replying to)</label>
+          <label for="note_in_reply_to"><code>in-reply-to</code> (a URL you are replying to)</label>
           <input type="text" id="note_in_reply_to" value="<?= $this->in_reply_to ?>" class="form-control">
         </div>
 
         <div class="form-group">
-          <label for="note_category"><code>category</code> (optional, comma-separated list of tags)</label>
+          <label for="note_category"><code>category</code> (comma-separated list of tags, will be posted as an array)</label>
           <input type="text" id="note_category" value="" class="form-control" placeholder="e.g. web, personal">
         </div>
 
         <div class="form-group">
-          <label for="note_slug"><code>slug</code> (optional)</label>
+          <label for="note_slug"><code>slug</code></label>
           <input type="text" id="note_slug" value="" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="note_photo"><code>photo</code></label>
+          <input type="file" name="note_photo" id="note_photo" accept="image/*" onchange="previewPhoto(event)">
+          <br>
+          <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
         </div>
 
         <div class="form-group">
@@ -72,7 +79,7 @@
       <?php if($this->test_response): ?>
         <h4>Last response from your Micropub endpoint <span id="last_response_date">(<?= relative_time($this->response_date) ?>)</span></h4>
       <?php endif; ?>
-      <pre id="test_response" style="width: 100%; min-height: 240px;"><?= htmlspecialchars($this->test_response) ?></pre>
+      <pre id="test_response" class="<?= $this->test_response ? '' : 'hidden' ?>" style="width: 100%; min-height: 240px;"><?= htmlspecialchars($this->test_response) ?></pre>
 
 
       <div class="callout">
@@ -105,12 +112,12 @@
   </div>
 
 <style type="text/css">
+
 #note_content_remaining {
   float: right;
   font-size: 0.8em;
   font-weight: bold;
 }
-
 
 .pcheck206 { color: #6ba15c; } /* tweet fits within the limit even after adding RT @username */
 .pcheck207 { color: #c4b404; } /* danger zone, tweet will overflow when RT @username is added */
@@ -120,6 +127,10 @@
 </style>
 
 <script>
+function previewPhoto(event) {
+  document.getElementById('photo_preview').src = URL.createObjectURL(event.target.files[0]);
+}
+
 $(function(){
 
   $("#note_content").on('change keyup', function(e){
@@ -146,11 +157,69 @@ $(function(){
       syndications.push($(btn).data('syndication'));
     });
 
-    $.post("/micropub/post", {
+    var category = csv_to_array($("#note_category").val());
+
+    var formData = new FormData();
+    if(v=$("#note_content").val()) {
+      formData.append("content", v);      
+    }
+    if(v=$("#note_in_reply_to").val()) {
+      formData.append("in-reply-to", v);
+    }
+    if(v=$("#note_location").val()) {
+      formData.append("location", v);
+    }
+    if(category.length > 0) {
+      formData.append("category", category);
+    }
+    if(syndications.length > 0) {
+      formData.append("syndicate-to", syndications);
+    }
+    if(v=$("#note_slug").val()) {
+      formData.append("slug", v);
+    }
+
+    if(document.getElementById("note_photo").files[0]) {
+      formData.append("photo", document.getElementById("note_photo").files[0]);
+    }
+
+    // Need to append a placeholder field because if the file size max is hit, $_POST will
+    // be empty, so the server needs to be able to recognize a post with only a file vs a failed one.
+    // This will be stripped by Quill before it's sent to the Micropub endpoint
+    formData.append("null","null");
+
+
+    var request = new XMLHttpRequest();
+    request.open("POST", "/micropub/multipart");
+    request.onreadystatechange = function() {
+      if(request.readyState == XMLHttpRequest.DONE) {
+        console.log(request.responseText);
+        try {
+          var response = JSON.parse(request.responseText);
+          if(response.location) {
+            window.location = response.location;
+            // console.log(response.location);
+          } else {
+            $("#test_response").html(response.response).removeClass('hidden');
+            $("#test_success").addClass('hidden');
+            $("#test_error").removeClass('hidden');
+          }
+        } catch(e) {
+          $("#test_success").addClass('hidden');
+          $("#test_error").removeClass('hidden');
+        }
+        $("#btn_post").removeClass("loading disabled").text("Post");
+      }
+    }
+    $("#btn_post").addClass("loading disabled").text("Working...");
+    request.send(formData);
+
+    /*
+    $.post("/micropub/multipart", {
       content: $("#note_content").val(),
       'in-reply-to': $("#note_in_reply_to").val(),
       location: $("#note_location").val(),
-      category: csv_to_array($("#note_category").val()),
+      category: category,
       slug: $("#note_slug").val(),
       'syndicate-to': syndications
     }, function(data){
@@ -180,6 +249,8 @@ $(function(){
       $("#last_request_container").show();
       $("#test_response").html(response.response);
     });
+    */
+
     return false;
   });
 

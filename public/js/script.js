@@ -15,7 +15,11 @@
   }
 
   function csv_to_array(val) {
-    return val.split(/[, ]+/);
+    if(val.length > 0) {
+      return val.split(/[, ]+/);
+    } else {
+      return [];
+    }
   }
 
 

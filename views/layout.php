@@ -69,7 +69,6 @@ if(property_exists($this, 'include_facebook')) {
           <li><a href="/new">Note</a></li>
           <li><a href="/bookmark">Bookmark</a></li>
           <li><a href="/favorite">Favorite</a></li>
-          <li><a href="/photo">Photo</a></li>
         <?php } ?>
 
         <li><a href="/docs">Docs</a></li>

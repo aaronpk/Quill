@@ -384,20 +384,6 @@ function create_favorite(&$user, $url) {
   return $r;
 }
 
-function create_photo(&$user, $params, $file) {
-  $error = validate_photo($file);
-
-  if(!$error) {
-    $file_path = $file['tmp_name'];
-    $micropub_request = array('content' => $params['note_content']);
-    $r = micropub_post_for_user($user, $micropub_request, $file_path);
-  } else {
-    $r = array('error' => $error);
-  }
-
-  return $r;
-}
-
 function create_repost(&$user, $url) {
   $micropub_request = array(
     'repost-of' => $url
@@ -452,40 +438,6 @@ $app->post('/favorite', function() use($app) {
   }
 });
 
-$app->post('/photo', function() use($app) {
-  if($user=require_login($app)) {
-
-    // var_dump($app->request()->post());
-    //
-    // Since $app->request()->post() with multipart is always
-    // empty (bug in Slim?) We're using the raw $_POST here
-    // until this gets fixed.
-    // PHP empties everything in $_POST if the file upload size exceeds
-    // that is why we have to test if the variables exist first.
-
-    $note_content = isset($_POST['note_content']) ? $_POST['note_content'] : null;
-    $params = array('note_content' => $note_content);
-    $file = isset($_FILES['note_photo']) ? $_FILES['note_photo'] : null;
-
-    $r = create_photo($user, $params, $file);
-
-    // Populate the error if there was no location header.
-    if(empty($r['location']) && empty($r['error'])) {
-      $r['error'] = "No 'Location' header in response.";
-    }
-
-    $html = render('photo', array(
-      'title' => 'Photo posted',
-      'note_content' => $params['note_content'],
-      'location' => (isset($r['location']) ? $r['location'] : null),
-      'error' => (isset($r['error']) ? $r['error'] : null),
-      'response' => (isset($r['response']) ? htmlspecialchars($r['response']) : null),
-      'authorizing' => false
-    ));
-    $app->response()->body($html);
-  }
-});
-
 $app->post('/repost', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
@@ -526,6 +478,47 @@ $app->post('/micropub/post', function() use($app) {
       'location' => $r['location'],
       'error' => $r['error'],
       'curlinfo' => $r['curlinfo']
+    )));
+  }
+});
+
+$app->post('/micropub/multipart', function() use($app) {
+  if($user=require_login($app)) {
+    // var_dump($app->request()->post());
+    //
+    // Since $app->request()->post() with multipart is always
+    // empty (bug in Slim?) We're using the raw $_POST here.
+    // PHP empties everything in $_POST if the file upload size exceeds
+    // that is why we have to test if the variables exist first.
+
+    $file = isset($_FILES['photo']) ? $_FILES['photo'] : null;
+
+    if($file) {
+      $error = validate_photo($file);
+
+      unset($_POST['null']);
+
+      if(!$error) {
+        $file_path = $file['tmp_name'];
+        correct_photo_rotation($file_path);
+        $r = micropub_post_for_user($user, $_POST, $file_path);
+      } else {
+        $r = array('error' => $error);
+      }
+    } else {
+      unset($_POST['null']);
+      $r = micropub_post_for_user($user, $_POST);
+    }
+
+    // Populate the error if there was no location header.
+    if(empty($r['location']) && empty($r['error'])) {
+      $r['error'] = "No 'Location' header in response.";
+    }
+
+    $app->response()->body(json_encode(array(
+      'response' => (isset($r['response']) ? htmlspecialchars($r['response']) : null),
+      'location' => (isset($r['location']) ? $r['location'] : null),
+      'error' => (isset($r['error']) ? $r['error'] : null),
     )));
   }
 });

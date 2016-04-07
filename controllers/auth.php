@@ -4,18 +4,18 @@ function buildRedirectURI() {
   return Config::$base_url . 'auth/callback';
 }
 
-function build_url($parsed_url) { 
-  $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : ''; 
-  $host     = isset($parsed_url['host']) ? $parsed_url['host'] : ''; 
-  $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : ''; 
-  $user     = isset($parsed_url['user']) ? $parsed_url['user'] : ''; 
-  $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : ''; 
-  $pass     = ($user || $pass) ? "$pass@" : ''; 
-  $path     = isset($parsed_url['path']) ? $parsed_url['path'] : ''; 
-  $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : ''; 
-  $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : ''; 
-  return "$scheme$user$pass$host$port$path$query$fragment"; 
-} 
+function build_url($parsed_url) {
+  $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+  $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+  $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+  $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+  $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+  $pass     = ($user || $pass) ? "$pass@" : '';
+  $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+  $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+  $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+  return "$scheme$user$pass$host$port$path$query$fragment";
+}
 
 $app->get('/', function($format='html') use($app) {
   $res = $app->response();
@@ -38,7 +38,6 @@ $app->get('/auth/start', function() use($app) {
 
   // the "me" parameter is user input, and may be in a couple of different forms:
   // aaronparecki.com http://aaronparecki.com http://aaronparecki.com/
-  // Normlize the value now (move this into a function in IndieAuth\Client later)
   if(!array_key_exists('me', $params) || !($me = IndieAuth\Client::normalizeMeURL($params['me']))) {
     $html = render('auth_error', array(
       'title' => 'Sign In',
@@ -68,12 +67,12 @@ $app->get('/auth/start', function() use($app) {
     $authorizationURL = false;
   }
 
-  // If the user has already signed in before and has a micropub access token, 
-  // and the endpoints are all the same, skip the debugging screens and redirect 
+  // If the user has already signed in before and has a micropub access token,
+  // and the endpoints are all the same, skip the debugging screens and redirect
   // immediately to the auth endpoint.
   // This will still generate a new access token when they finish logging in.
   $user = ORM::for_table('users')->where('url', $me)->find_one();
-  if($user && $user->micropub_access_token 
+  if($user && $user->micropub_access_token
     && $user->micropub_endpoint == $micropubEndpoint
     && $user->token_endpoint == $tokenEndpoint
     && $user->authorization_endpoint == $authorizationEndpoint
@@ -251,4 +250,3 @@ $app->get('/signout', function() use($app) {
   unset($_SESSION['user_id']);
   $app->redirect('/', 301);
 });
-

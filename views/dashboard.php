@@ -8,7 +8,6 @@
     <li><a href="/bookmark"><img src="/images/bookmark.svg" width="60"></a></li>
     <li><a href="/favorite"><img src="/images/star.svg" width="60"></a></li>
     <li><a href="/repost"><img src="/images/repost.svg" width="60"></a></li>
-    <li><a href="/photo"><img src="/images/camera.svg" width="60"></a></li>
     <li><a href="/itinerary"><img src="/images/plane.svg" width="60"></a></li>
     <li><a href="/email"><img src="/images/email.svg" width="60"></a></li>
   </ul>
