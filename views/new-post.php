@@ -146,7 +146,10 @@ $(function(){
 
     // If the user didn't enter any categories, add them from the post
     if(!userHasSetCategory) {
-      $("#note_category").val($("#note_content").val().match(/#[a-z0-9]+/g).map(function(tag){ return tag.replace('#',''); }).join(", "));
+      var tags = $("#note_content").val().match(/#[a-z0-9]+/g);
+      if(tags) {
+        $("#note_category").val(tags.map(function(tag){ return tag.replace('#',''); }).join(", "));
+      }
     }
   });
 
@@ -196,7 +199,9 @@ $(function(){
       formData.append("location", v);
     }
     if(category.length > 0) {
-      formData.append("category", category);
+      for(var i in category) {
+        formData.append("category[]", category[i]);
+      }
     }
     if(syndications.length > 0) {
       formData.append("syndicate-to", syndications);
