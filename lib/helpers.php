@@ -1,6 +1,6 @@
 <?php
 
-if(Config::$dbType == 'sqlite') {
+if(isset(Config::$dbType) && Config::$dbType == 'sqlite') {
   ORM::configure('sqlite:' . Config::$dbFilePath);
 } else {
   ORM::configure('mysql:host=' . Config::$dbHost . ';dbname=' . Config::$dbName);
