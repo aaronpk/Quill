@@ -6,6 +6,46 @@ Work in progress. Do not use!
 https://quill.p3k.io/
 
 
+### Web Server Configuration
+
+Set the document root to the "public" folder of this repo, and ensure all requests are routed through `public/index.php` if they don't match a file.
+
+#### nginx
+
+```
+server {
+  listen       80;
+  server_name  quill.dev;
+
+  root /path/to/Quill/public;
+
+  error_log  logs/quill.error.log  notice;
+
+  try_files $uri /index.php?$args;
+
+  location /index.php {
+    fastcgi_pass    php-pool;
+    fastcgi_index   index.php;
+    include fastcgi_params;
+    fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
+}
+```
+
+#### Apache htaccess
+
+```
+  RewriteEngine on
+
+  RewriteBase /
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !=/favicon.ico
+  RewriteRule ^ index.php [L]
+```
+
+
 ### Contributing
 
 By submitting code to this project, you agree to irrevocably release it under the same license as this project.

@@ -1,9 +1,10 @@
 <?php
 
 $app->get('/editor', function() use($app) {
-  // Don't require login because appcache caches the whole page
-  $html = $app->render('editor.php');
-  $app->response()->body($html);
+  if($user=require_login($app)) {
+    $html = $app->render('editor.php');
+    $app->response()->body($html);
+  }
 });
 
 $app->post('/editor/publish', function() use($app) {
@@ -65,11 +66,4 @@ $app->post('/editor/test-login', function() use($app) {
   $logged_in = array_key_exists('user_id', $_SESSION);
   $app->response()['Content-type'] = 'application/json';
   $app->response()->body(json_encode(['logged_in'=>$logged_in]));
-});
-
-$app->get('/appcache.manifest', function() use($app) {
-  $content = partial('partials/appcache');
-
-  $app->response()['Content-type'] = 'text/cache-manifest';
-  $app->response()->body($content);
 });
