@@ -131,7 +131,7 @@ input.form-field-small {
 }
 
 .publish-dropdown {
-  position: absolute;
+  position: fixed;
   top: 62px;
   right: 110px;
   z-index: 1001;
