@@ -5,6 +5,7 @@ class Config {
   public static $gaid = '';
 
   // MySQL (default)
+  public static $dbType = 'mysql';
   public static $dbHost = '127.0.0.1';
   public static $dbName = 'quill';
   public static $dbUsername = 'quill';
