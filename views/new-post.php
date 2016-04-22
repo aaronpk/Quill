@@ -133,12 +133,15 @@
 
 <script>
 function previewPhoto(event) {
-  document.getElementById('photo_preview').src = URL.createObjectURL(event.target.files[0]);
+  $("#photo_preview")
+    .show()
+    .attr("src", URL.createObjectURL(event.target.files[0]) );
 }
 
 $(function(){
 
   var userHasSetCategory = false;
+  $("#photo_preview").hide();
 
   $("#note_content").on('change keyup', function(e){
     var text = $("#note_content").val();
@@ -161,7 +164,7 @@ $(function(){
   $("#note_in_reply_to").on('change', function(){
     if(match=$("#note_in_reply_to").val().match(/twitter\.com\/([^\/]+)\/status/)) {
       $("#note_content").val( "@"+match[1]+" "+$("#note_content").val() );
-    }    
+    }
   });
 
   $("#note_category").on('keydown keyup', function(){
@@ -196,7 +199,7 @@ $(function(){
 
     var formData = new FormData();
     if(v=$("#note_content").val()) {
-      formData.append("content", v);      
+      formData.append("content", v);
     }
     if(v=$("#note_in_reply_to").val()) {
       formData.append("in-reply-to", v);
