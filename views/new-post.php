@@ -38,7 +38,12 @@
             if($this->syndication_targets) {
               echo '<ul>';
               foreach($this->syndication_targets as $syn) {
-                echo '<li><button data-syndication="'.$syn['target'].'" class="btn btn-default btn-block"><img src="'.$syn['favicon'].'" width="16" height="16"> '.$syn['target'].'</button></li>';
+                echo '<li>'
+                 . '<button data-syndicate-to="'.(isset($syn['uid']) ? $syn['uid'] : $syn['target']).'" class="btn btn-default btn-block">'
+                   . ($syn['favicon'] ? '<img src="'.$syn['favicon'].'" width="16" height="16"> ' : '')
+                   . $syn['target']
+                 . '</button>'
+               . '</li>';
               }
               echo '</ul>';
             } else {
@@ -181,9 +186,10 @@ $(function(){
 
   $("#btn_post").click(function(){
 
+    // Collect all the syndication buttons that are pressed
     var syndications = [];
     $("#syndication-container button.btn-info").each(function(i,btn){
-      syndications.push($(btn).data('syndication'));
+      syndications.push($(btn).data('syndicate-to'));
     });
 
     var category = csv_to_array($("#note_category").val());

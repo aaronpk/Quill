@@ -175,13 +175,14 @@ function micropub_get($endpoint, $params, $access_token) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $endpoint);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'Authorization: Bearer ' . $access_token
+    'Authorization: Bearer ' . $access_token,
+    'Accept: application/json'
   ));
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $response = curl_exec($ch);
   $data = array();
   if($response) {
-    parse_str($response, $data);
+    $data = json_decode($response, true);
   }
   $error = curl_error($ch);
   return array(
@@ -198,35 +199,23 @@ function get_syndication_targets(&$user) {
   $r = micropub_get($user->micropub_endpoint, array('q'=>'syndicate-to'), $user->micropub_access_token);
   if($r['data'] && array_key_exists('syndicate-to', $r['data'])) {
     if(is_array($r['data']['syndicate-to'])) {
-      $targetURLs = $r['data']['syndicate-to'];
-    } elseif(is_string($r['data']['syndicate-to'])) {
-      // support comma separated as a fallback
-      $targetURLs = preg_split('/, ?/', $r['data']['syndicate-to']);
+      $data = $r['data']['syndicate-to'];
     } else {
-      $targetURLs = array();
+      $data = array();
     }
 
-    foreach($targetURLs as $t) {
-      // If the syndication target doesn't have a scheme, add http
-      if(!preg_match('/^http/', $t))
-        $t2 = 'http://' . $t;
-      else
-        $t2 = $t;
-
-      // Parse the target expecting it to be a URL
-      $url = parse_url($t2);
-
-      // If there's a host, and the host contains a . then we can assume there's a favicon
-      // parse_url will parse strings like http://twitter into an array with a host of twitter, which is not resolvable
-      if($url && array_key_exists('host', $url) && strpos($url['host'], '.') !== false) {
-        $targets[] = array(
-          'target' => $t,
-          'favicon' => 'http://' . $url['host'] . '/favicon.ico'
-        );
+    foreach($data as $t) {
+      if(array_key_exists('service', $t) && array_key_exists('photo', $t['service'])) {
+        $icon = $t['service']['photo'];
       } else {
+        $icon = false;
+      }
+
+      if(array_key_exists('uid', $t) && array_key_exists('name', $t)) {
         $targets[] = array(
-          'target' => $t,
-          'favicon' => false
+          'target' => $t['name'],
+          'uid' => $t['uid'],
+          'favicon' => $icon
         );
       }
     }
