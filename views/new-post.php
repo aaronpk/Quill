@@ -28,7 +28,10 @@
           <label for="note_photo"><code>photo</code></label>
           <input type="file" name="note_photo" id="note_photo" accept="image/*" onchange="previewPhoto(event)">
           <br>
-          <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
+          <div id="photo_preview_container">
+            <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
+            <button type="button" class="btn btn-danger btn-sm" id="remove_photo"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Remove image</button>
+          </div>
         </div>
 
         <div class="form-group">
@@ -133,15 +136,20 @@
 
 <script>
 function previewPhoto(event) {
-  $("#photo_preview")
-    .show()
-    .attr("src", URL.createObjectURL(event.target.files[0]) );
+  $("#photo_preview_container").show();
+  $("#photo_preview").attr("src", URL.createObjectURL(event.target.files[0]) );
 }
 
 $(function(){
 
   var userHasSetCategory = false;
-  $("#photo_preview").hide();
+
+  $("#photo_preview_container").hide();
+  $("#remove_photo").on("click", function(){
+    $("#note_photo").val("");
+    $("#photo_preview").attr("src", "" );
+    $("#photo_preview_container").hide();
+  });
 
   $("#note_content").on('change keyup', function(e){
     var text = $("#note_content").val();
