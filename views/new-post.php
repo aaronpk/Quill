@@ -26,7 +26,7 @@
 
         <div class="form-group">
           <label for="note_photo"><code>photo</code></label>
-          <input type="file" name="note_photo" id="note_photo" accept="image/*" onchange="previewPhoto(event)">
+          <input type="file" name="note_photo" id="note_photo" accept="image/*">
           <br>
           <div id="photo_preview_container">
             <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
@@ -135,16 +135,15 @@
 </style>
 
 <script>
-function previewPhoto(event) {
-  $("#photo_preview_container").show();
-  $("#photo_preview").attr("src", URL.createObjectURL(event.target.files[0]) );
-}
-
 $(function(){
 
   var userHasSetCategory = false;
 
   $("#photo_preview_container").hide();
+  $("#note_photo").on("change", function(e){
+    $("#photo_preview_container").show();
+    $("#photo_preview").attr("src", URL.createObjectURL(e.target.files[0]) );
+  });
   $("#remove_photo").on("click", function(){
     $("#note_photo").val("");
     $("#photo_preview").attr("src", "" );
