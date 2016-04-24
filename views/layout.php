@@ -28,6 +28,10 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" sizes="196x196" href="/images/quill-icon-196.png">
 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#428bca">
+
     <script src="/js/jquery-1.7.1.min.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/date.js"></script>
