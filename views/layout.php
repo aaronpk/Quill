@@ -26,6 +26,11 @@
     <link rel="apple-touch-icon" sizes="144x144" href="/images/quill-icon-144.png">
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" sizes="196x196" href="/images/quill-icon-196.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#428bca">
 
     <script src="/js/jquery-1.7.1.min.js"></script>
     <script src="/js/script.js"></script>
