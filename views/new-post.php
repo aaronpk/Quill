@@ -213,7 +213,9 @@ $(function(){
       }
     }
     if(syndications.length > 0) {
-      formData.append("syndicate-to", syndications);
+      for(var i in syndications) {
+        formData.append("syndicate-to[]", syndications[i]);
+      }
     }
     if(v=$("#note_slug").val()) {
       formData.append("slug", v);
