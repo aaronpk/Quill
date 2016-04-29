@@ -28,9 +28,11 @@
           <label for="note_photo"><code>photo</code></label>
           <input type="file" name="note_photo" id="note_photo" accept="image/*">
           <br>
-          <div id="photo_preview_container">
+          <div id="photo_preview_container" class="hidden">
             <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
-            <button type="button" class="btn btn-danger btn-sm" id="remove_photo"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Remove image</button>
+            <div>
+              <button type="button" class="btn btn-danger btn-sm" id="remove_photo"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Remove image</button>
+            </div>
           </div>
         </div>
 
@@ -139,15 +141,15 @@ $(function(){
 
   var userHasSetCategory = false;
 
-  $("#photo_preview_container").hide();
+  $("#photo_preview_container").addClass("hidden");
   $("#note_photo").on("change", function(e){
-    $("#photo_preview_container").show();
+    $("#photo_preview_container").removeClass("hidden");
     $("#photo_preview").attr("src", URL.createObjectURL(e.target.files[0]) );
   });
   $("#remove_photo").on("click", function(){
     $("#note_photo").val("");
     $("#photo_preview").attr("src", "" );
-    $("#photo_preview_container").hide();
+    $("#photo_preview_container").addClass("hidden");
   });
 
   $("#note_content").on('change keyup', function(e){
