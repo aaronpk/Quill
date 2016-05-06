@@ -189,13 +189,6 @@ $(function(){
     $("#note_in_reply_to").change();
   }
 
-  // ctrl-s to save
-  $(window).on('keydown', function(e){
-    if(e.keyCode == 83 && e.ctrlKey){
-      $("#btn_post").click();
-    }
-  });
-
   $("#btn_post").click(function(){
 
     // Collect all the syndication buttons that are pressed

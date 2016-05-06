@@ -62,13 +62,6 @@
 <script>
 $(function(){
 
-  // ctrl-s to save
-  $(window).on('keydown', function(e){
-    if(e.keyCode == 83 && e.ctrlKey){
-      $("#btn_post").click();
-    }
-  });
-
   $("#btn_post").click(function(){
 
     var syndications = [];
