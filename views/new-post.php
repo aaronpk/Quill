@@ -44,9 +44,9 @@
               echo '<ul>';
               foreach($this->syndication_targets as $syn) {
                 echo '<li>'
-                 . '<button data-syndicate-to="'.(isset($syn['uid']) ? $syn['uid'] : $syn['target']).'" class="btn btn-default btn-block">'
-                   . ($syn['favicon'] ? '<img src="'.$syn['favicon'].'" width="16" height="16"> ' : '')
-                   . $syn['target']
+                 . '<button data-syndicate-to="'.(isset($syn['uid']) ? htmlspecialchars($syn['uid']) : htmlspecialchars($syn['target'])).'" class="btn btn-default btn-block">'
+                   . ($syn['favicon'] ? '<img src="'.htmlspecialchars($syn['favicon']).'" width="16" height="16"> ' : '')
+                   . htmlspecialchars($syn['target'])
                  . '</button>'
                . '</li>';
               }

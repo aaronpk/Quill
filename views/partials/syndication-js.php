@@ -7,7 +7,7 @@ function reload_syndications() {
         var target = data.targets[i].target;
         var uid = data.targets[i].uid;
         var favicon = data.targets[i].favicon;
-        $("#syndication-container ul").append('<li><button data-syndicate-to="'+(uid ? uid : target)+'" class="btn btn-default btn-block">'+(favicon ? '<img src="'+favicon+'" width="16" height="16"> ':'')+target+'</button></li>');
+        $("#syndication-container ul").append('<li><button data-syndicate-to="'+htmlspecialchars(uid ? uid : target)+'" class="btn btn-default btn-block">'+(favicon ? '<img src="'+htmlspecialchars(favicon)+'" width="16" height="16"> ':'')+htmlspecialchars(target)+'</button></li>');
       }
       bind_syndication_buttons();
     } else {
