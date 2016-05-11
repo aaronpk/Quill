@@ -212,9 +212,9 @@ $app->get('/auth/callback', function() use($app) {
     $user->save();
     $_SESSION['user_id'] = $user->id();
 
-    // Make a request to the micropub endpoint to discover the syndication targets if any.
+    // Make a request to the micropub endpoint to discover the syndication targets and media endpoint if any.
     // Errors are silently ignored here. The user will be able to retry from the new post interface and get feedback.
-    get_syndication_targets($user);
+    get_micropub_config($user);
   }
 
   unset($_SESSION['auth_state']);

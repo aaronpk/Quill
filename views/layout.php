@@ -33,6 +33,7 @@
     <meta name="theme-color" content="#428bca">
 
     <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="/libs/localforage.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/date.js"></script>
     <script src="/js/cassis.js"></script>

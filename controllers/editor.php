@@ -35,19 +35,30 @@ $app->post('/editor/publish', function() use($app) {
 });
 
 $app->post('/editor/upload', function() use($app) {
-  // Fake a file uploader by echo'ing back the data URI
-  $fn = $_FILES['files']['tmp_name'][0];
-  $imageData = base64_encode(file_get_contents($fn));
-  $src = 'data:'.mime_content_type($fn).';base64,'.$imageData;
+  if($user=require_login($app)) {
+    $fn = $_FILES['files']['tmp_name'][0];
+    $imageURL = false;
 
-  $app->response()['Content-type'] = 'application/json';
-  $app->response()->body(json_encode([
-    'files' => [
-      [
-        'url'=>$src
+    if($user->micropub_media_endpoint) {
+      // If the user has a media endpoint, upload to that and return that URL
+      correct_photo_rotation($fn);
+      $r = micropub_media_post_for_user($user, $fn);
+      if(!empty($r['location'])) {
+        $imageURL = $r['location'];
+      }
+    }
+    if(!$imageURL) {
+      // Otherwise, fake a file uploader by echo'ing back the data URI
+      $imageData = base64_encode(file_get_contents($fn));
+      $imageURL = 'data:'.mime_content_type($fn).';base64,'.$imageData;
+    }
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode([
+      'files' => [
+        ['url'=>$imageURL]
       ]
-    ]
-  ]));
+    ]));
+  }
 });
 
 $app->post('/editor/delete-file', function() use($app) {

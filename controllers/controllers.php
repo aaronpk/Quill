@@ -76,6 +76,7 @@ $app->get('/new', function() use($app) {
       'title' => 'New Post',
       'in_reply_to' => $in_reply_to,
       'micropub_endpoint' => $user->micropub_endpoint,
+      'media_endpoint' => $user->micropub_media_endpoint,
       'micropub_scope' => $user->micropub_scope,
       'micropub_access_token' => $user->micropub_access_token,
       'response_date' => $user->last_micropub_response_date,
@@ -452,7 +453,7 @@ $app->post('/repost', function() use($app) {
 
 $app->get('/micropub/syndications', function() use($app) {
   if($user=require_login($app)) {
-    $data = get_syndication_targets($user);
+    $data = get_micropub_config($user, ['q'=>'syndicate-to']);
     $app->response()->body(json_encode(array(
       'targets' => $data['targets'],
       'response' => $data['response']
@@ -516,6 +517,31 @@ $app->post('/micropub/multipart', function() use($app) {
 
     $app->response()->body(json_encode(array(
       'response' => (isset($r['response']) ? htmlspecialchars($r['response']) : null),
+      'location' => (isset($r['location']) ? $r['location'] : null),
+      'error' => (isset($r['error']) ? $r['error'] : null),
+    )));
+  }
+});
+
+$app->post('/micropub/media', function() use($app) {
+  if($user=require_login($app)) {
+    $file = isset($_FILES['photo']) ? $_FILES['photo'] : null;
+    $error = validate_photo($file);
+    unset($_POST['null']);
+
+    if(!$error) {
+      $file_path = $file['tmp_name'];
+      correct_photo_rotation($file_path);
+      $r = micropub_media_post_for_user($user, $file_path);
+    } else {
+      $r = array('error' => $error);
+    }
+
+    if(empty($r['location']) && empty($r['error'])) {
+      $r['error'] = "No 'Location' header in response.";
+    }
+
+    $app->response()->body(json_encode(array(
       'location' => (isset($r['location']) ? $r['location'] : null),
       'error' => (isset($r['error']) ? $r['error'] : null),
     )));

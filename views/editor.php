@@ -30,7 +30,7 @@
     <script src="/editor-files/handlebars.min.js"></script>
     <script src="/editor-files/medium-editor/js/medium-editor.min.js"></script>
     <script src="/editor-files/medium-editor/js/medium-editor-insert-plugin.min.js"></script>
-    <script src="/editor-files/localforage/localforage.js"></script>
+    <script src="/libs/localforage.js"></script>
 
     <link rel="apple-touch-icon" sizes="57x57" href="/images/quill-icon-57.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/images/quill-icon-72.png">

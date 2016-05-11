@@ -108,6 +108,12 @@
             <td>micropub endpoint</td>
             <td><code><?= $this->micropub_endpoint ?></code> (should be a URL)</td>
           </tr>
+          <?php if($this->media_endpoint): ?>
+          <tr>
+            <td>media endpoint</td>
+            <td><code><?= $this->media_endpoint ?></code> (should be a URL)</td>
+          </tr>
+          <?php endif; ?>
           <tr>
             <td>access token</td>
             <td>String of length <b><?= strlen($this->micropub_access_token) ?></b><?= (strlen($this->micropub_access_token) > 0) ? (', ending in <code>' . substr($this->micropub_access_token, -7) . '</code>') : '' ?> (should be greater than length 0)</td>
@@ -137,14 +143,93 @@
 </style>
 
 <script>
+function saveNoteState() {
+  var state = {
+    content: $("#note_content").val(),
+    inReplyTo: $("#note_in_reply_to").val(),
+    category: $("#note_category").val(),
+    slug: $("#note_slug").val(),
+    photo: $("#note_photo_url").val()
+  };
+  state.syndications = [];
+  $("#syndication-container button.btn-info").each(function(i,btn){
+    state.syndications[$(btn).data('syndicate-to')] = 'selected';
+  });
+  localforage.setItem('current-note', state);
+}
+
+function restoreNoteState() {
+  localforage.getItem('current-note', function(err,note){
+    if(note) {
+      $("#note_content").val(note.content);
+      $("#note_in_reply_to").val(note.inReplyTo);
+      $("#note_category").val(note.category);
+      $("#note_slug").val(note.slug);
+      if(note.photo) {
+        replacePhotoWithPhotoURL(note.photo);
+      }
+      console.log(note.syndications)
+      $("#syndication-container button").each(function(i,btn){
+        if($(btn).data('syndicate-to') in note.syndications) {
+          $(btn).addClass('btn-info');
+        }
+      });
+      $("#note_content").change();
+    }
+  });  
+}
+
+function replacePhotoWithPhotoURL(url) {
+  $("#note_photo").after('<input type="url" name="note_photo_url" id="note_photo_url" value="" class="form-control">');
+  $("#note_photo_url").val(url);
+  $("#note_photo").remove();  
+  $("#photo_preview").attr("src", url);
+  $("#photo_preview_container").removeClass("hidden");
+}
+
 $(function(){
 
   var userHasSetCategory = false;
 
+  var hasMediaEndpoint = <?= $this->media_endpoint ? 'true' : 'false' ?>;
+
+  $("#note_content, #note_category, #note_in_reply_to, #note_slug").on('keyup change', function(e){
+    saveNoteState();
+  })
+
+  // Preview the photo when one is chosen
   $("#photo_preview_container").addClass("hidden");
   $("#note_photo").on("change", function(e){
-    $("#photo_preview_container").removeClass("hidden");
-    $("#photo_preview").attr("src", URL.createObjectURL(e.target.files[0]) );
+    // If the user has a media endpoint, upload the photo to it right now
+    if(hasMediaEndpoint) {
+      // TODO: add loading state indicator here
+      console.log("Uploading file to media endpoint...");
+      var formData = new FormData();
+      formData.append("null","null");
+      formData.append("photo", e.target.files[0]);
+      var request = new XMLHttpRequest();
+      request.open("POST", "/micropub/media");
+      request.onreadystatechange = function() {
+        if(request.readyState == XMLHttpRequest.DONE) {
+          try {
+            var response = JSON.parse(request.responseText);
+            if(response.location) {
+              // Replace the file upload form with the URL
+              replacePhotoWithPhotoURL(response.location);
+              saveNoteState();
+            } else {
+              console.log("Endpoint did not return a location header", response);
+            }
+          } catch(e) {
+            console.log(e);
+          }
+        }
+      }
+      request.send(formData);
+    } else {
+      $("#photo_preview").attr("src", URL.createObjectURL(e.target.files[0]) );
+      $("#photo_preview_container").removeClass("hidden");
+    }
   });
   $("#remove_photo").on("click", function(){
     $("#note_photo").val("");
@@ -163,7 +248,7 @@ $(function(){
 
     // If the user didn't enter any categories, add them from the post
     if(!userHasSetCategory) {
-      var tags = $("#note_content").val().match(/#[a-z0-9]+/g);
+      var tags = $("#note_content").val().match(/#[a-z][a-z0-9]+/ig);
       if(tags) {
         $("#note_category").val(tags.map(function(tag){ return tag.replace('#',''); }).join(", "));
       }
@@ -223,8 +308,11 @@ $(function(){
       formData.append("slug", v);
     }
 
-    if(document.getElementById("note_photo").files[0]) {
+    // Add either the photo as a file, or the photo URL depending on whether the user has a media endpoint
+    if(document.getElementById("note_photo") && document.getElementById("note_photo").files[0]) {
       formData.append("photo", document.getElementById("note_photo").files[0]);
+    } else if($("#note_photo_url").val()) {
+      formData.append("photo", $("#note_photo_url").val());
     }
 
     // Need to append a placeholder field because if the file size max is hit, $_POST will
@@ -240,6 +328,7 @@ $(function(){
         console.log(request.responseText);
         try {
           var response = JSON.parse(request.responseText);
+          localforage.removeItem('current-note');
           if(response.location) {
             window.location = response.location;
             // console.log(response.location);
@@ -362,6 +451,8 @@ $(function(){
   }
 
   bind_syndication_buttons();
+
+  restoreNoteState();
 });
 
 <?= partial('partials/syndication-js') ?>

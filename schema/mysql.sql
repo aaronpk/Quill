@@ -4,6 +4,7 @@ CREATE TABLE `users` (
   `authorization_endpoint` varchar(255) DEFAULT NULL,
   `token_endpoint` varchar(255) DEFAULT NULL,
   `micropub_endpoint` varchar(255) DEFAULT NULL,
+  `micropub_media_endpoint` varchar(255) DEFAULT NULL,
   `micropub_access_token` text,
   `micropub_scope` varchar(255) DEFAULT NULL,
   `micropub_response` text,

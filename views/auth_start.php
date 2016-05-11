@@ -36,7 +36,9 @@
   <p><i>The Micropub endpoint is the URL this app will use to post new photos.</i></p>
 
   <?php if($this->micropubEndpoint): ?>
-    <div class="bs-callout bs-callout-success">Found your Micropub endpoint: <code><?= $this->micropubEndpoint ?></code></div>
+    <div class="bs-callout bs-callout-success">
+      Found your Micropub endpoint: <code><?= $this->micropubEndpoint ?></code>
+    </div>
   <?php else: ?>
     <div class="bs-callout bs-callout-danger">Could not find your Micropub endpoint!</div>
     <p>You need to set your Micropub endpoint in a <code>&lt;link&gt;</code> tag on your home page.</p>

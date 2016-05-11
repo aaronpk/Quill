@@ -109,6 +109,20 @@ function micropub_post_for_user(&$user, $params, $file_path = NULL, $json = fals
   return $r;
 }
 
+function micropub_media_post_for_user(&$user, $file_path) {
+  // Send to the media endpoint
+  $r = micropub_post($user->micropub_media_endpoint, [], $user->micropub_access_token, $file_path, true);
+
+  // Check the response and look for a "Location" header containing the URL
+  if($r['response'] && preg_match('/Location: (.+)/', $r['response'], $match)) {
+    $r['location'] = trim($match[1]);
+  } else {
+    $r['location'] = false;
+  }
+
+  return $r;
+}
+
 function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $json = false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $endpoint);
@@ -154,7 +168,7 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $js
   $response = curl_exec($ch);
   $error = curl_error($ch);
   $sent_headers = curl_getinfo($ch, CURLINFO_HEADER_OUT);
-  $request = $sent_headers . $post;
+  $request = $sent_headers . (is_string($post) ? $post : http_build_query($post));
   return array(
     'request' => $request,
     'response' => $response,
@@ -193,15 +207,15 @@ function micropub_get($endpoint, $params, $access_token) {
   );
 }
 
-function get_syndication_targets(&$user) {
-  $targets = array();
+function get_micropub_config(&$user, $query=[]) {
+  $targets = [];
 
-  $r = micropub_get($user->micropub_endpoint, array('q'=>'syndicate-to'), $user->micropub_access_token);
+  $r = micropub_get($user->micropub_endpoint, $query, $user->micropub_access_token);
   if($r['data'] && array_key_exists('syndicate-to', $r['data'])) {
     if(is_array($r['data']['syndicate-to'])) {
       $data = $r['data']['syndicate-to'];
     } else {
-      $data = array();
+      $data = [];
     }
 
     foreach($data as $t) {
@@ -212,23 +226,31 @@ function get_syndication_targets(&$user) {
       }
 
       if(array_key_exists('uid', $t) && array_key_exists('name', $t)) {
-        $targets[] = array(
+        $targets[] = [
           'target' => $t['name'],
           'uid' => $t['uid'],
           'favicon' => $icon
-        );
+        ];
       }
     }
   }
-  if(count($targets)) {
+
+  if(count($targets))
     $user->syndication_targets = json_encode($targets);
+
+  $media_endpoint = false;
+  if(array_key_exists('media_endpoint', $r['data'])) {
+    $user->micropub_media_endpoint = $r['data']['media_endpoint'];
+  }
+
+  if(count($targets) || $media_endpoint) {
     $user->save();
   }
 
-  return array(
+  return [
     'targets' => $targets,
     'response' => $r
-  );
+  ];
 }
 
 function static_map($latitude, $longitude, $height=180, $width=700, $zoom=14) {
