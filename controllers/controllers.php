@@ -203,6 +203,7 @@ $app->post('/prefs', function() use($app) {
     $user->location_enabled = $params['enabled'];
     $user->save();
   }
+  $app->response()['Content-type'] = 'application/json';
   $app->response()->body(json_encode(array(
     'result' => 'ok'
   )));
@@ -311,6 +312,7 @@ $app->post('/settings/html-content', function() use($app) {
     $params = $app->request()->params();
     $user->micropub_optin_html_content = $params['html'] ? 1 : 0;
     $user->save();
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'html' => $user->micropub_optin_html_content
     )));
@@ -318,6 +320,7 @@ $app->post('/settings/html-content', function() use($app) {
 });
 $app->get('/settings/html-content', function() use($app) {
   if($user=require_login($app)) {
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'html' => $user->micropub_optin_html_content
     )));
@@ -431,6 +434,7 @@ $app->post('/favorite', function() use($app) {
 
     $r = create_favorite($user, $params['url']);
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'location' => $r['location'],
       'error' => $r['error']
@@ -444,6 +448,7 @@ $app->post('/repost', function() use($app) {
 
     $r = create_repost($user, $params['url']);
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'location' => $r['location'],
       'error' => $r['error']
@@ -454,6 +459,7 @@ $app->post('/repost', function() use($app) {
 $app->get('/micropub/syndications', function() use($app) {
   if($user=require_login($app)) {
     $data = get_micropub_config($user, ['q'=>'syndicate-to']);
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'targets' => $data['targets'],
       'response' => $data['response']
@@ -472,6 +478,7 @@ $app->post('/micropub/post', function() use($app) {
 
     $r = micropub_post_for_user($user, $params);
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'request' => htmlspecialchars($r['request']),
       'response' => htmlspecialchars($r['response']),
@@ -515,6 +522,7 @@ $app->post('/micropub/multipart', function() use($app) {
       $r['error'] = "No 'Location' header in response.";
     }
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'response' => (isset($r['response']) ? htmlspecialchars($r['response']) : null),
       'location' => (isset($r['location']) ? $r['location'] : null),
@@ -541,6 +549,7 @@ $app->post('/micropub/media', function() use($app) {
       $r['error'] = "No 'Location' header in response.";
     }
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'location' => (isset($r['location']) ? $r['location'] : null),
       'error' => (isset($r['error']) ? $r['error'] : null),
@@ -554,6 +563,7 @@ $app->post('/micropub/postjson', function() use($app) {
 
     $r = micropub_post_for_user($user, json_decode($params['data'], true), null, true);
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'location' => $r['location'],
       'error' => $r['error'],
@@ -589,10 +599,12 @@ $app->post('/auth/twitter', function() use($app) {
     $user->twitter_token_secret = $params['twitter_secret'];
     $user->save();
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'result' => 'ok'
     )));
   } else {
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'result' => 'error'
     )));
@@ -621,6 +633,7 @@ $app->get('/auth/twitter', function() use($app) {
     } else {
       if($user->twitter_access_token) {
         if ($twitter->get('account/verify_credentials')) {
+          $app->response()['Content-type'] = 'application/json';
           $app->response()->body(json_encode(array(
             'result' => 'ok'
           )));
@@ -634,11 +647,13 @@ $app->get('/auth/twitter', function() use($app) {
       }
     }
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'url' => $twitter_login_url
     )));
 
   } else {
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'result' => 'error'
     )));
@@ -673,6 +688,7 @@ $app->get('/auth/instagram', function() use($app) {
       $igUser = $instagram->getUser();
 
       if($igUser && $igUser->meta->code == 200) {
+        $app->response()['Content-type'] = 'application/json';
         $app->response()->body(json_encode(array(
           'result' => 'ok',
           'username' => $igUser->data->username,
@@ -682,6 +698,7 @@ $app->get('/auth/instagram', function() use($app) {
       }
     }
 
+    $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'result' => 'error',
       'url' => $instagram->getLoginUrl(array('basic','likes'))

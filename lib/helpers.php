@@ -240,7 +240,8 @@ function get_micropub_config(&$user, $query=[]) {
 
   $media_endpoint = false;
   if(array_key_exists('media_endpoint', $r['data'])) {
-    $user->micropub_media_endpoint = $r['data']['media_endpoint'];
+    $media_endpoint = $r['data']['media_endpoint'];
+    $user->micropub_media_endpoint = $media_endpoint;
   }
 
   if(count($targets) || $media_endpoint) {
