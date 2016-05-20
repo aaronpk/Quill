@@ -46,9 +46,7 @@ $(function(){
 
     $.post("/favorite", {
       url: $("#note_url").val()
-    }, function(data){
-      var response = JSON.parse(data);
-
+    }, function(response){
       if(response.location != false) {
 
         if(autosubmit) {

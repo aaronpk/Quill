@@ -185,8 +185,7 @@ $(function(){
           "category": category
         }
       })
-    }, function(data){
-      var response = JSON.parse(data);
+    }, function(response){
 
       if(response.location != false) {
         $("#test_success").removeClass('hidden');
