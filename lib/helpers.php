@@ -111,7 +111,7 @@ function micropub_post_for_user(&$user, $params, $file_path = NULL, $json = fals
 
 function micropub_media_post_for_user(&$user, $file_path) {
   // Send to the media endpoint
-  $r = micropub_post($user->micropub_media_endpoint, [], $user->micropub_access_token, $file_path, true);
+  $r = micropub_post($user->micropub_media_endpoint, [], $user->micropub_access_token, $file_path, true, 'file');
 
   // Check the response and look for a "Location" header containing the URL
   if($r['response'] && preg_match('/Location: (.+)/', $r['response'], $match)) {
@@ -123,7 +123,7 @@ function micropub_media_post_for_user(&$user, $file_path) {
   return $r;
 }
 
-function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $json = false) {
+function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $json = false, $file_prop = 'photo') {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $endpoint);
   curl_setopt($ch, CURLOPT_POST, true);
@@ -154,7 +154,7 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $js
     $mimetype = finfo_file($finfo, $file_path);
     $multipart = new p3k\Multipart();
     $multipart->addArray($params);
-    $multipart->addFile('photo', $file_path, $mimetype);
+    $multipart->addFile($file_prop, $file_path, $mimetype);
     $post = $multipart->data();
     array_push($httpheaders, 'Content-Type: ' . $multipart->contentType());
   }
