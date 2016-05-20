@@ -20,7 +20,9 @@ function reload_syndications() {
 function bind_syndication_buttons() {
   $("#syndication-container button").unbind("click").click(function(){
     $(this).toggleClass('btn-info');
-    saveNoteState();
+    if(window.saveNoteState) {
+      saveNoteState();
+    }
     return false;
   });
 }
