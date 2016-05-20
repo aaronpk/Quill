@@ -239,7 +239,7 @@ function get_micropub_config(&$user, $query=[]) {
     $user->syndication_targets = json_encode($targets);
 
   $media_endpoint = false;
-  if(array_key_exists('media-endpoint', $r['data'])) {
+  if($r['data'] && is_array($r['data']) && array_key_exists('media-endpoint', $r['data'])) {
     $media_endpoint = $r['data']['media-endpoint'];
     $user->micropub_media_endpoint = $media_endpoint;
   }
