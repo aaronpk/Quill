@@ -270,10 +270,6 @@ $(function(){
     }
   });
 
-  if($("#note_in_reply_to").val() != "") {
-    $("#note_in_reply_to").change();
-  }
-
   $("#btn_post").click(function(){
 
     // Collect all the syndication buttons that are pressed
@@ -452,7 +448,12 @@ $(function(){
 
   bind_syndication_buttons();
 
-  restoreNoteState();
+  if($("#note_in_reply_to").val() != "") {
+    $("#note_in_reply_to").change();
+  } else {
+    restoreNoteState();    
+  }
+
 });
 
 <?= partial('partials/syndication-js') ?>
