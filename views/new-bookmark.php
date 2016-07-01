@@ -71,7 +71,7 @@ $(function(){
 
     var syndications = [];
     $("#syndication-container button.btn-info").each(function(i,btn){
-      syndications.push($(btn).data('syndication'));
+      syndications.push($(btn).data('syndicate-to'));
     });
 
     $.post("/micropub/post", {
