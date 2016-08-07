@@ -27,7 +27,7 @@
         <div class="form-group">
           <label for="note_photo"><code>photo</code></label>
           <input type="file" name="note_photo" id="note_photo" accept="image/*">
-          <a href="javascript:switchToManualPhotoURL();" id="note_manual_photo">enter photo url</a>
+          <a href="javascript:void(0);" id="note_manual_photo">enter photo url</a>
           <br>
           <div id="photo_preview_container" class="hidden">
             <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
@@ -189,16 +189,6 @@ function replacePhotoWithPhotoURL(url) {
   $("#note_manual_photo").addClass("hidden");
 }
 
-function switchToManualPhotoURL() {
-  $("#note_photo").after('<input type="url" name="note_photo_url" id="note_photo_url" value="" class="form-control">');
-  $("#note_photo").remove();  
-  $("#note_photo_url").change(function(){
-    $("#photo_preview").attr("src", $(this).val());
-    $("#photo_preview_container").removeClass("hidden");
-  });
-  $("#note_manual_photo").addClass("hidden");
-}
-
 $(function(){
 
   var userHasSetCategory = false;
@@ -242,6 +232,16 @@ $(function(){
       $("#photo_preview").attr("src", URL.createObjectURL(e.target.files[0]) );
       $("#photo_preview_container").removeClass("hidden");
     }
+  });
+  $("#note_manual_photo").on("click", function(){
+    $("#note_photo").after('<input type="url" name="note_photo_url" id="note_photo_url" value="" class="form-control">');
+    $("#note_photo").remove();  
+    $("#note_photo_url").change(function(){
+      $("#photo_preview").attr("src", $(this).val());
+      $("#photo_preview_container").removeClass("hidden");
+      
+    });
+    $("#note_manual_photo").addClass("hidden");
   });
   $("#remove_photo").on("click", function(){
     $("#note_photo").val("");
