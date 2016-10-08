@@ -28,6 +28,7 @@
           <label for="note_photo"><code>photo</code></label>
           <input type="file" name="note_photo" id="note_photo" accept="image/*">
           <a href="javascript:switchToManualPhotoURL();" id="note_manual_photo">enter photo url</a>
+          <a href="javascript:addPhotoURL();" class="hidden" id="add_photo">add photo</a>
           <br>
           <div id="photo_preview_container" class="hidden">
             <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
@@ -181,7 +182,7 @@ function restoreNoteState() {
 }
 
 function replacePhotoWithPhotoURL(url) {
-  $("#note_photo").after('<input type="url" name="note_photo_url" id="note_photo_url" value="" class="form-control">');
+  $("#note_photo").after('<input type="url" name="note_photo_url[]" value="" class="note_photo_url form-control">');
   $("#note_photo_url").val(url);
   $("#note_photo").remove();  
   $("#photo_preview").attr("src", url);
@@ -190,13 +191,21 @@ function replacePhotoWithPhotoURL(url) {
 }
 
 function switchToManualPhotoURL() {
-  $("#note_photo").after('<input type="url" name="note_photo_url" id="note_photo_url" value="" class="form-control">');
+  $("#note_photo").after('<input type="url" name="note_photo_url[]" value="" class="note_photo_url form-control">');
   $("#note_photo").remove();  
   $("#note_photo_url").change(function(){
     $("#photo_preview").attr("src", $(this).val());
     $("#photo_preview_container").removeClass("hidden");
   });
   $("#note_manual_photo").addClass("hidden");
+  $("#add_photo").removeClass("hidden");
+}
+
+function addPhotoURL() {
+  $(".note_photo_url:last").after('<input type="url" name="note_photo_url[]" value="" class="note_photo_url form-control" style="margin-top:2px;">');
+  if($(".note_photo_url").length == 4) {
+    $("#add_photo").remove();
+  }
 }
 
 $(function(){
@@ -321,15 +330,18 @@ $(function(){
     // Add either the photo as a file, or the photo URL depending on whether the user has a media endpoint
     if(document.getElementById("note_photo") && document.getElementById("note_photo").files[0]) {
       formData.append("photo", document.getElementById("note_photo").files[0]);
-    } else if($("#note_photo_url").val()) {
-      formData.append("photo", $("#note_photo_url").val());
+    } else if($(".note_photo_url").val()) {
+      $(".note_photo_url").each(function(){
+        if($(this).val()) {
+          formData.append("photo[]", $(this).val());
+        }
+      });
     }
 
     // Need to append a placeholder field because if the file size max is hit, $_POST will
     // be empty, so the server needs to be able to recognize a post with only a file vs a failed one.
     // This will be stripped by Quill before it's sent to the Micropub endpoint
     formData.append("null","null");
-
 
     var request = new XMLHttpRequest();
     request.open("POST", "/micropub/multipart");
