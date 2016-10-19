@@ -183,7 +183,7 @@ function restoreNoteState() {
 
 function replacePhotoWithPhotoURL(url) {
   $("#note_photo").after('<input type="url" name="note_photo_url[]" value="" class="note_photo_url form-control">');
-  $("#note_photo_url").val(url);
+  $(".note_photo_url").val(url);
   $("#note_photo").remove();  
   $("#photo_preview").attr("src", url);
   $("#photo_preview_container").removeClass("hidden");
