@@ -254,7 +254,7 @@ $(function(){
   });
   $("#remove_photo").on("click", function(){
     $("#note_photo").val("");
-    $("#note_photo_url").val("");
+    $(".note_photo_url").val("");
     $("#photo_preview").attr("src", "" );
     $("#photo_preview_container").addClass("hidden");
     saveNoteState();
