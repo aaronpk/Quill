@@ -347,7 +347,7 @@ $(function(){
     request.open("POST", "/micropub/multipart");
     request.onreadystatechange = function() {
       if(request.readyState == XMLHttpRequest.DONE) {
-        console.log(request.responseText);
+        // console.log(request.responseText);
         try {
           var response = JSON.parse(request.responseText);
           localforage.removeItem('current-note');

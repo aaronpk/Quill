@@ -178,6 +178,18 @@ $app->get('/photo', function() use($app) {
   }
 });
 
+$app->get('/review', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $html = render('review', array(
+      'title' => 'Review',
+      'authorizing' => false
+    ));
+    $app->response()->body($html);
+  }
+});
+
 $app->get('/repost', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
