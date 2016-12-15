@@ -8,7 +8,7 @@
 
     <form role="form" style="margin-top: 20px;" id="note_form">
 
-      <h2>Item</h2>
+      <h2>Product</h2>
 
       <div class="row">
         <div class="col-xs-6">
@@ -63,6 +63,9 @@
 
 </div>
 <style type="text/css">
+.alert {
+  margin-top: 1em;
+}
 .rating-stars {
   display: flex;
   flex-direction: row;
@@ -208,7 +211,7 @@ $(function(){
 
     var review = {
       item: [{
-              type: "h-item",
+              type: "h-product",
               properties: {
                 name: [$("#item_name").val()],
                 url: [$("#item_url").val()]
