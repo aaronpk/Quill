@@ -12,7 +12,7 @@
       <p>To use Quill, sign in with your domain. Your website will need to support <a href="https://indieweb.org/micropub">Micropub</a> for creating new posts.</p>
 
       <form action="/auth/start" method="get" class="form-inline">
-        <input type="url" name="me" placeholder="https://example.com" value="" class="form-control" onchange="auto_prefix_url_field(this)">
+        <input type="url" name="me" placeholder="https://example.com" value="" class="form-control" onchange="auto_prefix_url_field(this)" autofocus>
         <input type="submit" value="Sign In" class="btn btn-primary">
         <input type="hidden" name="client_id" value="https://quill.p3k.io">
         <input type="hidden" name="redirect_uri" value="https://quill.p3k.io/auth/callback">
