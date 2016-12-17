@@ -14,8 +14,8 @@
       <form action="/auth/start" method="get" class="form-inline">
         <input type="url" name="me" placeholder="https://example.com" value="" class="form-control" onchange="auto_prefix_url_field(this)" autofocus>
         <input type="submit" value="Sign In" class="btn btn-primary">
-        <input type="hidden" name="client_id" value="https://quill.p3k.io">
-        <input type="hidden" name="redirect_uri" value="https://quill.p3k.io/auth/callback">
+        <input type="hidden" name="client_id" value="<?= Config::$base_url ?>">
+        <input type="hidden" name="redirect_uri" value="<?= Config::$base_url ?>auth/callback">
       </form>
     <? endif; ?>
 
