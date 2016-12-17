@@ -212,7 +212,7 @@ $app->get('/auth/callback', function() use($app) {
 
     // Make a request to the micropub endpoint to discover the syndication targets and media endpoint if any.
     // Errors are silently ignored here. The user will be able to retry from the new post interface and get feedback.
-    get_micropub_config($user);
+    get_micropub_config($user, ['q'=>'config']);
   }
 
   unset($_SESSION['auth_state']);
