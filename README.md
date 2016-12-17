@@ -1,8 +1,8 @@
 Quill
 =====
-[Micropub](http://micropub.net/draft/) client written in PHP.
+[Micropub](https://micropub.net/draft/) client written in PHP.
 
-Work in progress. Do not use!
+A hosted version is available to try at:
 
 https://quill.p3k.io/
 
@@ -48,7 +48,7 @@ server {
 ```
 
 #### Apache .htaccess
-An `.htacces` file is already located in the `public/` folder.
+An `.htaccess` file is already located in the `public/` folder.
 
 
 ### Contributing
@@ -63,7 +63,7 @@ Quill icon designed by [Juan Pablo Bravo from the Noun Project](http://thenounpr
 
 ## License
 
-Copyright 2013 by Aaron Parecki
+Copyright 2013-2016 by Aaron Parecki and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
