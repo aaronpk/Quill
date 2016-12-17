@@ -40,12 +40,6 @@
   </head>
 
 <body role="document">
-<?php
-if(property_exists($this, 'include_facebook')) {
-  # echo partial('partials/fb-script');
-}
-?>
-
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

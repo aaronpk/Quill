@@ -314,7 +314,11 @@ $app->get('/email', function() use($app) {
 
 $app->get('/settings', function() use($app) {
   if($user=require_login($app)) {
-    $html = render('settings', array('title' => 'Settings', 'include_facebook' => true, 'authorizing' => false));
+    $html = render('settings', [
+      'title' => 'Settings',
+      'user' => $user,
+      'authorizing' => false
+    ]);
     $app->response()->body($html);
   }
 });
@@ -339,54 +343,15 @@ $app->get('/settings/html-content', function() use($app) {
   }
 });
 
-$app->get('/favorite-popup', function() use($app) {
-  if($user=require_login($app)) {
-    $params = $app->request()->params();
-
-    $html = $app->render('favorite-popup.php', array(
-      'url' => $params['url'],
-      'token' => $params['token']
-    ));
-    $app->response()->body($html);
-  }
-});
-
 function create_favorite(&$user, $url) {
   $micropub_request = array(
     'like-of' => $url
   );
   $r = micropub_post_for_user($user, $micropub_request);
 
-  $facebook_id = false;
-  $instagram_id = false;
   $tweet_id = false;
 
-  /*
-  // Facebook likes are posted via Javascript, so pass the FB ID to the javascript code
-  if(preg_match('/https?:\/\/(?:www\.)?facebook\.com\/(?:[^\/]+)\/posts\/(\d+)/', $url, $match)) {
-    $facebook_id = $match[1];
-  }
-
-  if(preg_match('/https?:\/\/(?:www\.)?facebook\.com\/photo\.php\?fbid=(\d+)/', $url, $match)) {
-    $facebook_id = $match[1];
-  }
-  */
-
-  if(preg_match('/https?:\/\/(?:www\.)?instagram\.com\/p\/([^\/]+)/', $url, $match)) {
-    $instagram_id = $match[1];
-    if($user->instagram_access_token) {
-      $instagram = instagram_client();
-      $instagram->setAccessToken($user->instagram_access_token);
-      $ch = curl_init('https://api.instagram.com/v1/media/shortcode/' . $instagram_id . '?access_token=' . $user->instagram_access_token);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      $result = json_decode(curl_exec($ch));
-
-      $result = $instagram->likeMedia($result->data->id);
-    } else {
-      // TODO: indicate that the instagram post couldn't be liked because no access token was available
-    }
-  }
-
+  // POSSE favorites to Twitter
   if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
     $tweet_id = $match[1];
     $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
@@ -416,29 +381,6 @@ function create_repost(&$user, $url) {
 
   return $r;
 }
-
-$app->get('/favorite.js', function() use($app) {
-  $app->response()->header("Content-type", "text/javascript");
-  if($user=require_login($app, false)) {
-    $params = $app->request()->params();
-
-    if(array_key_exists('url', $params)) {
-      $r = create_favorite($user, $params['url']);
-
-      $app->response()->body($app->render('favorite-js.php', array(
-        'url' => $params['url'],
-        'like_url' => $r['location'],
-        'error' => $r['error'],
-        // 'facebook_id' => $facebook_id
-      )));
-    } else {
-      $app->response()->body('alert("no url");');
-    }
-
-  } else {
-    $app->response()->body('alert("invalid token");');
-  }
-});
 
 $app->post('/favorite', function() use($app) {
   if($user=require_login($app)) {
