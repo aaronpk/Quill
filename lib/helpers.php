@@ -240,7 +240,7 @@ function get_micropub_config(&$user, $query=[]) {
   $targets = [];
 
   $r = micropub_get($user->micropub_endpoint, $query, $user->micropub_access_token);
-  if($r['data'] && array_key_exists('syndicate-to', $r['data'])) {
+  if($r['data'] && is_array($r['data']) && array_key_exists('syndicate-to', $r['data'])) {
     if(is_array($r['data']['syndicate-to'])) {
       $data = $r['data']['syndicate-to'];
     } else {
@@ -248,13 +248,13 @@ function get_micropub_config(&$user, $query=[]) {
     }
 
     foreach($data as $t) {
-      if(array_key_exists('service', $t) && array_key_exists('photo', $t['service'])) {
+      if(is_array($t) && array_key_exists('service', $t) && array_key_exists('photo', $t['service'])) {
         $icon = $t['service']['photo'];
       } else {
         $icon = false;
       }
 
-      if(array_key_exists('uid', $t) && array_key_exists('name', $t)) {
+      if(is_array($t) && array_key_exists('uid', $t) && array_key_exists('name', $t)) {
         $targets[] = [
           'target' => $t['name'],
           'uid' => $t['uid'],
