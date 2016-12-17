@@ -97,8 +97,9 @@ function micropub_post_for_user(&$user, $params, $file_path = NULL, $json = fals
   $user->last_micropub_response_date = date('Y-m-d H:i:s');
 
   // Check the response and look for a "Location" header containing the URL
-  if($r['response'] && preg_match('/Location: (.+)/', $r['response'], $match)) {
-    $r['location'] = trim($match[1]);
+  if($r['response'] && ($r['code'] == 201 || $r['code'] == 202) 
+    && isset($r['headers']['Location'])) {
+    $r['location'] = $r['headers']['Location'][0];
     $user->micropub_success = 1;
   } else {
     $r['location'] = false;
@@ -168,10 +169,16 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $js
   $response = curl_exec($ch);
   $error = curl_error($ch);
   $sent_headers = curl_getinfo($ch, CURLINFO_HEADER_OUT);
+
+  $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+  $header_str = trim(substr($response, 0, $header_size));
+
   $request = $sent_headers . (is_string($post) ? $post : http_build_query($post));
   return array(
     'request' => $request,
     'response' => $response,
+    'code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+    'headers' => parse_headers($header_str),
     'error' => $error,
     'curlinfo' => curl_getinfo($ch)
   );
@@ -205,6 +212,28 @@ function micropub_get($endpoint, $params, $access_token) {
     'error' => $error,
     'curlinfo' => curl_getinfo($ch)
   );
+}
+
+function parse_headers($headers) {
+  $retVal = array();
+  $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $headers));
+  foreach($fields as $field) {
+    if(preg_match('/([^:]+): (.+)/m', $field, $match)) {
+      $match[1] = preg_replace_callback('/(?<=^|[\x09\x20\x2D])./', function($m) {
+        return strtoupper($m[0]);
+      }, strtolower(trim($match[1])));
+      // If there's already a value set for the header name being returned, turn it into an array and add the new value
+      $match[1] = preg_replace_callback('/(?<=^|[\x09\x20\x2D])./', function($m) {
+        return strtoupper($m[0]);
+      }, strtolower(trim($match[1])));
+      if(isset($retVal[$match[1]])) {
+        $retVal[$match[1]][] = trim($match[2]);
+      } else {
+        $retVal[$match[1]] = [trim($match[2])];
+      }
+    }
+  }
+  return $retVal;
 }
 
 function get_micropub_config(&$user, $query=[]) {
