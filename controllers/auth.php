@@ -1,12 +1,15 @@
 <?php
 
-function buildRedirectURI() {
-  return Config::$base_url . 'auth/callback';
+function buildRedirectURI($params = array()) {
+  return Config::$base_url . 'auth/callback?' . http_build_query($params);
 }
 
 $app->get('/', function($format='html') use($app) {
   $res = $app->response();
-
+  $params = $app->request()->params();
+  if (k($params, 'me')) {
+    $app->redirect('/auth/start?'.http_build_query($params), 302);
+  }
 
   ob_start();
   render('index', array(
@@ -49,7 +52,10 @@ $app->get('/auth/start', function() use($app) {
     $_SESSION['auth_state'] = $state;
 
     $scope = 'post';
-    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI(), Config::$base_url, $state, $scope);
+    $cleanparams = $params;
+    unset($cleanparams['me']);
+    unset($cleanparams['redirect']);
+    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI($cleanparams), Config::$base_url, $state, $scope);
   } else {
     $authorizationURL = false;
   }
@@ -85,6 +91,10 @@ $app->get('/auth/start', function() use($app) {
     $user->token_endpoint = $tokenEndpoint;
     $user->micropub_access_token = ''; // blank out the access token if they attempt to sign in again
     $user->save();
+
+    if (k($params, 'dontask') && $params['dontask']) {
+        $app->redirect($authorizationURL, 302);
+    }
 
     $html = render('auth_start', array(
       'title' => 'Sign In',
@@ -206,13 +216,17 @@ $app->get('/auth/callback', function() use($app) {
 
   unset($_SESSION['auth_state']);
 
-  if($redirectToDashboardImmediately) {
+  if($redirectToDashboardImmediately || k($params, 'dontask')) {
     if(k($_SESSION, 'redirect_after_login')) {
       $dest = $_SESSION['redirect_after_login'];
       unset($_SESSION['redirect_after_login']);
       $app->redirect($dest, 301);
     } else {
-      $app->redirect('/new', 301);
+      $cleanparams = $params;
+      unset($cleanparams['code']);
+      unset($cleanparams['me']);
+      unset($cleanparams['state']);
+      $app->redirect('/new?' . http_build_query($cleanparams), 301);
     }
   } else {
     $html = render('auth_callback', array(
