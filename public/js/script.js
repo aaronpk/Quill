@@ -39,3 +39,11 @@ $(function(){
   });
 
 })
+
+function auto_prefix_url_field(field) {
+  var str = field.value;
+  if(!/^https?:\/\//.test(str)) {
+    str = "http://" + str;
+  }
+  field.value = str;
+}
