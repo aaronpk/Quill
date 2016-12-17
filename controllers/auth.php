@@ -1,7 +1,7 @@
 <?php
 
-function buildRedirectURI($params = array()) {
-  return Config::$base_url . 'auth/callback?' . http_build_query($params);
+function buildRedirectURI() {
+  return Config::$base_url . 'auth/callback';
 }
 
 $app->get('/', function($format='html') use($app) {
@@ -41,6 +41,9 @@ $app->get('/auth/start', function() use($app) {
   if(k($params, 'redirect')) {
     $_SESSION['redirect_after_login'] = $params['redirect'];
   }
+  if(k($params, 'reply')) {
+    $_SESSION['reply'] = $params['reply'];
+  }
 
   $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($me);
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
@@ -52,10 +55,7 @@ $app->get('/auth/start', function() use($app) {
     $_SESSION['auth_state'] = $state;
 
     $scope = 'post';
-    $cleanparams = $params;
-    unset($cleanparams['me']);
-    unset($cleanparams['redirect']);
-    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI($cleanparams), Config::$base_url, $state, $scope);
+    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI(), Config::$base_url, $state, $scope);
   } else {
     $authorizationURL = false;
   }
@@ -78,7 +78,7 @@ $app->get('/auth/start', function() use($app) {
     $user->token_endpoint = $tokenEndpoint;
     $user->save();
 
-    $app->redirect($authorizationURL, 301);
+    $app->redirect($authorizationURL, 302);
 
   } else {
 
@@ -92,8 +92,9 @@ $app->get('/auth/start', function() use($app) {
     $user->micropub_access_token = ''; // blank out the access token if they attempt to sign in again
     $user->save();
 
-    if (k($params, 'dontask') && $params['dontask']) {
-        $app->redirect($authorizationURL, 302);
+    if(k($params, 'dontask') && $params['dontask']) {
+      $_SESSION['dontask'] = 1;
+      $app->redirect($authorizationURL, 302);
     }
 
     $html = render('auth_start', array(
@@ -216,17 +217,19 @@ $app->get('/auth/callback', function() use($app) {
 
   unset($_SESSION['auth_state']);
 
-  if($redirectToDashboardImmediately || k($params, 'dontask')) {
+  if($redirectToDashboardImmediately || k($_SESSION, 'dontask')) {
+    unset($_SESSION['dontask']);
     if(k($_SESSION, 'redirect_after_login')) {
       $dest = $_SESSION['redirect_after_login'];
       unset($_SESSION['redirect_after_login']);
-      $app->redirect($dest, 301);
+      $app->redirect($dest, 302);
     } else {
-      $cleanparams = $params;
-      unset($cleanparams['code']);
-      unset($cleanparams['me']);
-      unset($cleanparams['state']);
-      $app->redirect('/new?' . http_build_query($cleanparams), 301);
+      $query = [];
+      if(k($_SESSION, 'reply')) {
+        $query['reply'] = $_SESSION['reply'];
+        unset($_SESSION['reply']);
+      }
+      $app->redirect('/new?' . http_build_query($query), 302);
     }
   } else {
     $html = render('auth_callback', array(
@@ -249,7 +252,7 @@ $app->get('/signout', function() use($app) {
   unset($_SESSION['me']);
   unset($_SESSION['auth_state']);
   unset($_SESSION['user_id']);
-  $app->redirect('/', 301);
+  $app->redirect('/', 302);
 });
 
 
