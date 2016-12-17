@@ -71,17 +71,17 @@ if(property_exists($this, 'include_facebook')) {
       <ul class="nav navbar-nav">
 
         <?php if(session('me')) { ?>
-          <li><a href="/editor">Editor</a></li>
-          <li><a href="/new">Note</a></li>
-          <li><a href="/bookmark">Bookmark</a></li>
-          <li><a href="/favorite">Favorite</a></li>
+          <li><a href="/editor">📄 Editor</a></li>
+          <li><a href="/new">✏️ Note</a></li>
+          <li><a href="/bookmark">🔖 Bookmark</a></li>
+          <li><a href="/favorite">👍 Favorite</a></li>
         <?php } ?>
 
         <li><a href="/docs">Docs</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php if(session('me')) { ?>
-          <li><a href="/settings"><?= preg_replace(array('/https?:\/\//','/\/$/'),'',session('me')) ?></a></li>
+          <li><a href="/settings">⚙ <?= preg_replace(array('/https?:\/\//','/\/$/'),'',session('me')) ?></a></li>
           <li><a href="/signout">Sign Out</a></li>
         <?php } else if(property_exists($this, 'authorizing')) { ?>
           <li class="navbar-text"><?= $this->authorizing ?></li>
