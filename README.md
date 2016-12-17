@@ -1,9 +1,24 @@
 Quill
 =====
+[Micropub](http://micropub.net/draft/) client written in PHP.
 
 Work in progress. Do not use!
 
 https://quill.p3k.io/
+
+
+## Dependencies
+- PHP
+- MySQL or SQLite
+- Composer for further dependency installation
+
+
+## Setup
+- Follow the "Web Server Configuration" section
+- Run `composer install`
+- Copy `lib/config.template.php` to `lib/config.php` and adjust it
+- Import `schema/mysql.sql` (or `schema/sqlite.sql`)
+- Open the Quill URL in your Browser
 
 
 ### Web Server Configuration
@@ -32,18 +47,8 @@ server {
 }
 ```
 
-#### Apache htaccess
-
-```
-  RewriteEngine on
-
-  RewriteBase /
-
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} !=/favicon.ico
-  RewriteRule ^ index.php [L]
-```
+#### Apache .htaccess
+An `.htacces` file is already located in the `public/` folder.
 
 
 ### Contributing
@@ -51,12 +56,12 @@ server {
 By submitting code to this project, you agree to irrevocably release it under the same license as this project.
 
 
-### Credits 
+## Credits
 
 Quill icon designed by [Juan Pablo Bravo from the Noun Project](http://thenounproject.com/term/quill/17013/).
 
 
-### License
+## License
 
 Copyright 2013 by Aaron Parecki
 
