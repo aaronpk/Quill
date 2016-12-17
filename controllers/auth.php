@@ -4,23 +4,6 @@ function buildRedirectURI() {
   return Config::$base_url . 'auth/callback';
 }
 
-$app->get('/', function($format='html') use($app) {
-  $res = $app->response();
-  $params = $app->request()->params();
-  if (k($params, 'me')) {
-    $app->redirect('/auth/start?'.http_build_query($params), 302);
-  }
-
-  ob_start();
-  render('index', array(
-    'title' => 'Quill',
-    'meta' => '',
-    'authorizing' => false
-  ));
-  $html = ob_get_clean();
-  $res->body($html);
-});
-
 $app->get('/auth/start', function() use($app) {
   $req = $app->request();
 

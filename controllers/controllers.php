@@ -221,24 +221,6 @@ $app->post('/prefs', function() use($app) {
   )));
 });
 
-$app->get('/creating-a-token-endpoint', function() use($app) {
-  $app->redirect('http://indiewebcamp.com/token-endpoint', 301);
-});
-$app->get('/creating-a-micropub-endpoint', function() use($app) {
-  $html = render('creating-a-micropub-endpoint', array('title' => 'Creating a Micropub Endpoint', 'authorizing' => false));
-  $app->response()->body($html);
-});
-
-$app->get('/docs', function() use($app) {
-  $html = render('docs', array('title' => 'Documentation', 'authorizing' => false));
-  $app->response()->body($html);
-});
-
-$app->get('/privacy', function() use($app) {
-  $html = render('privacy', array('title' => 'Quill Privacy Policy', 'authorizing' => false));
-  $app->response()->body($html);
-});
-
 $app->get('/add-to-home', function() use($app) {
   $params = $app->request()->params();
   header("Cache-Control: no-cache, must-revalidate");

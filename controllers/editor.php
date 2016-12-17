@@ -8,7 +8,6 @@ $app->get('/editor', function() use($app) {
 });
 
 $app->post('/editor/publish', function() use($app) {
-
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
