@@ -69,10 +69,16 @@ $(function(){
 
   $("#btn_post").click(function(){
 
+    if($("#note_bookmark").val() == "") {
+      return false;
+    }
+
     var syndications = [];
     $("#syndication-container button.btn-info").each(function(i,btn){
       syndications.push($(btn).data('syndicate-to'));
     });
+
+    $("#btn_post").addClass("loading disabled").text("Working...");
 
     $.post("/micropub/post", {
       'bookmark-of': $("#note_bookmark").val(),
@@ -86,6 +92,7 @@ $(function(){
         $("#test_success").removeClass('hidden');
         $("#test_error").addClass('hidden');
         $("#post_href").attr("href", response.location);
+        $("#note_form").addClass('hidden');
 
         // $("#note_bookmark").val("");
         // $("#note_content").val("");
@@ -95,6 +102,7 @@ $(function(){
       } else {
         $("#test_success").addClass('hidden');
         $("#test_error").removeClass('hidden');
+        $("#btn_post").removeClass("loading disabled").text("Post");
       }
 
     });

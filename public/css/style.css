@@ -197,3 +197,7 @@ body {
   .callout table {
     margin-bottom: 0;
   }
+
+  .notice-pad {
+    margin-top: 20px;
+  }
