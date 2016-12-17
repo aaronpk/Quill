@@ -5,14 +5,19 @@
 
     <p class="tagline">Quill is a simple app for posting text notes to your website.</p>
 
-    <p>To use Quill, sign in with your domain. Your website will need to support <a href="http://indiewebcamp.com/micropub">Micropub</a> for creating new posts.</p>
+    <? if(session('me')): ?>
+      <p>You're already signed in!<p>
+      <p><a href="/dashboard" class="btn btn-primary">Continue</a></p>
+    <? else: ?>
+      <p>To use Quill, sign in with your domain. Your website will need to support <a href="https://indieweb.org/micropub">Micropub</a> for creating new posts.</p>
 
-    <form action="/auth/start" method="get" class="form-inline">
-      <input type="url" name="me" placeholder="https://example.com" value="" class="form-control" onchange="auto_prefix_url_field(this)">
-      <input type="submit" value="Sign In" class="btn btn-primary">
-      <input type="hidden" name="client_id" value="https://quill.p3k.io">
-      <input type="hidden" name="redirect_uri" value="https://quill.p3k.io/auth/callback">
-    </form>
+      <form action="/auth/start" method="get" class="form-inline">
+        <input type="url" name="me" placeholder="https://example.com" value="" class="form-control" onchange="auto_prefix_url_field(this)">
+        <input type="submit" value="Sign In" class="btn btn-primary">
+        <input type="hidden" name="client_id" value="https://quill.p3k.io">
+        <input type="hidden" name="redirect_uri" value="https://quill.p3k.io/auth/callback">
+      </form>
+    <? endif; ?>
 
   </div>
 
