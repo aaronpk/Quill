@@ -74,6 +74,15 @@ function get_timezone($lat, $lng) {
   return null;
 }
 
+function display_url($url) {
+  $parts = parse_url($url);
+  if($parts['path'] != '' && $parts['path'] != '/') {
+    return preg_replace('/^https?:\/\//','', $url);
+  } else {
+    return $parts['host'];
+  }
+}
+
 if(!function_exists('http_build_url')) {
   function http_build_url($parsed_url) {
     $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
