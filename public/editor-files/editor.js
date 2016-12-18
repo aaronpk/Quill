@@ -1,6 +1,6 @@
 var editor = new MediumEditor('.editable', {
   toolbar: {
-    buttons: ['bold', 'italic', 'anchor', 'h1', 'h2', 'quote', 'pre', 'unorderedlist']
+    buttons: ['bold', 'italic', 'anchor', 'h2', 'h3', 'quote', 'pre', 'unorderedlist']
   },
   placeholder: {text: 'Write something nice...'},
   paste: {
