@@ -2,7 +2,9 @@
 
 $app->get('/editor', function() use($app) {
   if($user=require_login($app)) {
-    $html = $app->render('editor.php');
+    $html = $app->render('editor.php', [
+      'user' => $user
+    ]);
     $app->response()->body($html);
   }
 });

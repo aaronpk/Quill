@@ -3,8 +3,8 @@
   <head>
     <title>Quill Editor</title>
     <meta charset="utf-8">
-    <link rel="pingback" href="http://webmention.io/aaronpk/xmlrpc" />
-    <link rel="webmention" href="http://webmention.io/aaronpk/webmention" />
+    <link rel="pingback" href="https://webmention.io/aaronpk/xmlrpc" />
+    <link rel="webmention" href="https://webmention.io/aaronpk/webmention" />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <!-- standard viewport tag to set the viewport to the device's width
@@ -44,6 +44,7 @@
 <div class="toolbar">
   <div class="toolbar-left">
     <span class="item"><a href="/"><img src="/editor-files/quill-logo-36.png" width="36" height="31" class="logo"></a></span>
+    <span class="item text"><b><?= display_url($this->user->url) ?></b></span>
     <span class="item text"><span id="draft-status">Draft</span></span>
   </div>
   <div class="toolbar-right">
@@ -69,8 +70,10 @@
     <div style="clear:right;"></div>
 
     <div class="helptext" id="publish-help">
-      <div>Clicking "Publish Now" will send a request to your Micropub endpoint.</div><br>
-      <div>The request will include two fields, "name" and "content", where the content will be the full HTML for this post.</div>
+      <div style="font-size:0.8em;">
+        Clicking "Publish Now" will send a request to your Micropub endpoint.<br><br>
+        The request will include two fields, "name" and "content", where the content will be the full HTML for this post.
+      </div>
     </div>
 
     <div class="helptext hidden" id="publish-in-progress">
@@ -78,7 +81,6 @@
     </div>
 
     <div class="helptext hidden" id="publish-success">
-      <div>It worked! The post is on your site!</div><br>
       <div><a href="" id="publish-success-url">View your post</a></div>
     </div>
 
@@ -98,12 +100,6 @@
 <div class="container">
   <input id="post-name" type="text" value="" placeholder="Title">
   <div id="content" class="editable"></div>
-</div>
-
-<div id="new_version_available">
-  <div class="inner">
-    There is a new version available! Refresh to load the new version.
-  </div>
 </div>
 
 <script src="/editor-files/editor.js"></script>

@@ -75,7 +75,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php if(session('me')) { ?>
-          <li><a href="/settings">⚙ <?= preg_replace(array('/https?:\/\//','/\/$/'),'',session('me')) ?></a></li>
+          <li><a href="/settings">⚙ <?= display_url(session('me')) ?></a></li>
           <li><a href="/signout">Sign Out</a></li>
         <?php } else if(property_exists($this, 'authorizing')) { ?>
           <li class="navbar-text"><?= $this->authorizing ?></li>

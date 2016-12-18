@@ -75,7 +75,7 @@ img { border: 0; }
 .toolbar-left .logo {
   vertical-align: middle;
 }
-#draft-status {
+.toolbar .item.text {
   color: #aaa;
   font-family: sans-serif;
   font-size: 16px;
