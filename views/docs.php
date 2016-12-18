@@ -34,7 +34,7 @@
 
   <h2 id="syndication">Syndication Targets</h2>
 
-  <p>You can provide a list of supported syndication targets that will appear as checkboxes when you are creating a new post.</p>
+  <p>You can provide a list of supported <a href="https://www.w3.org/TR/micropub/#syndication-targets">syndication targets</a> that will appear as checkboxes when you are creating a new post.</p>
 
   <p>To do this, your Micropub endpoint will need to respond to a GET request containing a query string of <code>q=syndicate-to</code>. This request will be made with the access token that was generated for this app, so you can choose which syndication targets you want to allow this app to use.</p>
 
@@ -44,17 +44,24 @@
 Authorization: Bearer xxxxxxxxxx
 
 HTTP/1.1 200 OK
-Content-type: application/x-www-form-urlencoded
+Content-type: application/json
 
-syndicate-to[]=twitter.com%2Faaronpk&syndicate-to[]=facebook.com%2Faaronpk
+{
+  "syndicate-to": [
+    {
+      "uid": "https://twitter.com/aaronpk",
+      "name": "twitter.com/aaronpk"
+    },
+    {
+      "uid": "https://news.indieweb.org/en",
+      "name": "IndieNews"
+    }
+  ]
+}
 </code></pre>
 
-  <p>The response should be a form-encoded reply with an array, <code>syndicate-to</code> of all the supported syndication targets. The actual values are up to your Micropub endpoint, but a good convention is to use the domain name of the service (e.g. twitter.com), or domain name and username (e.g. twitter.com/aaronpk).</p>
-
-  <p>If you do include the domain name, Quill will be able to show icons for recognized services next to the checkboxes.</p>
+  <p>The specific values of names and uids are up to your Micropub endpoint, but a good convention is to use the domain name of the service (e.g. https://twitter.com), or domain name and username (e.g. https://twitter.com/aaronpk) for the uid, and a friendly name like "Twitter" or "twitter.com/aaronpk" as the name.</p>
 
   <p>Quill will check for your supported syndication targets when you sign in, but there is also a link on the new post screen to manually re-check if you'd like.</p>
-
-
 
 </div>
