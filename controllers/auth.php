@@ -1,4 +1,5 @@
 <?php
+use Abraham\TwitterOAuth\TwitterOAuth;
 
 function buildRedirectURI() {
   return Config::$base_url . 'auth/callback';
@@ -260,9 +261,11 @@ $app->post('/auth/twitter', function() use($app) {
 });
 
 function getTwitterLoginURL(&$twitter) {
-  $request_token = $twitter->getRequestToken(Config::$base_url . 'auth/twitter/callback');
+  $request_token = $twitter->oauth('oauth/request_token', [
+    'oauth_callback' => Config::$base_url . 'auth/twitter/callback'
+  ]);
   $_SESSION['twitter_auth'] = $request_token;
-  return $twitter->getAuthorizeURL($request_token['oauth_token']);
+  return $twitter->url('oauth/authorize', ['oauth_token' => $request_token['oauth_token']]);
 }
 
 $app->get('/auth/twitter', function() use($app) {
@@ -272,15 +275,16 @@ $app->get('/auth/twitter', function() use($app) {
     // If there is an existing Twitter token, check if it is valid
     // Otherwise, generate a Twitter login link
     $twitter_login_url = false;
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
-      $user->twitter_access_token, $user->twitter_token_secret);
 
     if(array_key_exists('login', $params)) {
-      $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret);
+      $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret);
       $twitter_login_url = getTwitterLoginURL($twitter);
     } else {
+      $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret,
+        $user->twitter_access_token, $user->twitter_token_secret);
+
       if($user->twitter_access_token) {
-        if ($twitter->get('account/verify_credentials')) {
+        if($twitter->get('account/verify_credentials')) {
           $app->response()['Content-type'] = 'application/json';
           $app->response()->body(json_encode(array(
             'result' => 'ok'
@@ -312,9 +316,9 @@ $app->get('/auth/twitter/callback', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
+    $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret,
       $_SESSION['twitter_auth']['oauth_token'], $_SESSION['twitter_auth']['oauth_token_secret']);
-    $credentials = $twitter->getAccessToken($params['oauth_verifier']);
+    $credentials = $twitter->oauth('oauth/access_token', ['oauth_verifier' => $params['oauth_verifier']]);
 
     $user->twitter_access_token = $credentials['oauth_token'];
     $user->twitter_token_secret = $credentials['oauth_token_secret'];

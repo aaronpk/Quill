@@ -4,20 +4,75 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "66741248756ed56d19ea2afd34809fe2",
+    "hash": "4756e7ef0035b8f768f07d252adbdc17",
+    "content-hash": "f4709cc6bd166e3759fbedbfbaa7752e",
     "packages": [
         {
-            "name": "andreyco/instagram",
-            "version": "v3.2",
+            "name": "abraham/twitteroauth",
+            "version": "0.7.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Andreyco/Instagram-for-PHP.git",
-                "reference": "726e724c51301410873d9bae9c659a0597ca47e4"
+                "url": "https://github.com/abraham/twitteroauth.git",
+                "reference": "119d5a83478a2d21c09cd27980ab67eba11c8fe1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Andreyco/Instagram-for-PHP/zipball/726e724c51301410873d9bae9c659a0597ca47e4",
-                "reference": "726e724c51301410873d9bae9c659a0597ca47e4",
+                "url": "https://api.github.com/repos/abraham/twitteroauth/zipball/119d5a83478a2d21c09cd27980ab67eba11c8fe1",
+                "reference": "119d5a83478a2d21c09cd27980ab67eba11c8fe1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "~2.4",
+                "phpunit/phpunit": "~5.6",
+                "squizlabs/php_codesniffer": "~2.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Abraham\\TwitterOAuth\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abraham Williams",
+                    "email": "abraham@abrah.am",
+                    "homepage": "https://abrah.am",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
+            "homepage": "https://twitteroauth.com",
+            "keywords": [
+                "Twitter API",
+                "Twitter oAuth",
+                "api",
+                "oauth",
+                "rest",
+                "social",
+                "twitter"
+            ],
+            "time": "2016-12-12 17:42:13"
+        },
+        {
+            "name": "andreyco/instagram",
+            "version": "3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Andreyco/Instagram-for-PHP.git",
+                "reference": "8c1b98f601a68142095461c0b8a9498375145e0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Andreyco/Instagram-for-PHP/zipball/8c1b98f601a68142095461c0b8a9498375145e0d",
+                "reference": "8c1b98f601a68142095461c0b8a9498375145e0d",
                 "shasum": ""
             },
             "require": {
@@ -42,12 +97,12 @@
                 }
             ],
             "description": "An easy-to-use PHP Class for accessing Instagram's API.",
-            "homepage": "https://github.com/Andreyco/Instagram",
+            "homepage": "https://github.com/Andreyco/Instagram-for-PHP",
             "keywords": [
                 "api",
                 "instagram"
             ],
-            "time": "2014-07-14 19:53:19"
+            "time": "2016-07-17 23:42:10"
         },
         {
             "name": "barnabywalters/mf-cleaner",
@@ -135,16 +190,16 @@
         },
         {
             "name": "indieauth/client",
-            "version": "0.1.11",
+            "version": "0.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/indieauth-client-php.git",
-                "reference": "6504ed0d4714084e9955f639d6e5cf4e976f9038"
+                "reference": "d438bb03db15b4ccc6c63228be16de7870b6ab99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/6504ed0d4714084e9955f639d6e5cf4e976f9038",
-                "reference": "6504ed0d4714084e9955f639d6e5cf4e976f9038",
+                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/d438bb03db15b4ccc6c63228be16de7870b6ab99",
+                "reference": "d438bb03db15b4ccc6c63228be16de7870b6ab99",
                 "shasum": ""
             },
             "require": {
@@ -170,20 +225,20 @@
                 }
             ],
             "description": "IndieAuth Client Library",
-            "time": "2015-08-30 22:29:40"
+            "time": "2016-02-08 23:56:31"
         },
         {
             "name": "indieweb/date-formatter",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/date-formatter-php.git",
-                "reference": "f0dc028ba53da4da2718d2a263300396b1c14203"
+                "reference": "9c12e0fda95f4b3119fcaf271d141305870c4350"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/date-formatter-php/zipball/f0dc028ba53da4da2718d2a263300396b1c14203",
-                "reference": "f0dc028ba53da4da2718d2a263300396b1c14203",
+                "url": "https://api.github.com/repos/indieweb/date-formatter-php/zipball/9c12e0fda95f4b3119fcaf271d141305870c4350",
+                "reference": "9c12e0fda95f4b3119fcaf271d141305870c4350",
                 "shasum": ""
             },
             "require": {
@@ -213,7 +268,7 @@
                 "microformats",
                 "microformats2"
             ],
-            "time": "2013-10-27 23:46:11"
+            "time": "2015-10-28 00:32:39"
         },
         {
             "name": "indieweb/link-rel-parser",
@@ -413,16 +468,16 @@
         },
         {
             "name": "mpratt/relativetime",
-            "version": "1.5.1",
+            "version": "1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpratt/RelativeTime.git",
-                "reference": "219e6568fa3e7b181244f93be493fbab4c89c056"
+                "reference": "3dc1efd96c8edbd0fe9e5cdb423ca31428b9dbb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpratt/RelativeTime/zipball/219e6568fa3e7b181244f93be493fbab4c89c056",
-                "reference": "219e6568fa3e7b181244f93be493fbab4c89c056",
+                "url": "https://api.github.com/repos/mpratt/RelativeTime/zipball/3dc1efd96c8edbd0fe9e5cdb423ca31428b9dbb7",
+                "reference": "3dc1efd96c8edbd0fe9e5cdb423ca31428b9dbb7",
                 "shasum": ""
             },
             "require": {
@@ -457,7 +512,7 @@
                 "time",
                 "time-ago"
             ],
-            "time": "2015-05-28 14:13:23"
+            "time": "2015-12-24 12:43:04"
         },
         {
             "name": "p3k/multipart",
@@ -494,41 +549,6 @@
             ],
             "description": "Multipart Encoding Library",
             "time": "2015-07-16 19:28:02"
-        },
-        {
-            "name": "ruudk/twitter-oauth",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ruudk/twitteroauth.git",
-                "reference": "7f5a94eaa1572ddbc7f0a32ba3b865b8ac23712a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ruudk/twitteroauth/zipball/7f5a94eaa1572ddbc7f0a32ba3b865b8ac23712a",
-                "reference": "7f5a94eaa1572ddbc7f0a32ba3b865b8ac23712a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Ruud Kamphuis",
-                    "email": "ruud@1plus1media.nl",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP 5.3 version of abraham/twitteroauth",
-            "homepage": "http://github.com/ruudk/twitteroauth",
-            "time": "2014-06-10 18:17:38"
         },
         {
             "name": "saltybeagle/savant3",
@@ -607,14 +627,36 @@
                 "router"
             ],
             "time": "2012-12-13 02:15:50"
+        },
+        {
+            "name": "tantek/cassis",
+            "version": "v0.2.16895",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tantek/cassis.git",
+                "reference": "357e30ad12017b4d67cac5f4400e8f371cd2f504"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tantek/cassis/zipball/357e30ad12017b4d67cac5f4400e8f371cd2f504",
+                "reference": "357e30ad12017b4d67cac5f4400e8f371cd2f504",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "cassis.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2016-04-04 15:31:04"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "saltybeagle/savant3": 20,
-        "ruudk/twitter-oauth": 20
+        "saltybeagle/savant3": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

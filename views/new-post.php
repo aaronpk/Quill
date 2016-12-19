@@ -3,29 +3,45 @@
 
       <form role="form" style="margin-top: 20px;" id="note_form">
 
+        <div id="reply">
+          <div class="reply-section hidden">
+            <div class="form-group has-feedback">
+              <label for="note_in_reply_to">Reply To (a URL you are replying to)</label>
+              <input type="text" id="note_in_reply_to" value="<?= $this->in_reply_to ?>" class="form-control">
+              <span class="loading hidden glyphicon glyphicon-refresh glyphicon-spin form-control-feedback"></span>
+            </div>
+            <div class="reply-context hidden">
+              <div>
+                <img src="" width="48" class="author-img"> 
+              </div>
+              <div>
+                <img src="" class="post-img hidden">
+                <div class="author"><span class="name"></span> <span class="url"></span></div>
+                <span class="content"></span>
+              </div>
+            </div>
+          </div>
+          <a href="" id="expand-reply" class="btn btn-xs btn-info">Reply</a>
+        </div>
+
         <div class="form-group">
           <div id="note_content_remaining" class="pcheck206"><img src="/images/twitter.ico"> <span>140</span></div>
-          <label for="note_content"><code>content</code></label>
+          <label for="note_content">Content</label>
           <textarea id="note_content" value="" class="form-control" style="height: 4em;"></textarea>
         </div>
 
-        <div class="form-group">
-          <label for="note_in_reply_to"><code>in-reply-to</code> (a URL you are replying to)</label>
-          <input type="text" id="note_in_reply_to" value="<?= $this->in_reply_to ?>" class="form-control">
-        </div>
-
-        <div class="form-group">
-          <label for="note_category"><code>category</code> (comma-separated list of tags, will be posted as an array)</label>
+        <div class="form-group" id="form_tags">
+          <label for="note_category">Tags (comma-separated list)</label>
           <input type="text" id="note_category" value="" class="form-control" placeholder="e.g. web, personal">
         </div>
 
-        <div class="form-group">
-          <label for="note_slug"><code>slug</code></label>
+        <div class="form-group" id="form_slug">
+          <label for="note_slug">Slug</label>
           <input type="text" id="note_slug" value="" class="form-control">
         </div>
 
         <div class="form-group">
-          <label for="note_photo"><code>photo</code></label>
+          <label for="note_photo">Photo</label>
           <input type="file" name="note_photo" id="note_photo" accept="image/*">
           <a href="javascript:switchToManualPhotoURL();" id="note_manual_photo">enter photo url</a>
           <a href="javascript:addPhotoURL();" class="hidden" id="add_photo">add photo</a>
@@ -39,7 +55,7 @@
         </div>
 
         <div class="form-group">
-          <label for="note_syndicate-to"><code>syndicate-to</code> <a href="javascript:reload_syndications()">(refresh)</a></label>
+          <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">(refresh list)</a></label>
           <div id="syndication-container">
             <?php
             if($this->syndication_targets) {
@@ -62,7 +78,7 @@
         </div>
 
         <div class="form-group">
-          <label for="note_location"><code>location</code></label>
+          <label for="note_location">Location</label>
           <input type="checkbox" id="note_location_chk" value="">
           <img src="/images/spinner.gif" id="note_location_loading" style="display: none;">
 
@@ -93,36 +109,6 @@
       <?php endif; ?>
       <pre id="test_response" class="<?= $this->test_response ? '' : 'hidden' ?>" style="width: 100%; min-height: 240px;"><?= htmlspecialchars($this->test_response) ?></pre>
 
-
-      <div class="callout">
-        <p>Clicking "Post" will post this note to your Micropub endpoint. Below is some information about the request that will be made.</p>
-
-        <table class="table table-condensed">
-          <tr>
-            <td>me</td>
-            <td><code><?= session('me') ?></code> (should be your URL)</td>
-          </tr>
-          <tr>
-            <td>scope</td>
-            <td><code><?= $this->micropub_scope ?></code> (should be a space-separated list of permissions including "post")</td>
-          </tr>
-          <tr>
-            <td>micropub endpoint</td>
-            <td><code><?= $this->micropub_endpoint ?></code> (should be a URL)</td>
-          </tr>
-          <?php if($this->media_endpoint): ?>
-          <tr>
-            <td>media endpoint</td>
-            <td><code><?= $this->media_endpoint ?></code> (should be a URL)</td>
-          </tr>
-          <?php endif; ?>
-          <tr>
-            <td>access token</td>
-            <td>String of length <b><?= strlen($this->micropub_access_token) ?></b><?= (strlen($this->micropub_access_token) > 0) ? (', ending in <code>' . substr($this->micropub_access_token, -7) . '</code>') : '' ?> (should be greater than length 0)</td>
-          </tr>
-        </table>
-      </div>
-
       <hr>
       <div style="text-align: right;">
         <a href="/add-to-home?start">Add to Home Screen</a>
@@ -130,6 +116,10 @@
   </div>
 
 <style type="text/css">
+
+#reply {
+  margin-bottom: 1em;
+}
 
 #note_content_remaining {
   float: right;
@@ -141,6 +131,33 @@
 .pcheck207 { color: #c4b404; } /* danger zone, tweet will overflow when RT @username is added */
 .pcheck200,.pcheck208 { color: #59cb3a; } /* exactly fits 140 chars, both with or without RT */
 .pcheck413 { color: #a73b3b; } /* over max tweet length */
+
+.reply-context {
+  display: flex;
+  flex-direction: row;
+  padding: 4px;
+  margin: 0 3em;
+  border: 1px #ccc solid;
+  border-radius: 4px;
+  background: #f4f4f4;
+}
+.reply-context img.author-img {
+  border-radius: 4px;
+  width: 48px;
+  margin-right: 4px;
+}
+.reply-context .author {
+  color: #777;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+.reply-context .author .url {
+  color: #aaa;
+}
+.reply-context img.post-img {
+  float: right;
+  width: 200px;
+}
 
 </style>
 
@@ -170,7 +187,9 @@ function restoreNoteState() {
       if(note.photo) {
         replacePhotoWithPhotoURL(note.photo);
       }
-      console.log(note.syndications)
+      if(note.inReplyTo) {
+        expandReplySection();
+      }
       $("#syndication-container button").each(function(i,btn){
         if($(btn).data('syndicate-to') in note.syndications) {
           $(btn).addClass('btn-info');
@@ -208,6 +227,11 @@ function addPhotoURL() {
   }
 }
 
+function expandReplySection() {
+  $("#expand-reply").click();
+  $("#note_in_reply_to").change();  
+}
+
 $(function(){
 
   var userHasSetCategory = false;
@@ -217,6 +241,12 @@ $(function(){
   $("#note_content, #note_category, #note_in_reply_to, #note_slug, #note_photo_url").on('keyup change', function(e){
     saveNoteState();
   })
+
+  $("#expand-reply").click(function(){
+    $('.reply-section').removeClass('hidden');
+    $(this).addClass('hidden');
+    return false;
+  });
 
   // Preview the photo when one is chosen
   $("#photo_preview_container").addClass("hidden");
@@ -279,9 +309,43 @@ $(function(){
   });
 
   $("#note_in_reply_to").on('change', function(){
-    if(match=$("#note_in_reply_to").val().match(/twitter\.com\/([^\/]+)\/status/)) {
-      $("#note_content").val( "@"+match[1]+" "+$("#note_content").val() );
-    }
+    var reply_to = $("#note_in_reply_to").val();
+    $(".reply-section .loading").removeClass("hidden");
+    $.get("/reply/preview", {url:reply_to}, function(data){
+
+      if(data.canonical_reply_url != reply_to) {
+        $("#note_in_reply_to").val(data.canonical_reply_url);
+      }
+      var category = csv_to_array($("#note_category").val());
+      for(var i in data.entry.category) {
+        if($.inArray(data.entry.category[i], category) == -1) {
+          category.push(data.entry.category[i]);
+        }
+      }
+      $("#note_category").val(category.join(", "));
+
+      if($("#note_content").val() == "" && data.mentions) {
+        var mentions = '';
+        for(var i in data.mentions) {
+          mentions += '@'+data.mentions[i]+' ';
+        }
+        console.log(mentions);
+        $("#note_content").val(mentions);
+      }
+
+      $(".reply-context .content").text(data.entry.content.text);
+      $(".reply-context .name").text(data.entry.author.name);
+      $(".reply-context .url").text(data.entry.author.url);
+      $(".reply-context img.author-img").attr('src', data.entry.author.photo);
+      if(data.entry.photo) {
+        $(".reply-context img.post-img").attr('src', data.entry.photo[0]).removeClass('hidden');
+      } else {
+        $(".reply-context img.post-img").addClass('hidden');
+      }
+
+      $(".reply-section .loading").addClass("hidden");
+      $(".reply-context").removeClass("hidden");
+    });
   });
 
   $("#note_category").on('keydown keyup', function(){
@@ -292,6 +356,12 @@ $(function(){
       userHasSetCategory = false;
     }
   });
+
+  // When the reply URL is in the query string, or loads from localstorage, make sure
+  // to run the event handlers to expand the reply section
+  if($("#note_in_reply_to").val() != "") {
+    expandReplySection();
+  }
 
   $("#btn_post").click(function(){
 

@@ -1,4 +1,5 @@
 <?php
+use Abraham\TwitterOAuth\TwitterOAuth;
 
 function require_login(&$app, $redirect=true) {
   $params = $app->request()->params();
@@ -336,7 +337,7 @@ function create_favorite(&$user, $url) {
   // POSSE favorites to Twitter
   if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
     $tweet_id = $match[1];
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
+    $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret,
       $user->twitter_access_token, $user->twitter_token_secret);
     $result = $twitter->post('favorites/create', array(
       'id' => $tweet_id
@@ -356,7 +357,7 @@ function create_repost(&$user, $url) {
 
   if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
     $tweet_id = $match[1];
-    $twitter = new \TwitterOAuth\Api(Config::$twitterClientID, Config::$twitterClientSecret,
+    $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret,
       $user->twitter_access_token, $user->twitter_token_secret);
     $result = $twitter->post('statuses/retweet/'.$tweet_id);
   }
@@ -389,6 +390,72 @@ $app->post('/repost', function() use($app) {
       'location' => $r['location'],
       'error' => $r['error']
     )));
+  }
+});
+
+$app->get('/reply/preview', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $reply_url = trim($params['url']);
+
+    if(preg_match('/twtr\.io\/([0-9a-z]+)/i', $reply_url, $match)) {
+      $twtr = 'https://twitter.com/_/status/' . sxg_to_num($match[1]);
+      $ch = curl_init($twtr);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+      curl_exec($ch);
+      $expanded_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+      if($expanded_url) $reply_url = $expanded_url;
+    }
+
+    $entry = false;
+    // Convert Tweets to h-entry
+    if(preg_match('/twitter\.com\/(?:[^\/]+)\/statuse?s?\/(.+)/', $reply_url, $match)) {
+      $tweet_id = $match[1];
+      if($user->twitter_access_token) {
+        $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret,
+          $user->twitter_access_token, $user->twitter_token_secret);
+      } else {
+        $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret);
+      }
+      $tweet = $twitter->get('statuses/show/'.$tweet_id);
+      $entry = tweet_to_h_entry($tweet);
+    } else {
+      // Pass to X-Ray to see if it can expand the entry
+      $ch = curl_init('https://xray.p3k.io/parse?url='.urlencode($reply_url));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $response = curl_exec($ch);
+      $data = @json_decode($response, true);
+      if($data && $data['data']['type'] == 'entry') {
+        $entry = $data['data'];
+        // Create a nickname based on the author URL
+        if($entry['author']['url']) {
+          $entry['author']['nickname'] = display_url($entry['author']['url']);
+        }
+      }
+    }
+
+    $mentions = [];
+    if($entry) {
+      // Find all @-names in the post, as well as the author name
+      $mentions[] = $entry['author']['nickname'];
+
+      if(preg_match_all('/(^|(?<=[\s\/]))@([a-z0-9_]+([a-z0-9_\.]*)?)/i', $entry['content']['text'], $matches)) {
+        foreach($matches[0] as $nick) {
+          if(trim($nick,'@') != $user->twitter_username && trim($nick,'@') != display_url($user->url))
+            $mentions[] = trim($nick,'@');
+        }
+      }
+
+    }    
+
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode([
+      'canonical_reply_url' => $reply_url,
+      'entry' => $entry,
+      'mentions' => $mentions
+    ]));
   }
 });
 

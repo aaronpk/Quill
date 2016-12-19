@@ -9,9 +9,10 @@
     "indieauth/client": ">=0.1.11",
     "mpratt/relativetime": ">=1.0",
     "firebase/php-jwt": "2.*",
-    "ruudk/twitter-oauth": "dev-master",
+    "abraham/twitteroauth": "*",
     "andreyco/instagram": "3.*",
-    "p3k/multipart": "*"
+    "p3k/multipart": "*",
+    "tantek/cassis": "*"
   },
   "autoload": {
     "files": [

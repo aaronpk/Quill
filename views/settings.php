@@ -2,13 +2,33 @@
   <?= partial('partials/header') ?>
 
   <h2>Signed In As</h2>
-  <code><?= session('me') ?></code>
 
-  <h3>Access Token</h3>
-  <input type="text" class="form-control" readonly="readonly" value="<?= $this->user->micropub_access_token ?>">
+  <table class="table table-condensed">
+    <tr>
+      <td>me</td>
+      <td><code><?= $this->user->url; ?></code> (should be your URL)</td>
+    </tr>
+    <tr>
+      <td>scope</td>
+      <td><code><?= $this->user->micropub_scope ?></code> (should be a space-separated list of permissions including "create")</td>
+    </tr>
+    <tr>
+      <td>micropub endpoint</td>
+      <td><code><?= $this->user->micropub_endpoint ?></code> (should be a URL)</td>
+    </tr>
+    <tr>
+      <td>media endpoint</td>
+      <td><?= $this->user->media_endpoint ? '<code>'.$this->user->media_endpoint.'</code>' : '<a href="https://www.w3.org/TR/micropub/#media-endpoint">no media endpoint</a>' ?></td>
+    </tr>
+    <tr>
+      <td width="140">access token</td>
+      <td><code style="word-break: break-word; white-space: pre-wrap;"><?= $this->user->micropub_access_token ?></code></td>
+    </tr>
+  </table>
+
 
   <h3>Twitter</h3>
-  <p>Connecting a Twitter account will automatically "favorite" tweets on Twitter when you favorite a Twitter URL in Quill.</p>
+  <p>Connecting a Twitter account will automatically "favorite" and "retweet" tweets on Twitter when you favorite and retweet a Twitter URL in Quill.</p>
   <input type="button" id="twitter-button" value="Checking" class="btn">
 
 </div>

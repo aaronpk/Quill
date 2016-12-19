@@ -396,3 +396,46 @@ function correct_photo_rotation($filename) {
   }
 }
 
+function tweet_to_h_entry($tweet) {
+  // Converts to XRay's h-entry format
+
+  $entry = [
+    'type' => 'entry',
+    'url' => 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id_str,
+  ];
+
+  $published = strtotime($tweet->created_at);
+  $entry['published'] = date('c', $published);
+
+  $entry['content'] = [
+    'text' => $tweet->text
+  ];
+
+  if($tweet->entities->urls) {
+    foreach($tweet->entities->urls as $url) {
+      $entry['content']['text'] = str_replace($url->url, $url->expanded_url, $entry['content']['text']);
+    }
+  }
+
+  $entry['author'] = [
+    'type' => 'card',
+    'url' => 'https://twitter.com/'.$tweet->user->screen_name,
+    'name' => $tweet->user->name,
+    'nickname' => $tweet->user->screen_name,
+    'photo' => $tweet->user->profile_image_url_https
+  ];
+
+  if($tweet->user->url) {
+    $entry['author']['url'] = $tweet->user->entities->url->urls[0]->expanded_url;
+  }
+
+  if($tweet->entities->hashtags) {
+    $entry['category'] = [];
+    foreach($tweet->entities->hashtags as $tag) {
+      $entry['category'][] = $tag->text;
+    }
+  }
+
+  return $entry;
+}
+
