@@ -397,6 +397,10 @@ $app->get('/reply/preview', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
+    if(!isset($params['url']) || !$params['url']) {
+      return '';
+    }
+
     $reply_url = trim($params['url']);
 
     if(preg_match('/twtr\.io\/([0-9a-z]+)/i', $reply_url, $match)) {

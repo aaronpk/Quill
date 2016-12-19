@@ -310,6 +310,14 @@ $(function(){
 
   $("#note_in_reply_to").on('change', function(){
     var reply_to = $("#note_in_reply_to").val();
+
+    if(reply_to == "") {
+      $(".reply-section").addClass("hidden");
+      $(".reply-context").addClass("hidden");
+      $("#expand-reply").removeClass("hidden");
+      return;
+    }
+
     $(".reply-section .loading").removeClass("hidden");
     $.get("/reply/preview", {url:reply_to}, function(data){
 
