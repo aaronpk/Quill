@@ -51,7 +51,16 @@ server {
 An `.htaccess` file is already located in the `public/` folder.
 
 
-### Contributing
+## Parameters
+Quill supports a couple of URL GET parameters which can be used to
+pre-configure it:
+
+- `me`: Author URL for auto-sign in
+- `dontask`: Set to `1` to skip the "Sign In" endpoint status page
+- `reply`: URL to pre-fill into the "Reply To:" field
+
+
+## Contributing
 
 By submitting code to this project, you agree to irrevocably release it under the same license as this project.
 
