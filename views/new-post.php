@@ -243,7 +243,15 @@ $(function(){
 
   $("#note_content, #note_category, #note_in_reply_to, #note_slug, #note_photo_url").on('keyup change', function(e){
     saveNoteState();
-  })
+  });
+
+  $("#note_content").on('keyup', function(){
+    var scrollHeight = document.getElementById("note_content").scrollHeight;
+    var currentHeight = parseInt($("#note_content").css("height"));
+    if(Math.abs(scrollHeight - currentHeight) > 20) {
+      $("#note_content").css("height", (scrollHeight+30)+"px");
+    }
+  });
 
   $("#expand-reply").click(function(){
     $('.reply-section').removeClass('hidden');
@@ -340,7 +348,6 @@ $(function(){
         for(var i in data.mentions) {
           mentions += '@'+data.mentions[i]+' ';
         }
-        console.log(mentions);
         $("#note_content").val(mentions);
       }
 
