@@ -17,6 +17,7 @@
               <div>
                 <img src="" class="post-img hidden">
                 <div class="author"><span class="name"></span> <span class="url"></span></div>
+                <h4 class="post-name hidden"></h4>
                 <span class="content"></span>
               </div>
             </div>
@@ -140,6 +141,8 @@
   border: 1px #ccc solid;
   border-radius: 4px;
   background: #f4f4f4;
+  max-height: 140px;
+  overflow-y: hidden;
 }
 .reply-context img.author-img {
   border-radius: 4px;
@@ -342,8 +345,13 @@ $(function(){
       }
 
       $(".reply-context .content").text(data.entry.content.text);
-      $(".reply-context .name").text(data.entry.author.name);
-      $(".reply-context .url").text(data.entry.author.url);
+      if(data.entry.name) {
+        $(".reply-context .post-name").text(data.entry.name).removeClass('hidden');
+      } else {
+        $(".reply-context .post-name").addClass('hidden');
+      }
+      $(".reply-context .author .name").text(data.entry.author.name);
+      $(".reply-context .author .url").text(data.entry.author.url);
       $(".reply-context img.author-img").attr('src', data.entry.author.photo);
       if(data.entry.photo) {
         $(".reply-context img.post-img").attr('src', data.entry.photo[0]).removeClass('hidden');
