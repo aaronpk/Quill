@@ -434,7 +434,7 @@ $app->get('/reply/preview', function() use($app) {
       if($data && $data['data']['type'] == 'entry') {
         $entry = $data['data'];
         // Create a nickname based on the author URL
-        if($entry['author']['url']) {
+        if(array_key_exists('author', $entry) && $entry['author']['url']) {
           $entry['author']['nickname'] = display_url($entry['author']['url']);
         }
       }
@@ -442,8 +442,10 @@ $app->get('/reply/preview', function() use($app) {
 
     $mentions = [];
     if($entry) {
-      // Find all @-names in the post, as well as the author name
-      $mentions[] = $entry['author']['nickname'];
+      if(array_key_exists('author', $entry)) {
+        // Find all @-names in the post, as well as the author name
+        $mentions[] = $entry['author']['nickname'];
+      }
 
       if(preg_match_all('/(^|(?<=[\s\/]))@([a-z0-9_]+([a-z0-9_\.]*)?)/i', $entry['content']['text'], $matches)) {
         foreach($matches[0] as $nick) {
