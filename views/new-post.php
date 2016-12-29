@@ -357,9 +357,11 @@ $(function(){
       } else {
         $(".reply-context .post-name").addClass('hidden');
       }
-      $(".reply-context .author .name").text(data.entry.author.name);
-      $(".reply-context .author .url").text(data.entry.author.url);
-      $(".reply-context img.author-img").attr('src', data.entry.author.photo);
+      if(data.entry.author) {
+        $(".reply-context .author .name").text(data.entry.author.name);
+        $(".reply-context .author .url").text(data.entry.author.url);
+        $(".reply-context img.author-img").attr('src', data.entry.author.photo);
+      }
       if(data.entry.photo) {
         $(".reply-context img.post-img").attr('src', data.entry.photo[0]).removeClass('hidden');
       } else {
