@@ -444,15 +444,17 @@ $app->get('/reply/preview', function() use($app) {
     if($entry) {
       if(array_key_exists('author', $entry)) {
         // Find all @-names in the post, as well as the author name
-        $mentions[] = $entry['author']['nickname'];
+        $mentions[] = strtolower($entry['author']['nickname']);
       }
 
       if(preg_match_all('/(^|(?<=[\s\/]))@([a-z0-9_]+([a-z0-9_\.]*)?)/i', $entry['content']['text'], $matches)) {
         foreach($matches[0] as $nick) {
           if(trim($nick,'@') != $user->twitter_username && trim($nick,'@') != display_url($user->url))
-            $mentions[] = trim($nick,'@');
+            $mentions[] = strtolower(trim($nick,'@'));
         }
       }
+
+      $mentions = array_values(array_unique($mentions));
 
     }    
 
