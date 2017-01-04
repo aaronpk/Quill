@@ -67,14 +67,29 @@
   <div class="dropdown-content action-publish">
 
     <div style="float:right"><button class="btn btn-medium" id="publish-confirm">Publish Now</button></div>
-    <div style="clear:right;"></div>
+    <div style="clear:right; margin-bottom: 4px;"></div>
 
-    <div class="helptext" id="publish-help">
-      <div style="font-size:0.8em;">
-        Clicking "Publish Now" will send a request to your Micropub endpoint.<br><br>
-        The request will include two fields, "name" and "content", where the content will be the full HTML for this post.
-      </div>
-    </div>
+    <table id="publish-fields">
+      <tr>
+        <td>Tags:</td>
+        <td><input type="text" class="form-field-small" placeholder="comma separated" id="post-tags"></td>
+      </tr>
+      <tr>
+        <td>Slug:</td>
+        <td><input type="text" class="form-field-small" id="post-slug"></td>
+      </tr>
+      <tr>
+        <td>Status:</td>
+        <td>
+          <select id="post-status" class="form-select-small">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+          <a href="/docs/post-status" class="small hidden" target="_blank" id="published-status-warning">read this first!</a>
+        </td>
+      </tr>
+    </table>
+
 
     <div class="helptext hidden" id="publish-in-progress">
       Posting... <!-- TODO replace this with a CSS animated spinner -->

@@ -8,6 +8,7 @@ CREATE TABLE `users` (
   `micropub_access_token` text,
   `micropub_scope` varchar(255) DEFAULT NULL,
   `micropub_response` text,
+  `micropub_slug_field` varchar(255) NOT NULL DEFAULT 'mp-slug',
   `micropub_success` tinyint(4) DEFAULT '0',
   `date_created` datetime DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,

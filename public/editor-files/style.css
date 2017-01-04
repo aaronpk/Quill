@@ -22,6 +22,10 @@ h1, h2, h3, h4, h5, h6, th, td, caption { font-weight:normal; }
 
 img { border: 0; }
 
+
+/* ************************************** */
+
+
 .micropub-html-warning {
   max-width: 600px;
   margin-left: auto;
@@ -48,6 +52,8 @@ img { border: 0; }
   background: #e4f8fa;
   float: right;
 }
+
+
 
 /* ************************************** */
 /* Toolbar */
@@ -120,14 +126,22 @@ img { border: 0; }
 
 input.form-field-small {
   height: 24px;
-  margin-top: 1px;
+  margin-top: 2px;
   font-size: 13px;
   color: #51a1a8;
   padding: 0 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
   border: 1px #93dee5 solid;
+}
+select.form-select-small {
+  border-radius: 6px;
+  border: 1px #93dee5 solid;
+  height: 24px;
+  margin-top: 2px;
+  font-size: 13px;
+  color: #51a1a8;
 }
 
 .publish-dropdown {
@@ -165,6 +179,10 @@ input.form-field-small {
 .publish-dropdown .dropdown-content {
   padding: 9px;
 }
+.publish-dropdown .dropdown-content, 
+.publish-dropdown .dropdown-content a {
+  color: #51a1a8;
+}
 .publish-dropdown input {
   font-family: sans-serif;  
 }
@@ -182,29 +200,9 @@ pre#publish-error-debug {
   display: none;
 }
 
-/* ************************************** */
-/* App Cache */
-
-#new_version_available {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(246,206,217,0.3);
+.small {
+  font-size: 0.8em;
 }
-#new_version_available .inner {
-  padding: 10px;
-  width: 600px;
-  margin: 0 auto;
-  text-align: center;
-  font-weight: bold;
-  color: #cf224f;
-  font-size: 14px;
-  font-family: sans-serif;
-}
-
 
 /* ************************************** */
 /* Editor CSS */

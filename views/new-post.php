@@ -419,7 +419,7 @@ $(function(){
       }
     }
     if(v=$("#note_slug").val()) {
-      formData.append("slug", v);
+      formData.append("<?= $this->user->micropub_slug_field ?>", v);
     }
 
     // Add either the photo as a file, or the photo URL depending on whether the user has a media endpoint

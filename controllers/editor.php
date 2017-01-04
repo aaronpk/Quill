@@ -25,6 +25,17 @@ $app->post('/editor/publish', function() use($app) {
       'content' => $content
     );
 
+    if(array_key_exists('category', $params) && $params['category'])
+      $micropub_request['category'] = $params['category'];
+
+    if(array_key_exists('slug', $params) && $params['slug'])
+      $micropub_request[$user->micropub_slug_field] = $params['slug'];
+
+    if(array_key_exists('status', $params) && $params['status']) {
+      if($params['status'] == 'draft')
+        $micropub_request['post-status'] = $params['status'];
+    }
+
     $r = micropub_post_for_user($user, $micropub_request);
 
     $app->response()['Content-type'] = 'application/json';

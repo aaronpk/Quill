@@ -90,7 +90,7 @@
       </ul>
     </div>
 
-    <p class="credits">&copy; <?=date('Y')?> by <a href="http://aaronparecki.com">Aaron Parecki</a>.
+    <p class="credits">&copy; <?=date('Y')?> by <a href="https://aaronparecki.com">Aaron Parecki</a>.
       This code is <a href="https://github.com/aaronpk/Quill">open source</a>.
       Feel free to send a pull request, or <a href="https://github.com/aaronpk/Quill/issues">file an issue</a>.</p>
   </div>

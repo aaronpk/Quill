@@ -44,11 +44,10 @@ function generate_login_token() {
 
 $app->get('/dashboard', function() use($app) {
   if($user=require_login($app)) {
-    $html = render('dashboard', array(
+    render('dashboard', array(
       'title' => 'Dashboard',
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -73,7 +72,7 @@ $app->get('/new', function() use($app) {
       }
     }
 
-    $html = render('new-post', array(
+    render('new-post', array(
       'title' => 'New Post',
       'in_reply_to' => $in_reply_to,
       'micropub_endpoint' => $user->micropub_endpoint,
@@ -87,7 +86,6 @@ $app->get('/new', function() use($app) {
       'user' => $user,
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -109,7 +107,7 @@ $app->get('/bookmark', function() use($app) {
     if(array_key_exists('content', $params))
       $content = $params['content'];
 
-    $html = render('new-bookmark', array(
+    render('new-bookmark', array(
       'title' => 'New Bookmark',
       'bookmark_url' => $url,
       'bookmark_name' => $name,
@@ -119,7 +117,6 @@ $app->get('/bookmark', function() use($app) {
       'syndication_targets' => json_decode($user->syndication_targets, true),
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -132,13 +129,12 @@ $app->get('/favorite', function() use($app) {
     if(array_key_exists('url', $params))
       $url = $params['url'];
 
-    $html = render('new-favorite', array(
+    render('new-favorite', array(
       'title' => 'New Favorite',
       'url' => $url,
       'token' => generate_login_token(),
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -146,11 +142,10 @@ $app->get('/event', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $html = render('event', array(
+    render('event', array(
       'title' => 'Event',
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -158,11 +153,10 @@ $app->get('/itinerary', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $html = render('new-itinerary', array(
+    render('new-itinerary', array(
       'title' => 'Itinerary',
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -170,12 +164,11 @@ $app->get('/photo', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $html = render('photo', array(
+    render('photo', array(
       'title' => 'New Photo',
       'note_content' => '',
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -183,11 +176,10 @@ $app->get('/review', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $html = render('review', array(
+    render('review', array(
       'title' => 'Review',
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -200,13 +192,12 @@ $app->get('/repost', function() use($app) {
     if(array_key_exists('url', $params))
       $url = $params['url'];
 
-    $html = render('new-repost', array(
+    render('new-repost', array(
       'title' => 'New Repost',
       'url' => $url,
       'token' => generate_login_token(),
       'authorizing' => false
     ));
-    $app->response()->body($html);
   }
 });
 
@@ -258,8 +249,7 @@ $app->get('/add-to-home', function() use($app) {
         $app->redirect('/add-to-home?token='.$token, 301);
       } else {
         unset($_SESSION['add-to-home-started']);
-        $html = render('add-to-home', array('title' => 'Quill'));
-        $app->response()->body($html);
+        render('add-to-home', array('title' => 'Quill'));
       }
     }
   }
@@ -285,24 +275,40 @@ $app->get('/email', function() use($app) {
       $user->save();
     }
 
-    $html = render('email', array(
+    render('email', array(
       'title' => 'Post-by-Email',
       'micropub_endpoint' => $user->micropub_endpoint,
       'test_response' => $test_response,
       'user' => $user
     ));
-    $app->response()->body($html);
   }
 });
 
 $app->get('/settings', function() use($app) {
   if($user=require_login($app)) {
-    $html = render('settings', [
+    render('settings', [
       'title' => 'Settings',
       'user' => $user,
       'authorizing' => false
     ]);
-    $app->response()->body($html);
+  }
+});
+
+$app->post('/settings/save', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    if(array_key_exists('html_content', $params))
+      $user->micropub_optin_html_content = $params['html_content'] ? 1 : 0;
+
+    if(array_key_exists('slug_field', $params) && $params['slug_field'])
+      $user->micropub_slug_field = $params['slug_field'];
+
+    $user->save();
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'result' => 'ok'
+    )));
   }
 });
 

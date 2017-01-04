@@ -47,6 +47,7 @@ $(function() {
       $('#publish-success').addClass('hidden');
       $('#publish-error').addClass('hidden');
       $('#publish-help').removeClass('hidden');
+      $('#publish-fields').removeClass('hidden');
     } else {
       $('.publish-dropdown').addClass('hidden');
     }
@@ -69,10 +70,14 @@ $(function() {
   $('#publish-confirm').click(function(){
     $('#publish-help').addClass('hidden');
     $('#publish-in-progress').removeClass('hidden');
+    $('#publish-fields').addClass('hidden');
 
     $.post('/editor/publish', {
       name: $("#post-name").val(),
-      body: editor.serialize().content.value
+      body: editor.serialize().content.value,
+      category: csv_to_array($("#post-tags").val()),
+      slug: $("#post-slug").val(),
+      status: $("#post-status").val()
     }, function(response) {
       if(response.location) {
         reset_page().then(function(){
@@ -87,6 +92,7 @@ $(function() {
         $('#publish-error-debug').html(response.response).removeClass('hidden');
         $('#publish-error').removeClass('hidden');
         $('#publish-success').addClass('hidden');
+        $('#publish-fields').removeClass('hidden');
       }
     });    
   });
@@ -99,6 +105,10 @@ $(function() {
     });
   });
 
+  $("#post-status").change(function(){
+    $("#published-status-warning").removeClass("hidden");
+  });
+
   $.getJSON('/settings/html-content', function(data){
     if(data.html == '0') {
       $('.micropub-html-warning').show();
@@ -108,21 +118,22 @@ $(function() {
 
 function reset_page() {
   $("#post-name").val('');
+  $("#post-slug").val('');
+  $("#post-tags").val('');
+  $("#post-status").val('published');
   $("#content").html('');
   $("#draft-status").text("New");
   $("#publish-confirm").hide();
   return localforage.setItem('currentdraft', {});
 }
 
-function onUpdateReady() {
-  // Show the notice that says there is a new version of the app
-  $("#new_version_available").show();
+function csv_to_array(val) {
+  if(val.length > 0) {
+    return val.split(/[, ]+/);
+  } else {
+    return [];
+  }
 }
-
-window.applicationCache.addEventListener('updateready', onUpdateReady);
-if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {
-  onUpdateReady();
-}  
 
 /* ************************************************ */
 /* autosave loop */
