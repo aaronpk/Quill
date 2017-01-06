@@ -1,12 +1,11 @@
 <?php
 
 $app->get('/editor', function() use($app) {
-  if($user=require_login($app)) {
-    $html = $app->render('editor.php', [
-      'user' => $user
-    ]);
-    $app->response()->body($html);
-  }
+  $user = require_login($app, false);
+  $html = $app->render('editor.php', [
+    'user' => $user
+  ]);
+  $app->response()->body($html);
 });
 
 $app->post('/editor/publish', function() use($app) {

@@ -44,7 +44,9 @@
 <div class="toolbar">
   <div class="toolbar-left">
     <span class="item"><a href="/"><img src="/editor-files/quill-logo-36.png" width="36" height="31" class="logo"></a></span>
-    <span class="item text"><b><?= display_url($this->user->url) ?></b></span>
+    <? if($this->user): ?>
+      <span class="item text"><b><?= display_url($this->user->url) ?></b></span>
+    <? endif; ?>
     <span class="item text"><span id="draft-status">Draft</span></span>
   </div>
   <div class="toolbar-right">
@@ -109,6 +111,7 @@
     <div class="helptext">You need to sign in before you can publish! Don't worry, your draft will still be here when you finish signing in.</div>
     <input type="url" class="form-field-small" placeholder="yourdomain.com" id="signin-domain">
     <button class="btn btn-small" id="signin-btn">Sign In</button>
+    <div class="helptext small"><a href="/docs">How does this work?</a></div>
   </div>
 </div>
 
