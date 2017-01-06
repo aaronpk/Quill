@@ -11,14 +11,14 @@ function require_login(&$app, $redirect=true) {
     } catch(DomainException $e) {
       if($redirect) {
         header('X-Error: DomainException');
-        $app->redirect('/', 301);
+        $app->redirect('/', 302);
       } else {
         return false;
       }
     } catch(UnexpectedValueException $e) {
       if($redirect) {
         header('X-Error: UnexpectedValueException');
-        $app->redirect('/', 301);
+        $app->redirect('/', 302);
       } else {
         return false;
       }
@@ -27,7 +27,7 @@ function require_login(&$app, $redirect=true) {
 
   if(!array_key_exists('user_id', $_SESSION)) {
     if($redirect)
-      $app->redirect('/');
+      $app->redirect('/', 302);
     return false;
   } else {
     return ORM::for_table('users')->find_one($_SESSION['user_id']);
@@ -225,13 +225,13 @@ $app->get('/add-to-home', function() use($app) {
       $data = JWT::decode($params['token'], Config::$jwtSecret, array('HS256'));
       $_SESSION['user_id'] = $data->user_id;
       $_SESSION['me'] = $data->me;
-      $app->redirect('/new', 301);
+      $app->redirect('/new', 302);
     } catch(DomainException $e) {
       header('X-Error: DomainException');
-      $app->redirect('/', 301);
+      $app->redirect('/', 302);
     } catch(UnexpectedValueException $e) {
       header('X-Error: UnexpectedValueException');
-      $app->redirect('/', 301);
+      $app->redirect('/', 302);
     }
 
   } else {
@@ -246,7 +246,7 @@ $app->get('/add-to-home', function() use($app) {
           'created_at' => time()
         ), Config::$jwtSecret);
 
-        $app->redirect('/add-to-home?token='.$token, 301);
+        $app->redirect('/add-to-home?token='.$token, 302);
       } else {
         unset($_SESSION['add-to-home-started']);
         render('add-to-home', array('title' => 'Quill'));
