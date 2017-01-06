@@ -1,5 +1,21 @@
 <?php
 
+function doc_pages($page=null) {
+  $pages = [
+    'signing-in' => 'Signing In',
+    'creating-posts' => 'Creating Posts',
+    'editor' => 'Rich Editor',
+    'note' => 'Note Interface',
+    'syndication' => 'Syndication',
+    'post-status' => 'Post Status',
+  ];
+  if($page == null) 
+    return $pages;
+  else
+    return $pages[$page];
+}
+
+
 $app->get('/', function($format='html') use($app) {
   $res = $app->response();
   $params = $app->request()->params();
@@ -23,14 +39,23 @@ $app->get('/creating-a-micropub-endpoint', function() use($app) {
 });
 
 $app->get('/docs', function() use($app) {
-  render('docs', array('title' => 'Documentation', 'authorizing' => false));
+  render('docs/index', array(
+    'title' => 'Documentation', 
+    'authorizing' => false,
+    'pages' => doc_pages()
+  ));
 });
 
-$app->get('/docs/post-status', function() use($app) {
-  render('docs/post-status', array('title' => 'Post Status Documentation', 'authorizing' => false));
+$app->get('/docs/:page', function($page) use($app) {
+  if(file_exists('views/docs/'.$page.'.php'))
+    render('docs/'.$page, array(
+      'title' => doc_pages($page).' - Quill Documentation', 
+      'authorizing' => false
+    ));
+  else
+    $app->notFound();
 });
 
 $app->get('/privacy', function() use($app) {
   render('privacy', array('title' => 'Quill Privacy Policy', 'authorizing' => false));
 });
-

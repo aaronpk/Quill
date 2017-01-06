@@ -1,38 +1,7 @@
 <div class="narrow">
   <?= partial('partials/header') ?>
 
-  <h2 id="introduction">Introduction</h2>
-
-  <div class="col-xs-6 col-md-4" style="float: right;">
-    <span class="thumbnail"><img src="/images/quill-ui.png"></span>
-  </div>
-
-  <p>This is a simple <a href="http://indiewebcamp.com/micropub">Micropub</a> client for 
-     creating text posts on your own website. To use it, you will need to turn your website 
-     into an OAuth provider, and implement a Micropub endpoint that this app will send 
-     requests to.</p>
-
-  <p>Once you've signed in, you'll see an interface like the one shown which you can use to 
-     write a post. Clicking "post" will make a Micropub request to your endpoint.<p>
-
-
-
-  <h2 id="endpoints">Configuring Endpoints</h2>
-
-  <h3>Authorization Endpoint</h3>
-  <?= partial('partials/auth-endpoint-help') ?>
-
-  <h3>Token Endpoint</h3>
-  <?= partial('partials/token-endpoint-help') ?>
-
-  <h3>Micropub Endpoint</h3>
-  <?= partial('partials/micropub-endpoint-help') ?>
-
-  <p>The <a href="/creating-a-micropub-endpoint">Creating a Micropub Endpoint</a> tutorial will walk you through how to handle incoming POST requests from apps like this.</p>
-
-
-
-  <h2 id="syndication">Syndication Targets</h2>
+  <h2>Syndication Targets</h2>
 
   <p>You can provide a list of supported <a href="https://www.w3.org/TR/micropub/#syndication-targets">syndication targets</a> that will appear as checkboxes when you are creating a new post.</p>
 
@@ -63,5 +32,7 @@ Content-type: application/json
   <p>The specific values of names and uids are up to your Micropub endpoint, but a good convention is to use the domain name of the service (e.g. https://twitter.com), or domain name and username (e.g. https://twitter.com/aaronpk) for the uid, and a friendly name like "Twitter" or "twitter.com/aaronpk" as the name.</p>
 
   <p>Quill will check for your supported syndication targets when you sign in, but there is also a link on the new post screen to manually re-check if you'd like.</p>
+
+  <p>When you create a post and tap one of the syndication options, the value of <code>uid</code> is sent in a property called <code>mp-syndicate-to</code>, which instructs your endpoint to syndicate to that target. Note that Quill doesn't know whether the target is Twitter, Facebook, or something else, and doesn't talk to the service directly. It's just an instruction to your endpoint to syndicate to that destination.</p>
 
 </div>
