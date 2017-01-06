@@ -437,7 +437,7 @@ $app->get('/reply/preview', function() use($app) {
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       $response = curl_exec($ch);
       $data = @json_decode($response, true);
-      if($data && $data['data']['type'] == 'entry') {
+      if($data && isset($data['data']) && $data['data']['type'] == 'entry') {
         $entry = $data['data'];
         // Create a nickname based on the author URL
         if(array_key_exists('author', $entry) && $entry['author']['url']) {
