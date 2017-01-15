@@ -13,6 +13,7 @@ $app = new \Slim\Slim(array(
 
 require 'controllers/auth.php';
 require 'controllers/controllers.php';
+require 'controllers/micropub.php';
 require 'controllers/static.php';
 require 'controllers/editor.php';
 require 'controllers/hooks.php';

@@ -12,7 +12,8 @@
     "abraham/twitteroauth": "*",
     "andreyco/instagram": "3.*",
     "p3k/multipart": "*",
-    "tantek/cassis": "*"
+    "tantek/cassis": "*",
+    "p3k/timezone": "*"
   },
   "autoload": {
     "files": [

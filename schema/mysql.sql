@@ -21,6 +21,7 @@ CREATE TABLE `users` (
   `twitter_token_secret` text,
   `twitter_username` varchar(255) DEFAULT NULL,
   `instagram_access_token` text,
-  `email_username` varchar(255) DEFAULT NULL,
+  `email_username` vacrchar(255) DEFAULT NULL,
+  `default_timezone` vacrchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

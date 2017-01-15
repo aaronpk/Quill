@@ -213,6 +213,25 @@ $app->post('/prefs', function() use($app) {
   )));
 });
 
+$app->post('/prefs/timezone', function() use($app) {
+  // Called when the interface finds the user's location.
+  // Look up the timezone for this location and store it as their default.
+  $timezone = false;
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+    $timezone = p3k\Timezone::timezone_for_location($params['latitude'], $params['longitude']);
+    if($timezone) {
+      $user->default_timezone = $timezone;
+      $user->save();
+    }
+  }
+  $app->response()['Content-type'] = 'application/json';
+  $app->response()->body(json_encode(array(
+    'result' => 'ok',
+    'timezone' => $timezone,
+  )));
+});
+
 $app->get('/add-to-home', function() use($app) {
   $params = $app->request()->params();
   header("Cache-Control: no-cache, must-revalidate");

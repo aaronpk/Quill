@@ -532,6 +532,11 @@ $(function(){
       $("#note_location_img").show();
       $("#note_location_msg").addClass("img-visible");
 
+      $.post("/prefs/timezone", {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+
     }, function(err){
       if(err.code == 1) {
         location_error("The website was not able to get permission");
