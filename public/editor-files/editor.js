@@ -77,7 +77,8 @@ $(function() {
       body: editor.serialize().content.value,
       category: csv_to_array($("#post-tags").val()),
       slug: $("#post-slug").val(),
-      status: $("#post-status").val()
+      status: $("#post-status").val(),
+      publish: $("#post-publish-date").val()
     }, function(response) {
       if(response.location) {
         reset_page().then(function(){
@@ -109,6 +110,24 @@ $(function() {
     $("#published-status-warning").removeClass("hidden");
   });
 
+  $("#post-publish-date").change(function(){
+    if($("#post-publish-date").val() == "") {
+      $("#post-publish-date").val("now");
+    } else {
+      // Parse and verify the publish date when it's changed
+      $.post('/editor/parse-date', {
+        date: $("#post-publish-date").val(),
+        tzoffset: (new Date().getTimezoneOffset())
+      }, function(response) {
+        if(response.date) {
+          $("#post-publish-date").val(response.date);
+        } else {
+          $("#post-publish-date").val("now");
+        }
+      });
+    }
+  });
+
   $.getJSON('/settings/html-content', function(data){
     if(data.html == '0') {
       $('.micropub-html-warning').show();
@@ -121,6 +140,7 @@ function reset_page() {
   $("#post-slug").val('');
   $("#post-tags").val('');
   $("#post-status").val('published');
+  $("#post-publish-date").val('now');
   $("#content").html('');
   $("#draft-status").text("New");
   $("#publish-confirm").hide();
@@ -147,7 +167,11 @@ function doAutoSave() {
   autosaveTimeout = false;
   var savedData = {
     title: $("#post-name").val(),
-    body: editor.serialize().content.value
+    body: editor.serialize().content.value,
+    tags: $("#post-tags").val(),
+    slug: $("#post-slug").val(),
+    status: $("#post-status").val(),
+    publish: $("#post-publish-date").val()
   }
   localforage.setItem('currentdraft', savedData).then(function(){
     $("#draft-status").text("Saved");
@@ -160,6 +184,10 @@ $(function(){
       $("#post-name").val(val.title);
       $("#content").html(val.body);
       $("#draft-status").text("Restored");
+      $("#post-tags").val(val.tags);
+      $("#post-slug").val(val.slug);
+      $("#post-status").val(val.status);
+      $("#post-publish-date").val(val.publish);
       // drop the cursor into the editor which clears the placeholder text
       $("#content").focus().click();
     }
@@ -178,5 +206,5 @@ editor.on(document.getElementById('content'), 'input', function(){
   contentChanged();
 });
 $(function(){
-  $('#post-name').on('keyup', contentChanged);
+  $('#post-name, #post-tags, #post-slug, #post-publish-date').on('keyup', contentChanged);
 });

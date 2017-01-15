@@ -183,6 +183,9 @@ select.form-select-small {
 .publish-dropdown .dropdown-content a {
   color: #51a1a8;
 }
+.publish-dropdown .dropdown-content table#publish-fields td {
+  vertical-align: middle;
+}
 .publish-dropdown input {
   font-family: sans-serif;  
 }

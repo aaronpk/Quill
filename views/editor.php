@@ -90,6 +90,10 @@
           <a href="/docs/post-status" class="small hidden" target="_blank" id="published-status-warning">read this first!</a>
         </td>
       </tr>
+      <tr>
+        <td>Publish:</td>
+        <td><input type="text" class="form-field-small" id="post-publish-date" value="now" placeholder="YYYY-MM-DD hh:mm:ss"></td>
+      </tr>
     </table>
 
 

@@ -35,6 +35,10 @@ $app->post('/editor/publish', function() use($app) {
         $micropub_request['post-status'] = $params['status'];
     }
 
+    if(array_key_exists('publish', $params) && $params['publish'] != 'now') {
+      $micropub_request['published'] = $params['publish'];
+    }
+
     $r = micropub_post_for_user($user, $micropub_request);
 
     $app->response()['Content-type'] = 'application/json';
@@ -70,6 +74,35 @@ $app->post('/editor/upload', function() use($app) {
       ]
     ]));
   }
+});
+
+$app->post('/editor/parse-date', function() use($app) {
+  $date = false;
+  $params = $app->request()->params();
+  if(isset($params['date'])) {
+    if($params['date'] == 'now') {
+      $date = 'now';
+    } else {
+      try {
+        // Check if the provided date has a timezone offset
+        $has_timezone = preg_match('/[-+]\d\d:?\d\d$/', $params['date']);
+
+        if(!$has_timezone && $params['tzoffset']) {
+          $s = (-60) * $params['tzoffset'];
+          $h = $params['tzoffset'] / (-60);
+          $tz = new DateTimeZone($h);
+          $d = new DateTime($params['date'], $tz);
+        } else {
+          $d = new DateTime($params['date']);
+        }
+        $date = $d->format('c');
+      } catch(Exception $e) {
+      }
+    }
+  }
+
+  $app->response()['Content-type'] = 'application/json';
+  $app->response()->body(json_encode(['date'=>$date]));
 });
 
 $app->post('/editor/delete-file', function() use($app) {
