@@ -420,28 +420,33 @@ $app->get('/reply/preview', function() use($app) {
     }
 
     $entry = false;
-    // Convert Tweets to h-entry
+
+    $xray = [
+      'url' => $reply_url
+    ];
+
     if(preg_match('/twitter\.com\/(?:[^\/]+)\/statuse?s?\/(.+)/', $reply_url, $match)) {
-      $tweet_id = $match[1];
       if($user->twitter_access_token) {
-        $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret,
-          $user->twitter_access_token, $user->twitter_token_secret);
-      } else {
-        $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret);
+        $xray['twitter_api_key'] = Config::$twitterClientID;
+        $xray['twitter_api_secret'] = Config::$twitterClientSecret;
+        $xray['twitter_access_token'] = $user->twitter_access_token;
+        $xray['twitter_access_token_secret'] = $user->twitter_token_secret;
       }
-      $tweet = $twitter->get('statuses/show/'.$tweet_id);
-      $entry = tweet_to_h_entry($tweet);
-    } else {
-      // Pass to X-Ray to see if it can expand the entry
-      $ch = curl_init('https://xray.p3k.io/parse?url='.urlencode($reply_url));
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      $response = curl_exec($ch);
-      $data = @json_decode($response, true);
-      if($data && isset($data['data']) && $data['data']['type'] == 'entry') {
-        $entry = $data['data'];
-        // Create a nickname based on the author URL
-        if(array_key_exists('author', $entry) && $entry['author']['url']) {
-          $entry['author']['nickname'] = display_url($entry['author']['url']);
+    }
+
+    // Pass to X-Ray to see if it can expand the entry
+    $ch = curl_init('https://xray.p3k.io/parse');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($xray));
+    $response = curl_exec($ch);
+    $data = @json_decode($response, true);
+    if($data && isset($data['data']) && $data['data']['type'] == 'entry') {
+      $entry = $data['data'];
+      // Create a nickname based on the author URL
+      if(array_key_exists('author', $entry)) {
+        if($entry['author']['url']) {
+          if(!isset($entry['author']['nickname']) || !$entry['author']['nickname'])
+            $entry['author']['nickname'] = display_url($entry['author']['url']);
         }
       }
     }

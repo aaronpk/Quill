@@ -11,10 +11,10 @@
               <span class="loading hidden glyphicon glyphicon-refresh glyphicon-spin form-control-feedback"></span>
             </div>
             <div class="reply-context hidden">
-              <div>
+              <div class="reply-author">
                 <img src="" width="48" class="author-img"> 
               </div>
-              <div>
+              <div class="reply-content">
                 <img src="" class="post-img hidden">
                 <div class="author"><span class="name"></span> <span class="url"></span></div>
                 <h4 class="post-name hidden"></h4>
@@ -143,6 +143,9 @@
   background: #f4f4f4;
   max-height: 140px;
   overflow-y: hidden;
+}
+.reply-context .reply-content {
+  flex: 1 0;
 }
 .reply-context img.author-img {
   border-radius: 4px;

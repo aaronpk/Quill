@@ -59,24 +59,9 @@ function k($a, $k, $default=null) {
   }
 }
 
-function get_timezone($lat, $lng) {
-  try {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'http://atlas.p3k.io/api/timezone?latitude='.$lat.'&longitude='.$lng);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    $tz = @json_decode($response);
-    if($tz)
-      return new DateTimeZone($tz->timezone);
-  } catch(Exception $e) {
-    return null;
-  }
-  return null;
-}
-
 function display_url($url) {
   $parts = parse_url($url);
-  if($parts['path'] != '' && $parts['path'] != '/') {
+  if(isset($parts['path']) && $parts['path'] != '' && $parts['path'] != '/') {
     return preg_replace('/^https?:\/\//','', $url);
   } else {
     return $parts['host'];
@@ -395,47 +380,3 @@ function correct_photo_rotation($filename) {
     $image->writeImage($filename);
   }
 }
-
-function tweet_to_h_entry($tweet) {
-  // Converts to XRay's h-entry format
-
-  $entry = [
-    'type' => 'entry',
-    'url' => 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id_str,
-  ];
-
-  $published = strtotime($tweet->created_at);
-  $entry['published'] = date('c', $published);
-
-  $entry['content'] = [
-    'text' => $tweet->text
-  ];
-
-  if($tweet->entities->urls) {
-    foreach($tweet->entities->urls as $url) {
-      $entry['content']['text'] = str_replace($url->url, $url->expanded_url, $entry['content']['text']);
-    }
-  }
-
-  $entry['author'] = [
-    'type' => 'card',
-    'url' => 'https://twitter.com/'.$tweet->user->screen_name,
-    'name' => $tweet->user->name,
-    'nickname' => $tweet->user->screen_name,
-    'photo' => $tweet->user->profile_image_url_https
-  ];
-
-  if($tweet->user->url) {
-    $entry['author']['url'] = $tweet->user->entities->url->urls[0]->expanded_url;
-  }
-
-  if($tweet->entities->hashtags) {
-    $entry['category'] = [];
-    foreach($tweet->entities->hashtags as $tag) {
-      $entry['category'][] = $tag->text;
-    }
-  }
-
-  return $entry;
-}
-
