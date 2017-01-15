@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="/editor-files/medium-editor/css/medium-editor-insert-plugin.min.css">
     <link rel="stylesheet" href="/editor-files/medium-editor/css/medium-editor-insert-plugin-frontend.min.css">
     <link href="/editor-files/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" href="/editor-files/style.css">
 
     <script src="/editor-files/jquery-1.11.3.min.js"></script>
     <script src="/editor-files/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
@@ -31,6 +30,12 @@
     <script src="/editor-files/medium-editor/js/medium-editor.min.js"></script>
     <script src="/editor-files/medium-editor/js/medium-editor-insert-plugin.min.js"></script>
     <script src="/libs/localforage.js"></script>
+
+    <script src="/libs/tokenfield/bootstrap-tokenfield.min.js"></script>
+    <link rel="stylesheet" href="/libs/tokenfield/bootstrap-tokenfield.min.css">
+    <link rel="stylesheet" href="/libs/tokenfield/tokenfield-typeahead.min.css">
+
+    <link rel="stylesheet" href="/editor-files/style.css">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/images/quill-icon-57.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/images/quill-icon-72.png">
@@ -74,7 +79,7 @@
     <table id="publish-fields">
       <tr>
         <td>Tags:</td>
-        <td><input type="text" class="form-field-small" placeholder="comma separated" id="post-tags"></td>
+        <td><input type="text" class="form-field-small" placeholder="" id="post-tags"></td>
       </tr>
       <tr>
         <td>Slug:</td>

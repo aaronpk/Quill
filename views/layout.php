@@ -18,6 +18,14 @@
 
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.min.css">
+
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="/libs/localforage.js"></script>
+
+    <script src="/libs/tokenfield/bootstrap-tokenfield.min.js"></script>
+    <link rel="stylesheet" href="/libs/tokenfield/bootstrap-tokenfield.min.css">
+    <link rel="stylesheet" href="/libs/tokenfield/tokenfield-typeahead.min.css">
+    
     <link rel="stylesheet" href="/css/style.css">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/images/quill-icon-57.png">
@@ -32,8 +40,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#428bca">
 
-    <script src="/js/jquery-1.7.1.min.js"></script>
-    <script src="/libs/localforage.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/date.js"></script>
     <script src="/js/cassis.js"></script>

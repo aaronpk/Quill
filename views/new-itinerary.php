@@ -68,7 +68,7 @@
       <button class="btn btn-default" id="btn_add_leg">Add Leg</button>
 
       <div class="form-group" style="margin-top: 18px;">
-        <label for="note_category">Tags (comma-separated)</label>
+        <label for="note_category">Tags</label>
         <input type="text" id="note_category" value="" class="form-control">
       </div>
 
@@ -107,6 +107,11 @@
 
 <script>
 $(function(){
+
+  $("#note_category").tokenfield({
+    createTokensOnBlur: true,
+    beautify: true
+  });  
 
   $("#btn_add_leg").click(function(){
     add_leg();

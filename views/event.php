@@ -38,7 +38,7 @@
 
 
       <div class="form-group" style="margin-top: 18px;">
-        <label for="note_category">Tags (comma-separated)</label>
+        <label for="note_category">Tags</label>
         <input type="text" id="note_category" value="" class="form-control">
       </div>
 
@@ -55,6 +55,11 @@
     var d = new Date();
     $("#start_date .timezone").val(tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1));
   });
+
+  $("#note_category").tokenfield({
+    createTokensOnBlur: true,
+    beautify: true
+  });  
 
   $("#btn_post").click(function(){
 

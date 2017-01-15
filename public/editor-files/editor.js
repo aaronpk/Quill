@@ -72,10 +72,12 @@ $(function() {
     $('#publish-in-progress').removeClass('hidden');
     $('#publish-fields').addClass('hidden');
 
+    var category = csv_to_array($("#post-tags").tokenfield('getTokensList'));
+
     $.post('/editor/publish', {
       name: $("#post-name").val(),
       body: editor.serialize().content.value,
-      category: csv_to_array($("#post-tags").val()),
+      category: category,
       slug: $("#post-slug").val(),
       status: $("#post-status").val(),
       publish: $("#post-publish-date").val()
@@ -138,7 +140,7 @@ $(function() {
 function reset_page() {
   $("#post-name").val('');
   $("#post-slug").val('');
-  $("#post-tags").val('');
+  $("#post-tags").tokenfield('setTokens',[]);
   $("#post-status").val('published');
   $("#post-publish-date").val('now');
   $("#content").html('');
@@ -168,7 +170,7 @@ function doAutoSave() {
   var savedData = {
     title: $("#post-name").val(),
     body: editor.serialize().content.value,
-    tags: $("#post-tags").val(),
+    tags: $("#post-tags").tokenfield('getTokensList'),
     slug: $("#post-slug").val(),
     status: $("#post-status").val(),
     publish: $("#post-publish-date").val()
@@ -176,6 +178,13 @@ function doAutoSave() {
   localforage.setItem('currentdraft', savedData).then(function(){
     $("#draft-status").text("Saved");
   });
+}
+function activateTokenField() {
+  $("#post-tags").tokenfield({
+    createTokensOnBlur: true,
+    beautify: true
+  }).on('tokenfield:createdtoken', contentChanged)
+    .on('tokenfield:removedtoken', contentChanged);
 }
 $(function(){
   // Restore draft if present
@@ -190,6 +199,9 @@ $(function(){
       $("#post-publish-date").val(val.publish);
       // drop the cursor into the editor which clears the placeholder text
       $("#content").focus().click();
+      activateTokenField();
+    } else {
+      activateTokenField();
     }
   });
 });

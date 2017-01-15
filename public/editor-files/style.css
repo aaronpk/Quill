@@ -130,10 +130,16 @@ input.form-field-small {
   font-size: 13px;
   color: #51a1a8;
   padding: 0 10px;
+}
+input.form-field-small, .tokenfield.form-control {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
-  border: 1px #93dee5 solid;
+  border: 1px #93dee5 solid;  
+}
+.tokenfield.form-control {
+  padding: 6px;
+  padding-bottom: 0;
 }
 select.form-select-small {
   border-radius: 6px;
@@ -142,6 +148,15 @@ select.form-select-small {
   margin-top: 2px;
   font-size: 13px;
   color: #51a1a8;
+}
+
+.tokenfield .token {
+  height: 20px;
+  font-size: 13px;
+}
+.tokenfield a.close {
+  text-decoration: none;
+  opacity: 0.3;
 }
 
 .publish-dropdown {
@@ -193,6 +208,13 @@ select.form-select-small {
   padding: 8px 4px 12px 4px;
   color: #333;
 }
+#publish-fields {
+  width: 100%;
+}
+#publish-fields .form-field-small {
+  width: calc(100% - 22px);
+}
+
 pre#publish-error-debug {
   overflow: scroll;
   font-size: 11px;
@@ -292,3 +314,4 @@ blockquote {
 .editable .placeholder {
   color: #ccc;
 }
+

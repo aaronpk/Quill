@@ -28,7 +28,7 @@
         </div>
 
         <div class="form-group">
-          <label for="note_category">Tags (<code>category</code>, optional, comma-separated list of tags)</label>
+          <label for="note_category">Tags (<code>category</code>)</label>
           <input type="text" id="note_category" value="<?= $this->bookmark_tags ?>" class="form-control" placeholder="e.g. web, personal">
         </div>
 
@@ -66,6 +66,11 @@
 
 <script>
 $(function(){
+
+  $("#note_category").tokenfield({
+    createTokensOnBlur: true,
+    beautify: true
+  });  
 
   $("#btn_post").click(function(){
 

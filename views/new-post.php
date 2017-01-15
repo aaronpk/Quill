@@ -32,7 +32,7 @@
         </div>
 
         <div class="form-group" id="form_tags">
-          <label for="note_category">Tags (comma-separated list)</label>
+          <label for="note_category">Tags</label>
           <input type="text" id="note_category" value="" class="form-control" placeholder="e.g. web, personal">
         </div>
 
@@ -180,6 +180,7 @@ function saveNoteState() {
   $("#syndication-container button.btn-info").each(function(i,btn){
     state.syndications[$(btn).data('syndicate-to')] = 'selected';
   });
+  console.log("saving",state);
   localforage.setItem('current-note', state);
 }
 
@@ -202,6 +203,9 @@ function restoreNoteState() {
         }
       });
       $("#note_content").change();
+      activateTokenField();
+    } else {
+      activateTokenField();
     }
   });  
 }
@@ -236,6 +240,13 @@ function addPhotoURL() {
 function expandReplySection() {
   $("#expand-reply").click();
   $("#note_in_reply_to").change();  
+}
+
+function activateTokenField() {
+  $("#note_category").tokenfield({
+    createTokensOnBlur: true,
+    beautify: true
+  });  
 }
 
 $(function(){
@@ -314,12 +325,12 @@ $(function(){
     $("#note_content_remaining").addClass("pcheck"+tweet_check);
 
     // If the user didn't enter any categories, add them from the post
-    if(!userHasSetCategory) {
-      var tags = $("#note_content").val().match(/#[a-z][a-z0-9]+/ig);
-      if(tags) {
-        $("#note_category").val(tags.map(function(tag){ return tag.replace('#',''); }).join(", "));
-      }
-    }
+    // if(!userHasSetCategory) {
+    //   var tags = $("#note_content").val().match(/#[a-z][a-z0-9]+/ig);
+    //   if(tags) {
+    //     $("#note_category").val(tags.map(function(tag){ return tag.replace('#',''); }).join(", "));
+    //   }
+    // }
   });
 
   $("#note_in_reply_to").on('change', function(){
@@ -338,13 +349,13 @@ $(function(){
       if(data.canonical_reply_url != reply_to) {
         $("#note_in_reply_to").val(data.canonical_reply_url);
       }
-      var category = csv_to_array($("#note_category").val());
-      for(var i in data.entry.category) {
-        if($.inArray(data.entry.category[i], category) == -1) {
-          category.push(data.entry.category[i]);
-        }
-      }
-      $("#note_category").val(category.join(", "));
+      // var category = csv_to_array($("#note_category").val());
+      // for(var i in data.entry.category) {
+      //   if($.inArray(data.entry.category[i], category) == -1) {
+      //     category.push(data.entry.category[i]);
+      //   }
+      // }
+      // $("#note_category").val(category.join(", "));
 
       if($("#note_content").val() == "" && data.mentions) {
         var mentions = '';
