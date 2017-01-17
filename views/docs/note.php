@@ -30,7 +30,7 @@
     <li><code>location</code> - If you check the "location" box, then this property will be a Geo URI with the location the browser detected. You will see a preview of the value in the note interface along with a map.</li>
     <li><code>photo</code> or <code>photo[]</code> - If your server supports a Media Endpoint, this will be set to the URL that your endpoint returned when it uploaded the photo. Otherwise, this will be one of the parts in the multipart request with the image file itself.</li>
     <li><code>mp-slug</code> - If you enter a slug, this will be sent in the request. You can customize the name of this property in settings.</li>
-    <li><code>syndicate-to[]</code> - (Note: this is deprecated and will be replaced with "mp-syndicate-to[]" soon) Each syndication destination selected will be sent in this property. The values will be the <code>uid</code> that your endpoint returns. See <a href="/docs/syndication">Syndication</a> for more details.</li>
+    <li><code>mp-syndicate-to[]</code> - Each syndication destination selected will be sent in this property. The values will be the <code>uid</code> that your endpoint returns. See <a href="/docs/syndication">Syndication</a> for more details. (If you are using an older Micropub endpoint that expects <code>syndicate-to</code>, you can customize this property in the settings.)</li>
   </ul>
 
   <hr>

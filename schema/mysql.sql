@@ -9,6 +9,7 @@ CREATE TABLE `users` (
   `micropub_scope` varchar(255) DEFAULT NULL,
   `micropub_response` text,
   `micropub_slug_field` varchar(255) NOT NULL DEFAULT 'mp-slug',
+  `micropub_syndicate_field` varchar(255) NOT NULL DEFAULT 'mp-syndicate-to',
   `micropub_success` tinyint(4) DEFAULT '0',
   `date_created` datetime DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,

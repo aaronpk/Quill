@@ -13,27 +13,27 @@
       <form role="form" style="margin-top: 20px;" id="note_form">
 
         <div class="form-group">
-          <label for="note_bookmark">Bookmark URL (<code>bookmark-of</code>)</label>
+          <label for="note_bookmark">Bookmark URL</label>
           <input type="text" id="note_bookmark" value="<?= $this->bookmark_url ?>" class="form-control">
         </div>
 
         <div class="form-group">
-          <label for="note_name">Name (<code>name</code>)</label>
+          <label for="note_name">Name</label>
           <input type="text" id="note_name" value="<?= $this->bookmark_name ?>" class="form-control">
         </div>
 
         <div class="form-group">
-          <label for="note_content">Content (<code>content</code>, optional)</label>
+          <label for="note_content">Content</label>
           <textarea id="note_content" value="" class="form-control" style="height: 5em;"><?= $this->bookmark_content ?></textarea>
         </div>
 
         <div class="form-group">
-          <label for="note_category">Tags (<code>category</code>)</label>
+          <label for="note_category">Tags</label>
           <input type="text" id="note_category" value="<?= $this->bookmark_tags ?>" class="form-control" placeholder="e.g. web, personal">
         </div>
 
         <div class="form-group">
-          <label for="note_syndicate-to">Syndicate (<code>syndicate-to</code>) <a href="javascript:reload_syndications()">refresh</a></label>
+          <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">refresh</a></label>
           <div id="syndication-container">
             <?php
             if($this->syndication_targets) {
@@ -90,7 +90,7 @@ $(function(){
       name: $("#note_name").val(),
       content: $("#note_content").val(),
       category: csv_to_array($("#note_category").val()),
-      'syndicate-to': syndications
+      '<?= $this->user->micropub_syndicate_field ?>': syndications
     }, function(response){
       if(response.location != false) {
 

@@ -429,7 +429,7 @@ $(function(){
     }
     if(syndications.length > 0) {
       for(var i in syndications) {
-        formData.append("syndicate-to[]", syndications[i]);
+        formData.append("<?= $this->user->micropub_syndicate_field ?>[]", syndications[i]);
       }
     }
     if(v=$("#note_slug").val()) {
@@ -485,7 +485,7 @@ $(function(){
       location: $("#note_location").val(),
       category: category,
       slug: $("#note_slug").val(),
-      'syndicate-to': syndications
+      '<?= $this->user->micropub_syndicate_field ?>': syndications
     }, function(data){
       var response = JSON.parse(data);
 

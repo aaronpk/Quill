@@ -36,14 +36,22 @@
 
   <p>You can customize some of the properties that are sent in the Micropub request to work with your specific endpoint.</p>
 
-  <table class="table table-condensed">
+  <table class="table table-condensed" width="100%">
     <tr>
       <td>Slug</td>
-      <td>
+      <td width="160">
         <div style="margin-bottom:4px;"><input type="text" id="slug-field-name" value="<?= $this->user->micropub_slug_field ?>" placeholder="mp-slug" class="form-control"></div>
         <div><input type="button" class="btn btn-primary" value="Save" id="save-slug-field"></div>
       </td>
       <td>Choose the name of the field that the slug will be sent in. This should be set to <code>mp-slug</code> unless your endpoint is using a custom property or the deprecated <code>slug</code> property.</td>
+    </tr>
+    <tr>
+      <td>Syndication</td>
+      <td>
+        <div style="margin-bottom:4px;"><input type="text" id="syndicate-to-field-name" value="<?= $this->user->micropub_syndicate_field ?>" placeholder="mp-syndicate-to" class="form-control"></div>
+        <div><input type="button" class="btn btn-primary" value="Save" id="save-syndicate-to-field"></div>
+      </td>
+      <td>Choose the name of the field that the syndication values will be sent in. This should be set to <code>mp-syndicate-to</code> unless your endpoint is using the deprecated <code>syndicate-to</code> property.</td>
     </tr>
     <tr>
       <td>Send HTML Content</td>
@@ -88,6 +96,12 @@ $(function(){
   $("#save-slug-field").click(function(){
     $.post("/settings/save", {
       slug_field: $("#slug-field-name").val()
+    });
+  });
+
+  $("#save-syndicate-to-field").click(function(){
+    $.post("/settings/save", {
+      syndicate_field: $("#syndicate-to-field-name").val()
     });
   });
 

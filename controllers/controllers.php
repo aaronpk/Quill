@@ -115,6 +115,7 @@ $app->get('/bookmark', function() use($app) {
       'bookmark_tags' => $tags,
       'token' => generate_login_token(),
       'syndication_targets' => json_decode($user->syndication_targets, true),
+      'user' => $user,
       'authorizing' => false
     ));
   }
@@ -322,6 +323,9 @@ $app->post('/settings/save', function() use($app) {
 
     if(array_key_exists('slug_field', $params) && $params['slug_field'])
       $user->micropub_slug_field = $params['slug_field'];
+
+    if(array_key_exists('syndicate_field', $params) && $params['syndicate_field'])
+      $user->micropub_syndicate_field = $params['syndicate_field'];
 
     $user->save();
     $app->response()['Content-type'] = 'application/json';
