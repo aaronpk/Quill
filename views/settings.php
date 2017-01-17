@@ -48,7 +48,12 @@
     <tr>
       <td>Syndication</td>
       <td>
-        <div style="margin-bottom:4px;"><input type="text" id="syndicate-to-field-name" value="<?= $this->user->micropub_syndicate_field ?>" placeholder="mp-syndicate-to" class="form-control"></div>
+        <div style="margin-bottom:4px;">
+          <select id="syndicate-to-field-name">
+            <option value="mp-syndicate-to" <?= $this->user->micropub_syndicate_field == 'mp-syndicate-to' ? 'selected="selected"' : '' ?>>mp-syndicate-to</option>
+            <option value="syndicate-to" <?= $this->user->micropub_syndicate_field == 'syndicate-to' ? 'selected="selected"' : '' ?>>syndicate-to</option>
+          </select>
+        </div>
         <div><input type="button" class="btn btn-primary" value="Save" id="save-syndicate-to-field"></div>
       </td>
       <td>Choose the name of the field that the syndication values will be sent in. This should be set to <code>mp-syndicate-to</code> unless your endpoint is using the deprecated <code>syndicate-to</code> property.</td>
