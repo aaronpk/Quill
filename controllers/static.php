@@ -6,6 +6,7 @@ function doc_pages($page=null) {
     'creating-posts' => 'Creating Posts',
     'editor' => 'Rich Editor',
     'note' => 'Note Interface',
+    'bookmark' => 'Bookmark Interface',
     'syndication' => 'Syndication',
     'post-status' => 'Post Status',
   ];
