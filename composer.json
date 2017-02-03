@@ -14,7 +14,8 @@
     "ezyang/htmlpurifier": "4.*",
     "p3k/multipart": "*",
     "tantek/cassis": "*",
-    "p3k/timezone": "*"
+    "p3k/timezone": "*",
+    "gajus/dindent": "^2.0"
   },
   "autoload": {
     "files": [

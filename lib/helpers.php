@@ -382,12 +382,15 @@ function correct_photo_rotation($filename) {
 }
 
 function sanitize_editor_html($html) {
+  #error_log($html."\n");
+
   $config = HTMLPurifier_Config::createDefault();
   $config->set('Cache.DefinitionImpl', null);
   $config->set('HTML.AllowedElements', [
     'a',
     'abbr',
     'b',
+    'br',
     'code',
     'del',
     'em',
@@ -424,6 +427,19 @@ function sanitize_editor_html($html) {
   # Remove empty paragraphs
   $sanitized = str_replace('<p><br /></p>','',$sanitized);
   $sanitized = str_replace('<p></p>','',$sanitized);
+
+  $indenter = new \Gajus\Dindent\Indenter([
+    'indentation_character' => '  '
+  ]);
+  $indenter->setElementType('h1', \Gajus\Dindent\Indenter::ELEMENT_TYPE_INLINE);
+  $indenter->setElementType('h2', \Gajus\Dindent\Indenter::ELEMENT_TYPE_INLINE);
+  $indenter->setElementType('h3', \Gajus\Dindent\Indenter::ELEMENT_TYPE_INLINE);
+  $indenter->setElementType('h4', \Gajus\Dindent\Indenter::ELEMENT_TYPE_INLINE);
+  $indenter->setElementType('h5', \Gajus\Dindent\Indenter::ELEMENT_TYPE_INLINE);
+  $indenter->setElementType('h6', \Gajus\Dindent\Indenter::ELEMENT_TYPE_INLINE);
+  $sanitized = $indenter->indent($sanitized);
+
+  #error_log($sanitized."\n");
 
   return $sanitized;
 }
