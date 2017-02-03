@@ -14,8 +14,11 @@ $app->post('/editor/publish', function() use($app) {
 
     $content = $params['body'];
 
+    // Clean up the HTML from the editor
+    $content = sanitize_editor_html($content);
+
     if($user->micropub_optin_html_content) {
-      $content = ['html' => $params['body']];
+      $content = ['html' => $content];
     }
 
     $micropub_request = array(

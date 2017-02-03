@@ -380,3 +380,50 @@ function correct_photo_rotation($filename) {
     $image->writeImage($filename);
   }
 }
+
+function sanitize_editor_html($html) {
+  $config = HTMLPurifier_Config::createDefault();
+  $config->set('Cache.DefinitionImpl', null);
+  $config->set('HTML.AllowedElements', [
+    'a',
+    'abbr',
+    'b',
+    'code',
+    'del',
+    'em',
+    'i',
+    'img',
+    'q',
+    'strike',
+    'strong',
+    'blockquote',
+    'pre',
+    'p',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'ul',
+    'li',
+    'ol'
+  ]);
+
+  // Allow data: URIs 
+  $config->set('URI.AllowedSchemes', array('data' => true, 'http' => true, 'https' => true));
+
+  // Strip all classes from elements
+  $config->set('Attr.AllowedClasses', '');
+
+  // $def = $config->getHTMLDefinition(true);
+  $purifier = new HTMLPurifier($config);
+  $sanitized = $purifier->purify($html);
+  $sanitized = str_replace("&#xD;","\r",$sanitized);
+
+  # Remove empty paragraphs
+  $sanitized = str_replace('<p><br /></p>','',$sanitized);
+  $sanitized = str_replace('<p></p>','',$sanitized);
+
+  return $sanitized;
+}

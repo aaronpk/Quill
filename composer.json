@@ -11,6 +11,7 @@
     "firebase/php-jwt": "2.*",
     "abraham/twitteroauth": "*",
     "andreyco/instagram": "3.*",
+    "ezyang/htmlpurifier": "4.*",
     "p3k/multipart": "*",
     "tantek/cassis": "*",
     "p3k/timezone": "*"

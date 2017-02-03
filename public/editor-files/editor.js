@@ -25,7 +25,7 @@ $(function() {
         }
       },
       embeds: {
-        oembedProxy: '/editor/oembed'
+        oembedProxy: null
       }
     }
   });

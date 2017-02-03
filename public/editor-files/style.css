@@ -315,3 +315,6 @@ blockquote {
   color: #ccc;
 }
 
+.medium-insert-action[data-addon=embeds] {
+  display: none !important;
+}
