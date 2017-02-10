@@ -33,13 +33,14 @@ $app->get('/auth/start', function() use($app) {
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
   $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
 
+  $defaultScope = 'create';
+
   if($tokenEndpoint && $micropubEndpoint && $authorizationEndpoint) {
     // Generate a "state" parameter for the request
     $state = IndieAuth\Client::generateStateParameter();
     $_SESSION['auth_state'] = $state;
 
-    $scope = 'post';
-    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI(), Config::$base_url, $state, $scope);
+    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI(), Config::$base_url, $state, $defaultScope);
   } else {
     $authorizationURL = false;
   }
@@ -62,6 +63,11 @@ $app->get('/auth/start', function() use($app) {
     $user->token_endpoint = $tokenEndpoint;
     $user->save();
 
+    // Request whatever scope was previously granted
+    $authorizationURL = parse_url($authorizationURL);
+    $authorizationURL['scope'] = $user->micropub_scope;
+    $authorizationURL = http_build_url($authorizationURL);
+
     $app->redirect($authorizationURL, 302);
 
   } else {
@@ -77,6 +83,11 @@ $app->get('/auth/start', function() use($app) {
     $user->save();
 
     if(k($params, 'dontask') && $params['dontask']) {
+      // Request whatever scope was previously granted
+      $authorizationURL = parse_url($authorizationURL);
+      $authorizationURL['scope'] = $user->micropub_scope ?: $defaultScope;
+      $authorizationURL = http_build_url($authorizationURL);
+
       $_SESSION['dontask'] = 1;
       $app->redirect($authorizationURL, 302);
     }
@@ -93,6 +104,23 @@ $app->get('/auth/start', function() use($app) {
     ));
     $app->response()->body($html);
   }
+});
+
+$app->get('/auth/redirect', function() use($app) {
+  $req = $app->request();
+  $params = $req->params();
+
+  if(!isset($params['scope']))
+    $params['scope'] = '';
+
+  $authorizationURL = parse_url($params['authorization_url']);
+  parse_str($authorizationURL['query'], $query);
+  $query['scope'] = $params['scope'];
+  $authorizationURL['query'] = http_build_query($query);
+  $authorizationURL = http_build_url($authorizationURL);
+
+  $app->redirect($authorizationURL);
+  return;
 });
 
 $app->get('/auth/callback', function() use($app) {

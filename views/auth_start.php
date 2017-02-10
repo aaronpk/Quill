@@ -53,7 +53,17 @@
 
   <p>Clicking the button below will take you to <strong>your</strong> authorization server which is where you will allow this app to be able to post to your site.</p>
 
-  <a href="<?= $this->authorizationURL ?>" class="btn btn-primary">Authorize</a>
+  <form action="/auth/redirect" method="get">
+    <p>Choose the scope to request:</p>
+    <ul style="list-style-type: none;">
+      <li><input type="radio" name="scope" value="create" checked="checked"> create</li>
+      <li><input type="radio" name="scope" value="post"> post (legacy)</li>
+    </ul>
+
+    <button class="btn btn-primary" type="submit" id="auth-submit">Authorize</button>
+
+    <input type="hidden" name="authorization_url" value="<?= $this->authorizationURL ?>">
+  </form>
 
 <?php endif; ?>
 

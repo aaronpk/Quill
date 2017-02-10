@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "05f646a93f2c1204dddd80c4670dcf15",
+    "content-hash": "b7a5b281de45ad549d11a38464bdfb24",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -278,22 +278,22 @@
         },
         {
             "name": "indieauth/client",
-            "version": "0.1.13",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/indieauth-client-php.git",
-                "reference": "d438bb03db15b4ccc6c63228be16de7870b6ab99"
+                "reference": "4b9bd766a92b8abbe420f5889bf7ebac7678151d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/d438bb03db15b4ccc6c63228be16de7870b6ab99",
-                "reference": "d438bb03db15b4ccc6c63228be16de7870b6ab99",
+                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/4b9bd766a92b8abbe420f5889bf7ebac7678151d",
+                "reference": "4b9bd766a92b8abbe420f5889bf7ebac7678151d",
                 "shasum": ""
             },
             "require": {
                 "barnabywalters/mf-cleaner": "0.*",
-                "indieweb/link-rel-parser": "0.1.1",
-                "mf2/mf2": "0.2.*",
+                "indieweb/link-rel-parser": "0.1.*",
+                "mf2/mf2": "~0.3",
                 "php": ">5.3.0"
             },
             "type": "library",
@@ -313,7 +313,7 @@
                 }
             ],
             "description": "IndieAuth Client Library",
-            "time": "2016-02-08T23:56:31+00:00"
+            "time": "2017-02-09T23:42:05+00:00"
         },
         {
             "name": "indieweb/date-formatter",
@@ -360,16 +360,16 @@
         },
         {
             "name": "indieweb/link-rel-parser",
-            "version": "0.1.1",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/link-rel-parser-php.git",
-                "reference": "9e0e635fd301a8b1da7bc181f651f029c531dbb6"
+                "reference": "295420e4f16d9a9d262a3c25a7a583794428f055"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/link-rel-parser-php/zipball/9e0e635fd301a8b1da7bc181f651f029c531dbb6",
-                "reference": "9e0e635fd301a8b1da7bc181f651f029c531dbb6",
+                "url": "https://api.github.com/repos/indieweb/link-rel-parser-php/zipball/295420e4f16d9a9d262a3c25a7a583794428f055",
+                "reference": "295420e4f16d9a9d262a3c25a7a583794428f055",
                 "shasum": ""
             },
             "require": {
@@ -402,46 +402,7 @@
                 "indieweb",
                 "microformats2"
             ],
-            "time": "2013-12-23T00:14:58+00:00"
-        },
-        {
-            "name": "indieweb/mention-client",
-            "version": "0.4.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/indieweb/mention-client-php.git",
-                "reference": "15271f4988c7bf661896fad188fdf0bf91877a7f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/mention-client-php/zipball/15271f4988c7bf661896fad188fdf0bf91877a7f",
-                "reference": "15271f4988c7bf661896fad188fdf0bf91877a7f",
-                "shasum": ""
-            },
-            "require": {
-                "mf2/mf2": "0.2.*",
-                "php": ">=5.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "IndieWeb": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Aaron Parecki",
-                    "email": "aaron@parecki.com",
-                    "homepage": "http://aaronparecki.com/"
-                }
-            ],
-            "description": "Client library for sending webmention and pingback notifications",
-            "homepage": "https://github.com/indieweb/mention-client-php",
-            "time": "2015-04-03T11:21:06+00:00"
+            "time": "2017-01-11T17:14:49+00:00"
         },
         {
             "name": "j4mie/idiorm",
@@ -503,20 +464,20 @@
         },
         {
             "name": "mf2/mf2",
-            "version": "v0.2.12",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/php-mf2.git",
-                "reference": "6701504876d6c9242eb310b35f41d40d9785ab4e"
+                "reference": "4fb2eb5365cbc0fd2e0c26ca748777d6c2539763"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/6701504876d6c9242eb310b35f41d40d9785ab4e",
-                "reference": "6701504876d6c9242eb310b35f41d40d9785ab4e",
+                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/4fb2eb5365cbc0fd2e0c26ca748777d6c2539763",
+                "reference": "4fb2eb5365cbc0fd2e0c26ca748777d6c2539763",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*"
@@ -536,7 +497,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "CC0"
             ],
             "authors": [
                 {
@@ -552,7 +513,7 @@
                 "parser",
                 "semantic"
             ],
-            "time": "2015-07-12T14:10:01+00:00"
+            "time": "2016-03-14T12:13:34+00:00"
         },
         {
             "name": "mpratt/relativetime",
