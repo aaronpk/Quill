@@ -41,7 +41,9 @@
           <input type="text" id="note_slug" value="" class="form-control">
         </div>
 
-        <div class="form-group">
+        <a href="javascript:expandPhotoSection();" id="expand-photo-section"><i class="glyphicon glyphicon-camera" style="color: #aaa; font-size: 36px;"></i></a>
+
+        <div class="form-group hidden" id="photo-section">
           <label for="note_photo">Photo</label>
           <input type="file" name="note_photo" id="note_photo" accept="image/*">
           <a href="javascript:switchToManualPhotoURL();" id="note_manual_photo">enter photo url</a>
@@ -55,7 +57,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" style="margin-top: 1em;">
           <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">(refresh list)</a></label>
           <div id="syndication-container">
             <?php
@@ -245,8 +247,13 @@ function expandReplySection() {
 function activateTokenField() {
   $("#note_category").tokenfield({
     createTokensOnBlur: true,
-    beautify: true
-  });  
+    beautify: true,
+  });
+}
+
+function expandPhotoSection() {
+  $("#photo-section").removeClass("hidden");
+  $("#expand-photo-section").addClass("hidden");
 }
 
 $(function(){
