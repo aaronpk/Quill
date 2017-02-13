@@ -31,12 +31,6 @@
 <script>
 $(function(){
 
-  var autosubmit = window.location.search.match('autosubmit=true');
-
-  if(autosubmit) {
-    $(".footer, #bookmarklet").hide();
-  }
-
   $("#btn_post").click(function(){
     $("#btn_post").addClass("loading disabled").text("Working...");
 
@@ -50,13 +44,9 @@ $(function(){
     }, function(response){
       if(response.location != false) {
 
-        if(autosubmit) {
-          $("#btn_post").hide();
-        } else {
-          $("#test_success").removeClass('hidden');
-          $("#test_error").addClass('hidden');
-          $("#post_href").attr("href", response.location);
-        }
+        $("#test_success").removeClass('hidden');
+        $("#test_error").addClass('hidden');
+        $("#post_href").attr("href", response.location);
 
         window.location = response.location;
       } else {
@@ -69,9 +59,10 @@ $(function(){
     return false;
   });
 
-  if(autosubmit) {
+  <? if($this->autosubmit): ?>
+    $(".footer, #bookmarklet").hide();
     $("#btn_post").click();
-  }
+  <? endif ?>
 
   bind_syndication_buttons();
 });

@@ -34,12 +34,12 @@ function require_login(&$app, $redirect=true) {
   }
 }
 
-function generate_login_token() {
-  return JWT::encode(array(
+function generate_login_token($opts=[]) {
+  return JWT::encode(array_merge([
     'user_id' => $_SESSION['user_id'],
     'me' => $_SESSION['me'],
     'created_at' => time()
-  ), Config::$jwtSecret);
+  ], $opts), Config::$jwtSecret);
 }
 
 $app->get('/dashboard', function() use($app) {
@@ -130,11 +130,23 @@ $app->get('/favorite', function() use($app) {
     if(array_key_exists('url', $params))
       $url = $params['url'];
 
+    // Check if there was a login token in the query string and whether it has autosubmit=true
+    $autosubmit = false;
+
+    if(array_key_exists('token', $params)) {
+      try {
+        $data = JWT::decode($params['token'], Config::$jwtSecret, ['HS256']);
+        $autosubmit = isset($data->autosubmit) && $data->autosubmit;
+      } catch(Exception $e) {
+      }
+    }
+
     render('new-favorite', array(
       'title' => 'New Favorite',
       'url' => $url,
-      'token' => generate_login_token(),
-      'authorizing' => false
+      'token' => generate_login_token(['autosubmit'=>true]),
+      'authorizing' => false,
+      'autosubmit' => $autosubmit
     ));
   }
 });
