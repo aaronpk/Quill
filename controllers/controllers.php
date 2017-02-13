@@ -136,7 +136,12 @@ $app->get('/favorite', function() use($app) {
     if(array_key_exists('token', $params)) {
       try {
         $data = JWT::decode($params['token'], Config::$jwtSecret, ['HS256']);
-        $autosubmit = isset($data->autosubmit) && $data->autosubmit;
+        if(isset($data->autosubmit) && $data->autosubmit) {
+          // Only allow this token to be used for the user who created it
+          if($data->user_id == $_SESSION['user_id']) {
+            $autosubmit = true;
+          }
+        }
       } catch(Exception $e) {
       }
     }
