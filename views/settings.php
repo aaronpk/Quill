@@ -24,6 +24,14 @@
       <td width="140">access token</td>
       <td><code style="word-break: break-word; white-space: pre-wrap;"><?= $this->user->micropub_access_token ?></code></td>
     </tr>
+    <tr>
+      <td>
+        <input type="button" class="btn btn-default" value="Reset Login" id="reset-login">
+      </td>
+      <td>
+        Clicking this button will erase the access token Quill has stored for you, forget all cached endpoints, and sign you out. If you sign back in, you will start over and see the debugging screens and scope options again.
+      </td>
+    </tr>
   </table>
 
 
@@ -107,6 +115,12 @@ $(function(){
   $("#save-syndicate-to-field").click(function(){
     $.post("/settings/save", {
       syndicate_field: $("#syndicate-to-field-name").val()
+    });
+  });
+
+  $("#reset-login").click(function(){
+    $.post("/auth/reset", function(){
+      window.location = "/";
     });
   });
 

@@ -267,6 +267,24 @@ $app->get('/signout', function() use($app) {
   $app->redirect('/', 302);
 });
 
+$app->post('/auth/reset', function() use($app) {
+  if($user=require_login($app, false)) {
+    $user->authorization_endpoint = '';
+    $user->token_endpoint = '';
+    $user->micropub_endpoint = '';
+    $user->authorization_endpoint = '';
+    $user->micropub_media_endpoint = '';
+    $user->micropub_scope = '';
+    $user->micropub_access_token = '';
+    $user->save();
+    
+    unset($_SESSION['auth']);
+    unset($_SESSION['me']);
+    unset($_SESSION['auth_state']);
+    unset($_SESSION['user_id']);
+  }
+  $app->redirect('/', 302);
+});
 
 $app->post('/auth/twitter', function() use($app) {
   if($user=require_login($app, false)) {
