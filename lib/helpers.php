@@ -385,6 +385,7 @@ function sanitize_editor_html($html) {
   #error_log($html."\n");
 
   $config = HTMLPurifier_Config::createDefault();
+  $config->autoFinalize = false;
   $config->set('Cache.DefinitionImpl', null);
   $config->set('HTML.AllowedElements', [
     'a',
@@ -410,8 +411,15 @@ function sanitize_editor_html($html) {
     'h6',
     'ul',
     'li',
-    'ol'
+    'ol',
+    'figcaption',
+    'figure'
   ]);
+
+  $def = $config->getHTMLDefinition(true);
+  // http://developers.whatwg.org/grouping-content.html
+  $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
+  $def->addElement('figcaption', 'Inline', 'Flow', 'Common');
 
   // Allow data: URIs 
   $config->set('URI.AllowedSchemes', array('data' => true, 'http' => true, 'https' => true));
