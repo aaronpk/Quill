@@ -125,7 +125,11 @@
           Choose File <input type="file" name="note_photo" id="note_photo" accept="image/*">
         </label>
 
-        <input type="url" id="note_photo_url" class="form-control" placeholder="Paste image URL">
+        <div style="margin-bottom: 1em;">
+          <input type="url" id="note_photo_url" class="form-control" placeholder="Paste image URL">
+        </div>
+
+        <input type="text" id="note_photo_alt" class="form-control" placeholder="Image alt text">
 
       </div>
       <div class="modal-footer">
@@ -150,14 +154,14 @@
           <img style="width:100%;">
         </div>
 
-        <input type="text" id="note_photo_alt" class="form-control hidden" placeholder="Image alt text">
+        <input type="text" id="note_edit_photo_alt" class="form-control" placeholder="Image alt text">
         <input type="hidden" id="modal_edit_photo_index">
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
         <button type="button" class="btn btn-danger remove-btn" data-dismiss="modal">Remove</button>
-        <!-- <button type="button" class="btn btn-primary save-btn">Save</button> -->
+        <button type="button" class="btn btn-primary save-btn">Save</button>
       </div>
     </div>
   </div>
@@ -255,7 +259,7 @@ function saveNoteState() {
   $("#syndication-container button.btn-info").each(function(i,btn){
     state.syndications[$(btn).data('syndicate-to')] = 'selected';
   });
-  console.log("saving",state);
+  // console.log("saving",state);
   localforage.setItem('current-note', state);
 }
 
@@ -306,6 +310,7 @@ function addNewPhoto() {
   // Reset modal
   $("#note_photo").val("");
   $("#note_photo_url").val("");
+  $("#note_photo_alt").val("");
   $("#modal_photo_preview").addClass("hidden");
   $("#note_photo_button").removeClass("hidden");
   $("#note_photo_url").removeClass("hidden");
@@ -360,11 +365,13 @@ $(function(){
     if($("#note_photo_url").val()) {
       photos.push({
         url: $("#note_photo_url").val(),
+        alt: $("#note_photo_alt").val(),
         external: true
       });
     } else {
       photos.push({
         url: URL.createObjectURL(document.getElementById("note_photo").files[0]),
+        alt: $("#note_photo_alt").val(),
         file: document.getElementById("note_photo").files[0],
         external: false
       });
@@ -375,6 +382,11 @@ $(function(){
   });
 
   $("#edit-photo-modal .save-btn").click(function(){
+    var index = $("#modal_edit_photo_index").val();
+    photos[index].alt = $("#note_edit_photo_alt").val();
+    refreshPhotoPreviews();
+    saveNoteState();
+    $("#edit-photo-modal").modal('hide');
   });
 
   $("#edit-photo-modal .remove-btn").click(function(){
@@ -394,8 +406,13 @@ $(function(){
 function refreshPhotoPreviews() {
   $("#photo-previews").html("");
   for(i=0; i<photos.length; i++) {
-    console.log(photos[i]);
-    $("#photo-previews").append('<span><img src="'+photos[i].url+'"></span>');
+    var img = document.createElement('img');
+    img.setAttribute('src', photos[i].url);
+    img.setAttribute('alt', photos[i].alt);
+    img.setAttribute('title', photos[i].alt);
+    var span = document.createElement('span');
+    span.appendChild(img);
+    $("#photo-previews").append(span);
   }
   if(photos.length == 0) {
     $("#photo-previews").addClass("hidden");
@@ -403,7 +420,6 @@ function refreshPhotoPreviews() {
     $("#photo-previews").removeClass("hidden");
   }
   $("#photo-previews img").unbind("click").bind("click", function(){
-    console.log("Photo was tapped: "+$(this).attr("src"));
     $("#modal_edit_photo_preview img").attr("src", $(this).attr("src"));
     var index = false;
     for(i=0; i<photos.length; i++) {
@@ -411,6 +427,7 @@ function refreshPhotoPreviews() {
         index = i;
       }
     }
+    $("#note_edit_photo_alt").val(photos[index].alt);
     $("#modal_edit_photo_index").val(index);
     $("#edit-photo-modal").modal();
   });
@@ -575,42 +592,66 @@ $(function(){
     var category = csv_to_array($("#note_category").val());
 
     var formData = new FormData();
+    var entry = {};
+    var doMultipart = false;
+    var hasAltText = false;
+
     if(v=$("#note_content").val()) {
       formData.append("content", v);
+      entry['content'] = v;
     }
     if(v=$("#note_in_reply_to").val()) {
       formData.append("in-reply-to", v);
+      entry['in-reply-to'] = v;
     }
     if(v=$("#note_location").val()) {
       formData.append("location", v);
+      entry['location'] = v;
     }
     if(category.length > 0) {
       for(var i in category) {
         formData.append("category[]", category[i]);
       }
+      entry['category'] = category;
     }
     if(syndications.length > 0) {
       for(var i in syndications) {
         formData.append("<?= $this->user->micropub_syndicate_field ?>[]", syndications[i]);
       }
+      entry["<?= $this->user->micropub_syndicate_field ?>"] = syndications;
     }
     if(v=$("#note_slug").val()) {
       formData.append("<?= $this->user->micropub_slug_field ?>", v);
+      entry["<?= $this->user->micropub_slug_field ?>"] = v;
+    }
+
+    function appendPhotoToFormData(photo, prop) {
+      if(photo.external) {
+        if(photo.alt) {
+          hasAltText = true;
+          formData.append(prop+"[value]", photo.url);
+          formData.append(prop+"[alt]", photo.alt);
+          entry['photo'].push({
+            value: photo.url,
+            alt: photo.alt
+          })
+        } else {
+          formData.append(prop, photo.url);
+          entry['photo'].push(photo.url);
+        }
+      } else {
+        formData.append(prop, photo.file);
+        doMultipart = true;
+      }
     }
 
     if(photos.length == 1) {
-      if(photos[0].external) {
-        formData.append("photo", photos[0].url);
-      } else {
-        formData.append("photo", photos[0].file);
-      }
+      entry['photo'] = [];
+      appendPhotoToFormData(photos[0], "photo");
     } else {
+      entry['photo'] = [];
       for(i=0; i<photos.length; i++) {
-        if(photos[i].external) {
-          formData.append("photo[]", photos[i].url);
-        } else {
-          formData.append("photo[]", photos[i].file);
-        }
+        appendPhotoToFormData(photos[i], "photo[]");
       }
     }
 
@@ -619,71 +660,50 @@ $(function(){
     // This will be stripped by Quill before it's sent to the Micropub endpoint
     formData.append("null","null");
 
-    var request = new XMLHttpRequest();
-    request.open("POST", "/micropub/multipart");
-    request.onreadystatechange = function() {
-      if(request.readyState == XMLHttpRequest.DONE) {
-        // console.log(request.responseText);
-        try {
-          var response = JSON.parse(request.responseText);
-          localforage.removeItem('current-note');
-          if(response.location) {
-            window.location = response.location;
-            // console.log(response.location);
-          } else {
-            $("#test_response").html(response.response).removeClass('hidden');
-            $("#test_success").addClass('hidden');
-            $("#test_error").removeClass('hidden');
-          }
-        } catch(e) {
-          $("#test_success").addClass('hidden');
-          $("#test_error").removeClass('hidden');
-        }
-        $("#btn_post").removeClass("loading disabled").text("Post");
-      }
-    }
     $("#btn_post").addClass("loading disabled").text("Working...");
-    request.send(formData);
-
-    /*
-    $.post("/micropub/multipart", {
-      content: $("#note_content").val(),
-      'in-reply-to': $("#note_in_reply_to").val(),
-      location: $("#note_location").val(),
-      category: category,
-      slug: $("#note_slug").val(),
-      '<?= $this->user->micropub_syndicate_field ?>': syndications
-    }, function(data){
-      var response = JSON.parse(data);
-
-      if(response.location != false) {
-        $("#note_form").slideUp(200, function(){
-          $(window).scrollTop($("#test_success").position().top);
-        });
-
-        $("#test_success").removeClass('hidden');
-        $("#test_error").addClass('hidden');
-        $("#post_href").attr("href", response.location);
-
-        $("#note_content").val("");
-        $("#note_in_reply_to").val("");
-        $("#note_category").val("");
-        $("#note_slug").val("");
-
-      } else {
-        $("#test_success").addClass('hidden');
-        $("#test_error").removeClass('hidden');
+    if(doMultipart || !hasAltText) {
+      var request = new XMLHttpRequest();
+      request.open("POST", "/micropub/multipart");
+      request.onreadystatechange = function() {
+        if(request.readyState == XMLHttpRequest.DONE) {
+          handle_post_response(request.responseText);
+        }
       }
-
-      $("#last_response_date").html("(just now)");
-      $("#test_request").html(response.request);
-      $("#last_request_container").show();
-      $("#test_response").html(response.response);
-    });
-    */
+      request.send(formData);
+    } else {
+      $.post("/micropub/postjson", {
+        data: JSON.stringify({
+          "type": "h-entry",
+          "properties": entry
+        })
+      }, function(response) {
+        handle_post_response(response);
+      });
+    }
 
     return false;
   });
+
+  function handle_post_response(response) {
+    try {
+      if(typeof response == "string") {
+        response = JSON.parse(response);
+      }
+      localforage.removeItem('current-note');
+      if(response.location) {
+        window.location = response.location;
+        // console.log(response.location);
+      } else {
+        $("#test_response").html(response.response).removeClass('hidden');
+        $("#test_success").addClass('hidden');
+        $("#test_error").removeClass('hidden');
+      }
+    } catch(e) {
+      $("#test_success").addClass('hidden');
+      $("#test_error").removeClass('hidden');
+    }
+    $("#btn_post").removeClass("loading disabled").text("Post");
+  }
 
   function location_error(msg) {
     $("#note_location_msg").val(msg);
