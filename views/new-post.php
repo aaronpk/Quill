@@ -41,21 +41,10 @@
           <input type="text" id="note_slug" value="" class="form-control">
         </div>
 
-        <a href="javascript:expandPhotoSection();" id="expand-photo-section"><i class="glyphicon glyphicon-camera" style="color: #aaa; font-size: 36px;"></i></a>
-
-        <div class="form-group hidden" id="photo-section">
-          <label for="note_photo">Photo</label>
-          <input type="file" name="note_photo" id="note_photo" accept="image/*">
-          <a href="javascript:switchToManualPhotoURL();" id="note_manual_photo">enter photo url</a>
-          <a href="javascript:addPhotoURL();" class="hidden" id="add_photo">add photo</a>
-          <br>
-          <div id="photo_preview_container" class="hidden">
-            <img src="" id="photo_preview" style="max-width: 300px; max-height: 300px;">
-            <div>
-              <button type="button" class="btn btn-danger btn-sm" id="remove_photo"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Remove image</button>
-            </div>
-          </div>
+        <div class="form-group hidden" id="photo-previews">
         </div>
+
+        <a href="javascript:addNewPhoto();" id="expand-photo-section"><i class="glyphicon glyphicon-camera" style="color: #aaa; font-size: 36px;"></i></a>
 
         <div class="form-group" style="margin-top: 1em;">
           <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">(refresh list)</a></label>
@@ -118,6 +107,62 @@
       </div>
   </div>
 
+<!-- Add Photo -->
+<div class="modal fade" id="photo-modal" tabindex="-1" role="dialog" aria-labelledby="photo-modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="photo-modal-title">Add Photo</h4>
+      </div>
+      <div class="modal-body">
+
+        <div id="modal_photo_preview" class="hidden">
+          <img style="width:100%;">
+        </div>
+
+        <label id="note_photo_button" class="btn btn-default btn-file" style="margin-bottom: 1em;">
+          Choose File <input type="file" name="note_photo" id="note_photo" accept="image/*">
+        </label>
+
+        <input type="url" id="note_photo_url" class="form-control" placeholder="Paste image URL">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary save-btn">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Photo -->
+<div class="modal fade" id="edit-photo-modal" tabindex="-1" role="dialog" aria-labelledby="edit-photo-modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="edit-photo-modal-title">Edit Photo</h4>
+      </div>
+      <div class="modal-body">
+
+        <div id="modal_edit_photo_preview" style="margin-bottom: 4px;">
+          <img style="width:100%;">
+        </div>
+
+        <input type="text" id="note_photo_alt" class="form-control hidden" placeholder="Image alt text">
+        <input type="hidden" id="modal_edit_photo_index">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger remove-btn" data-dismiss="modal">Remove</button>
+        <!-- <button type="button" class="btn btn-primary save-btn">Save</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <style type="text/css">
 
 #reply {
@@ -129,6 +174,34 @@
   font-size: 0.8em;
   font-weight: bold;
 }
+
+#modal_photo_preview img, #modal_edit_photo_preview img {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+#photo-previews span {
+  width: 24%;
+  height: 180px;
+  margin-right: 1px;
+
+  position: relative;
+  overflow: hidden;
+  display: inline-block;  
+}
+#photo-previews img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 100%;
+  width: auto;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+  cursor: pointer;
+}
+
 
 .pcheck206 { color: #6ba15c; } /* tweet fits within the limit even after adding RT @username */
 .pcheck207 { color: #c4b404; } /* danger zone, tweet will overflow when RT @username is added */
@@ -176,7 +249,7 @@ function saveNoteState() {
     inReplyTo: $("#note_in_reply_to").val(),
     category: $("#note_category").val(),
     slug: $("#note_slug").val(),
-    photo: $("#note_photo_url").val()
+    photos: photos
   };
   state.syndications = [];
   $("#syndication-container button.btn-info").each(function(i,btn){
@@ -193,8 +266,9 @@ function restoreNoteState() {
       $("#note_in_reply_to").val(note.inReplyTo);
       $("#note_category").val(note.category);
       $("#note_slug").val(note.slug);
-      if(note.photo) {
-        replacePhotoWithPhotoURL(note.photo);
+      if(note.photos) {
+        photos = note.photos;
+        refreshPhotoPreviews();
       }
       if(note.inReplyTo) {
         expandReplySection();
@@ -212,33 +286,6 @@ function restoreNoteState() {
   });  
 }
 
-function replacePhotoWithPhotoURL(url) {
-  $("#note_photo").after('<input type="url" name="note_photo_url[]" value="" class="note_photo_url form-control">');
-  $(".note_photo_url").val(url);
-  $("#note_photo").remove();  
-  $("#photo_preview").attr("src", url);
-  $("#photo_preview_container").removeClass("hidden");
-  $("#note_manual_photo").addClass("hidden");
-}
-
-function switchToManualPhotoURL() {
-  $("#note_photo").after('<input type="url" name="note_photo_url[]" value="" class="note_photo_url form-control">');
-  $("#note_photo").remove();  
-  $("#note_photo_url").change(function(){
-    $("#photo_preview").attr("src", $(this).val());
-    $("#photo_preview_container").removeClass("hidden");
-  });
-  $("#note_manual_photo").addClass("hidden");
-  $("#add_photo").removeClass("hidden");
-}
-
-function addPhotoURL() {
-  $(".note_photo_url:last").after('<input type="url" name="note_photo_url[]" value="" class="note_photo_url form-control" style="margin-top:2px;">');
-  if($(".note_photo_url").length == 4) {
-    $("#add_photo").remove();
-  }
-}
-
 function expandReplySection() {
   $("#expand-reply").click();
   $("#note_in_reply_to").change();  
@@ -251,37 +298,125 @@ function activateTokenField() {
   });
 }
 
-function expandPhotoSection() {
-  $("#photo-section").removeClass("hidden");
-  $("#expand-photo-section").addClass("hidden");
+
+var hasMediaEndpoint = <?= $this->media_endpoint ? 'true' : 'false' ?>;
+var photos = [];
+
+function addNewPhoto() {
+  // Reset modal
+  $("#note_photo").val("");
+  $("#note_photo_url").val("");
+  $("#modal_photo_preview").addClass("hidden");
+  $("#note_photo_button").removeClass("hidden");
+  $("#note_photo_url").removeClass("hidden");
+
+  // Show the modal
+  $("#photo-modal").modal();
 }
 
 $(function(){
+  $("#note_photo").on("change", function(e){
 
-  var userHasSetCategory = false;
+    // If the user has a media endpoint, upload the photo to it right now
+    if(hasMediaEndpoint) {
+      var formData = new FormData();
+      formData.append("null","null");
+      formData.append("photo", e.target.files[0]);
+      var request = new XMLHttpRequest();
+      request.open("POST", "/micropub/media");
+      request.onreadystatechange = function() {
+        if(request.readyState == XMLHttpRequest.DONE) {
+          try {
+            var response = JSON.parse(request.responseText);
+            if(response.location) {
+              $("#modal_photo_preview img").attr("src", response.location);
+              $("#note_photo_url").removeClass("hidden").val(response.location);
+              $("#note_photo_button").addClass("hidden");
+            } else {
+              console.log("Endpoint did not return a location header", response);
+            }
+          } catch(e) {
+            console.log(e);
+          }
+        }
+      }
+      request.send(formData);
+    } else {
+      $("#modal_photo_preview img").attr("src", URL.createObjectURL(e.target.files[0]));
+    }
 
-  var hasMediaEndpoint = <?= $this->media_endpoint ? 'true' : 'false' ?>;
+    $("#modal_photo_preview").removeClass("hidden");
+    $("#note_photo_button").addClass("hidden");
+    $("#note_photo_url").addClass("hidden");
+  });
 
-  $("#note_content, #note_category, #note_in_reply_to, #note_slug, #note_photo_url").on('keyup change', function(e){
+  $("#note_photo_url").on("change", function(){
+    $("#modal_photo_preview img").attr("src", $(this).val());
+    $("#modal_photo_preview").removeClass("hidden");
+    $("#note_photo_button").addClass("hidden");
+  });
+
+  $("#photo-modal .save-btn").click(function(){
+    if($("#note_photo_url").val()) {
+      photos.push({
+        url: $("#note_photo_url").val(),
+        external: true
+      });
+    } else {
+      photos.push({
+        url: URL.createObjectURL(document.getElementById("note_photo").files[0]),
+        file: document.getElementById("note_photo").files[0],
+        external: false
+      });
+    }
+    $("#photo-modal").modal('hide');
+    refreshPhotoPreviews();
     saveNoteState();
   });
 
-  $("#note_content").on('keyup', function(){
-    var scrollHeight = document.getElementById("note_content").scrollHeight;
-    var currentHeight = parseInt($("#note_content").css("height"));
-    if(Math.abs(scrollHeight - currentHeight) > 20) {
-      $("#note_content").css("height", (scrollHeight+30)+"px");
+  $("#edit-photo-modal .save-btn").click(function(){
+  });
+
+  $("#edit-photo-modal .remove-btn").click(function(){
+    var new_photos = [];
+    for(i=0; i<photos.length; i++) {
+      if(i != $("#modal_edit_photo_index").val()) {
+        new_photos.push(photos[i]);
+      }
     }
+    photos = new_photos;
+    refreshPhotoPreviews();
+    saveNoteState();
   });
 
-  $("#expand-reply").click(function(){
-    $('.reply-section').removeClass('hidden');
-    $(this).addClass('hidden');
-    return false;
-  });
+});
 
-  // Preview the photo when one is chosen
-  $("#photo_preview_container").addClass("hidden");
+function refreshPhotoPreviews() {
+  $("#photo-previews").html("");
+  for(i=0; i<photos.length; i++) {
+    console.log(photos[i]);
+    $("#photo-previews").append('<span><img src="'+photos[i].url+'"></span>');
+  }
+  if(photos.length == 0) {
+    $("#photo-previews").addClass("hidden");
+  } else {
+    $("#photo-previews").removeClass("hidden");
+  }
+  $("#photo-previews img").unbind("click").bind("click", function(){
+    console.log("Photo was tapped: "+$(this).attr("src"));
+    $("#modal_edit_photo_preview img").attr("src", $(this).attr("src"));
+    var index = false;
+    for(i=0; i<photos.length; i++) {
+      if(photos[i].url == $(this).attr("src")) {
+        index = i;
+      }
+    }
+    $("#modal_edit_photo_index").val(index);
+    $("#edit-photo-modal").modal();
+  });
+}
+
+/*
   $("#note_photo").on("change", function(e){
     // If the user has a media endpoint, upload the photo to it right now
     if(hasMediaEndpoint) {
@@ -314,13 +449,33 @@ $(function(){
       $("#photo_preview_container").removeClass("hidden");
     }
   });
-  $("#remove_photo").on("click", function(){
-    $("#note_photo").val("");
-    $(".note_photo_url").val("");
-    $("#photo_preview").attr("src", "" );
-    $("#photo_preview_container").addClass("hidden");
+*/
+
+
+$(function(){
+
+  var userHasSetCategory = false;
+
+  $("#note_content, #note_category, #note_in_reply_to, #note_slug").on('keyup change', function(e){
     saveNoteState();
   });
+
+  $("#note_content").on('keyup', function(){
+    var scrollHeight = document.getElementById("note_content").scrollHeight;
+    var currentHeight = parseInt($("#note_content").css("height"));
+    if(Math.abs(scrollHeight - currentHeight) > 20) {
+      $("#note_content").css("height", (scrollHeight+30)+"px");
+    }
+  });
+
+  $("#expand-reply").click(function(){
+    $('.reply-section').removeClass('hidden');
+    $(this).addClass('hidden');
+    return false;
+  });
+
+  // Preview the photo when one is chosen
+  $("#photo_preview_container").addClass("hidden");
 
   $("#note_content").on('change keyup', function(e){
     var text = $("#note_content").val();
@@ -443,15 +598,20 @@ $(function(){
       formData.append("<?= $this->user->micropub_slug_field ?>", v);
     }
 
-    // Add either the photo as a file, or the photo URL depending on whether the user has a media endpoint
-    if(document.getElementById("note_photo") && document.getElementById("note_photo").files[0]) {
-      formData.append("photo", document.getElementById("note_photo").files[0]);
-    } else if($(".note_photo_url").val()) {
-      $(".note_photo_url").each(function(){
-        if($(this).val()) {
-          formData.append("photo[]", $(this).val());
+    if(photos.length == 1) {
+      if(photos[0].external) {
+        formData.append("photo", photos[0].url);
+      } else {
+        formData.append("photo", photos[0].file);
+      }
+    } else {
+      for(i=0; i<photos.length; i++) {
+        if(photos[i].external) {
+          formData.append("photo[]", photos[i].url);
+        } else {
+          formData.append("photo[]", photos[i].file);
         }
-      });
+      }
     }
 
     // Need to append a placeholder field because if the file size max is hit, $_POST will

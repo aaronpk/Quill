@@ -22,9 +22,13 @@
     <script src="/js/jquery-1.7.1.min.js"></script>
     <script src="/libs/localforage.js"></script>
 
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/libs/tokenfield/bootstrap-tokenfield.min.js"></script>
     <link rel="stylesheet" href="/libs/tokenfield/bootstrap-tokenfield.min.css">
     <link rel="stylesheet" href="/libs/tokenfield/tokenfield-typeahead.min.css">
+
+    <script src="/libs/awesomplete/awesomplete.min.js"></script>
+    <link rel="stylesheet" href="/libs/awesomplete/awesomplete.css">
     
     <link rel="stylesheet" href="/css/style.css">
 
