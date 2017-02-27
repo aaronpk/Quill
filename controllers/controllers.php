@@ -443,7 +443,7 @@ $app->post('/favorite', function() use($app) {
 
     $error = false;
 
-    if(isset($params['edit'])) {
+    if(isset($params['edit']) && $params['edit']) {
       $r = edit_favorite($user, $params['edit'], $params['like_of']);
       if(isset($r['location']) && $r['location'])
         $location = $r['location'];
