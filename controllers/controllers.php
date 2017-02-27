@@ -441,12 +441,21 @@ $app->post('/favorite', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
+    $error = false;
+
     if(isset($params['edit'])) {
       $r = edit_favorite($user, $params['edit'], $params['like_of']);
       if(isset($r['location']) && $r['location'])
         $location = $r['location'];
-      else
+      elseif(in_array($r['code'], [200,201,204]))
         $location = $params['edit'];
+      elseif(in_array($r['code'], [401,403])) {
+        $location = false;
+        $error = 'Your Micropub endpoint denied the request. Check that Quill is authorized to update posts.';
+      } else {
+        $location = false;
+        $error = 'Your Micropub endpoint did not return a location header or a recognized response code';
+      }
     } else {
       $r = create_favorite($user, $params['like_of']);
       $location = $r['location'];
@@ -455,7 +464,8 @@ $app->post('/favorite', function() use($app) {
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'location' => $location,
-      'error' => $r['error']
+      'error' => $r['error'],
+      'error_details' => $error,
     )));
   }
 });

@@ -32,7 +32,7 @@
 $(function(){
 
   $("#btn_post").click(function(){
-    $("#btn_post").addClass("loading disabled").text("Working...");
+    $("#btn_post").addClass("loading disabled");
 
     var syndications = [];
     $("#syndication-container button.btn-info").each(function(i,btn){
@@ -53,7 +53,10 @@ $(function(){
       } else {
         $("#test_success").addClass('hidden');
         $("#test_error").removeClass('hidden');
-        $("#btn_post").removeClass("loading disabled").text("Post");
+        if(response.error_details) {
+          $("#test_error").text(response.error_details);
+        }
+        $("#btn_post").removeClass("loading disabled");
       }
 
     });
