@@ -125,10 +125,10 @@ $app->get('/favorite', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $url = '';
+    $like_of = '';
 
     if(array_key_exists('url', $params))
-      $url = $params['url'];
+      $like_of = $params['url'];
 
     // Check if there was a login token in the query string and whether it has autosubmit=true
     $autosubmit = false;
@@ -146,12 +146,24 @@ $app->get('/favorite', function() use($app) {
       }
     }
 
+    if(array_key_exists('edit', $params)) {
+      $edit_data = get_micropub_source($user, $params['edit'], 'like-of');
+      $url = $params['edit'];
+      if(isset($edit_data['like-of'])) {
+        $like_of = $edit_data['like-of'][0];
+      }
+    } else {
+      $edit_data = false;
+      $url = false;
+    }
+
     render('new-favorite', array(
       'title' => 'New Favorite',
-      'url' => $url,
+      'like_of' => $like_of,
       'token' => generate_login_token(['autosubmit'=>true]),
       'authorizing' => false,
-      'autosubmit' => $autosubmit
+      'autosubmit' => $autosubmit,
+      'url' => $url
     ));
   }
 });
@@ -395,6 +407,18 @@ function create_favorite(&$user, $url) {
   return $r;
 }
 
+function edit_favorite(&$user, $post_url, $like_of) {
+  $micropub_request = [
+    'action' => 'update',
+    'url' => $post_url,
+    'replace' => [
+      'like-of' => $like_of
+    ]
+  ];
+  $r = micropub_post_for_user($user, $micropub_request, null, true);
+  return $r;
+}
+
 function create_repost(&$user, $url) {
   $micropub_request = array(
     'repost-of' => $url
@@ -417,11 +441,20 @@ $app->post('/favorite', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $r = create_favorite($user, $params['url']);
+    if(isset($params['edit'])) {
+      $r = edit_favorite($user, $params['edit'], $params['like_of']);
+      if(isset($r['location']) && $r['location'])
+        $location = $r['location'];
+      else
+        $location = $params['edit'];
+    } else {
+      $r = create_favorite($user, $params['like_of']);
+      $location = $r['location'];
+    }
 
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
-      'location' => $r['location'],
+      'location' => $location,
       'error' => $r['error']
     )));
   }
@@ -517,5 +550,87 @@ $app->get('/reply/preview', function() use($app) {
       'entry' => $entry,
       'mentions' => $mentions
     ]));
+  }
+});
+
+$app->get('/edit', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    if(!isset($params['url']) || !$params['url']) {
+      $app->response()->body('no URL specified');
+    }
+
+    // Query the micropub endpoint for the source properties
+    $source = micropub_get($user->micropub_endpoint, [
+        'q' => 'source',
+        'url' => $params['url']
+      ], $user->micropub_access_token);
+
+    $data = $source['data'];
+
+    if(array_key_exists('error', $data)) {
+      render('edit/error', [
+        'title' => 'Error',
+        'summary' => 'Your Micropub endpoint returned an error:',
+        'error' => $data['error'],
+        'error_description' => $data['error_description']
+      ]);
+      return;
+    }
+
+    if(!array_key_exists('properties', $data) || !array_key_exists('type', $data)) {
+      render('edit/error', [
+        'title' => 'Error',
+        'summary' => '',
+        'error' => 'Invalid Response',
+        'error_description' => 'Your endpoint did not return "properties" and "type" in the response.'
+      ]);
+      return;
+    }
+
+    // Start checking for content types
+    $type = $data['type'][0];
+    $error = false;
+    $url = false;
+
+    if($type == 'h-review') {
+      $url = '/review';
+    } elseif($type == 'h-event') {
+      $url = '/event';
+    } elseif($type != 'h-entry') {
+      $error = 'This type of post is not supported by any of Quill\'s editing interfaces. Type: '.$type;
+    } else {
+      if(array_key_exists('bookmark-of', $data['properties'])) {
+        $url = '/bookmark';
+      } elseif(array_key_exists('like-of', $data['properties'])) {
+        $url = '/favorite';
+      } elseif(array_key_exists('repost-of', $data['properties'])) {
+        $url = '/repost';
+      }
+    }
+
+    if($error) {
+      render('edit/error', [
+        'title' => 'Error',
+        'summary' => '',
+        'error' => 'There was a problem!',
+        'error_description' => $error
+      ]);
+      return;      
+    }
+
+    // Until all interfaces are complete, show an error here for unsupported ones
+    if(!in_array($url, ['/favorite',])) {
+      render('edit/error', [
+        'title' => 'Not Yet Supported',
+        'summary' => '',
+        'error' => 'Not Yet Supported',
+        'error_description' => 'Editing is not yet supported for this type of post.'
+      ]);
+      return;      
+    }
+
+    $app->redirect($url . '?edit=' . $params['url'], 302);
   }
 });

@@ -33,7 +33,7 @@ $app->get('/auth/start', function() use($app) {
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
   $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
 
-  $defaultScope = 'create';
+  $defaultScope = 'create update';
 
   if($tokenEndpoint && $micropubEndpoint && $authorizationEndpoint) {
     // Generate a "state" parameter for the request

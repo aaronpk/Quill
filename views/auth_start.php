@@ -56,7 +56,8 @@
   <form action="/auth/redirect" method="get">
     <p>Choose the scope to request:</p>
     <ul style="list-style-type: none;">
-      <li><input type="radio" name="scope" value="create" checked="checked"> create</li>
+      <li><input type="radio" name="scope" value="create update" checked="checked"> create update</li>
+      <li><input type="radio" name="scope" value="create"> create</li>
       <li><input type="radio" name="scope" value="post"> post (legacy)</li>
     </ul>
 

@@ -277,6 +277,19 @@ function get_micropub_config(&$user, $query=[]) {
   ];
 }
 
+function get_micropub_source(&$user, $url, $properties) {
+  $r = micropub_get($user->micropub_endpoint, [
+    'q' => 'source',
+    'url' => $url,
+    'properties' => $properties
+  ], $user->micropub_access_token);
+  if(isset($r['data']) && isset($r['data']['properties'])) {
+    return $r['data']['properties'];
+  } else {
+    return false;
+  }
+}
+
 function static_map($latitude, $longitude, $height=180, $width=700, $zoom=14) {
   return 'https://atlas.p3k.io/map/img?marker[]=lat:' . $latitude . ';lng:' . $longitude . ';icon:small-blue-cutout&basemap=gray&width=' . $width . '&height=' . $height . '&zoom=' . $zoom;
 }
