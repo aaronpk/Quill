@@ -412,7 +412,7 @@ function edit_favorite(&$user, $post_url, $like_of) {
     'action' => 'update',
     'url' => $post_url,
     'replace' => [
-      'like-of' => $like_of
+      'like-of' => [$like_of]
     ]
   ];
   $r = micropub_post_for_user($user, $micropub_request, null, true);
