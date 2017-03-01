@@ -217,16 +217,28 @@ $app->get('/repost', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $url = '';
+    $repost_of = '';
 
     if(array_key_exists('url', $params))
-      $url = $params['url'];
+      $repost_of = $params['url'];
+
+    if(array_key_exists('edit', $params)) {
+      $edit_data = get_micropub_source($user, $params['edit'], 'repost-of');
+      $url = $params['edit'];
+      if(isset($edit_data['repost-of'])) {
+        $repost_of = $edit_data['repost-of'][0];
+      }
+    } else {
+      $edit_data = false;
+      $url = false;
+    }
 
     render('new-repost', array(
       'title' => 'New Repost',
-      'url' => $url,
+      'repost_of' => $repost_of,
       'token' => generate_login_token(),
-      'authorizing' => false
+      'authorizing' => false,
+      'url' => $url,
     ));
   }
 });
@@ -437,6 +449,18 @@ function create_repost(&$user, $url) {
   return $r;
 }
 
+function edit_repost(&$user, $post_url, $repost_of) {
+  $micropub_request = [
+    'action' => 'update',
+    'url' => $post_url,
+    'replace' => [
+      'repost-of' => [$repost_of]
+    ]
+  ];
+  $r = micropub_post_for_user($user, $micropub_request, null, true);
+  return $r;
+}
+
 $app->post('/favorite', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
@@ -474,12 +498,31 @@ $app->post('/repost', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $r = create_repost($user, $params['url']);
+    $error = false;
+
+    if(isset($params['edit']) && $params['edit']) {
+      $r = edit_repost($user, $params['edit'], $params['repost_of']);
+      if(isset($r['location']) && $r['location'])
+        $location = $r['location'];
+      elseif(in_array($r['code'], [200,201,204]))
+        $location = $params['edit'];
+      elseif(in_array($r['code'], [401,403])) {
+        $location = false;
+        $error = 'Your Micropub endpoint denied the request. Check that Quill is authorized to update posts.';
+      } else {
+        $location = false;
+        $error = 'Your Micropub endpoint did not return a location header or a recognized response code';
+      }
+    } else {
+      $r = create_repost($user, $params['repost_of']);
+      $location = $r['location'];
+    }
 
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
-      'location' => $r['location'],
-      'error' => $r['error']
+      'location' => $location,
+      'error' => $r['error'],
+      'error_details' => $error,
     )));
   }
 });
@@ -631,7 +674,7 @@ $app->get('/edit', function() use($app) {
     }
 
     // Until all interfaces are complete, show an error here for unsupported ones
-    if(!in_array($url, ['/favorite',])) {
+    if(!in_array($url, ['/favorite','/repost'])) {
       render('edit/error', [
         'title' => 'Not Yet Supported',
         'summary' => '',
