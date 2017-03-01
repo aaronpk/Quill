@@ -227,7 +227,6 @@ $app->get('/repost', function() use($app) {
       $url = $params['edit'];
       if(isset($edit_data['repost-of'])) {
         $repost = $edit_data['repost-of'][0];
-            print_r($edit_data);
         if(is_string($edit_data['repost-of'][0])) {
           $repost_of = $repost;
         } elseif(is_array($repost)) {
