@@ -226,7 +226,21 @@ $app->get('/repost', function() use($app) {
       $edit_data = get_micropub_source($user, $params['edit'], 'repost-of');
       $url = $params['edit'];
       if(isset($edit_data['repost-of'])) {
-        $repost_of = $edit_data['repost-of'][0];
+        $repost = $edit_data['repost-of'][0];
+            print_r($edit_data);
+        if(is_string($edit_data['repost-of'][0])) {
+          $repost_of = $repost;
+        } elseif(is_array($repost)) {
+          if(array_key_exists('type', $repost) && in_array('h-cite', $repost)) {
+            if(array_key_exists('url', $repost['properties'])) {
+              $repost_of = $repost['properties']['url'][0];
+            }
+          } else {
+            // Error
+          }
+        } else {
+          // Error: don't know what type of post this is
+        }
       }
     } else {
       $edit_data = false;
