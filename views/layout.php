@@ -27,8 +27,10 @@
     <link rel="stylesheet" href="/libs/tokenfield/bootstrap-tokenfield.min.css">
     <link rel="stylesheet" href="/libs/tokenfield/tokenfield-typeahead.min.css">
 
+    <!--
     <script src="/libs/awesomplete/awesomplete.min.js"></script>
     <link rel="stylesheet" href="/libs/awesomplete/awesomplete.css">
+    -->
     
     <link rel="stylesheet" href="/css/style.css">
 
