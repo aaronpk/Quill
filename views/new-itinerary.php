@@ -167,29 +167,33 @@ $(function(){
       var arrival = $(this).find(".leg-arrival-date").val()+"T"+$(this).find(".leg-arrival-time").val()+$(this).find(".leg-arrival-tz").val();
 
       itinerary.push({
-        "type": "h-leg",
+        "type": ["h-leg"],
         "properties": {
-          "transit-type": $(this).find(".leg-transit-type").val(),
-          "operator": $(this).find(".leg-operator").val(),
-          "number": $(this).find(".leg-number").val(),
-          "origin": $(this).find(".leg-origin").val(),
-          "destination": $(this).find(".leg-destination").val(),
-          "departure": departure,
-          "arrival": arrival
+          "transit-type": [$(this).find(".leg-transit-type").val()],
+          "operator": [$(this).find(".leg-operator").val()],
+          "number": [$(this).find(".leg-number").val()],
+          "origin": [$(this).find(".leg-origin").val()],
+          "destination": [$(this).find(".leg-destination").val()],
+          "departure": [departure],
+          "arrival": [arrival]
         }
       });
     });
 
     var category = csv_to_array($("#note_category").val());
 
+    properties = {
+      itinerary: itinerary
+    };
+    if(category.length > 0) {
+      properties['category'] = category;
+    }
+
     $("#btn_post").addClass("loading disabled").text("Working...");
     $.post("/micropub/postjson", {
       data: JSON.stringify({
-        "type": "h-entry",
-        "properties": {
-          "itinerary": itinerary,
-          "category": category
-        }
+        "type": ["h-entry"],
+        "properties": properties
       })
     }, function(response){
 
