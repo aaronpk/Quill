@@ -598,15 +598,15 @@ $(function(){
 
     if(v=$("#note_content").val()) {
       formData.append("content", v);
-      entry['content'] = v;
+      entry['content'] = [v];
     }
     if(v=$("#note_in_reply_to").val()) {
       formData.append("in-reply-to", v);
-      entry['in-reply-to'] = v;
+      entry['in-reply-to'] = [v];
     }
     if(v=$("#note_location").val()) {
       formData.append("location", v);
-      entry['location'] = v;
+      entry['location'] = [v];
     }
     if(category.length > 0) {
       for(var i in category) {
@@ -673,7 +673,7 @@ $(function(){
     } else {
       $.post("/micropub/postjson", {
         data: JSON.stringify({
-          "type": "h-entry",
+          "type": ["h-entry"],
           "properties": entry
         })
       }, function(response) {
