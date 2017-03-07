@@ -211,7 +211,7 @@ $(function(){
 
     var review = {
       item: [{
-              type: "h-product",
+              type: ["h-product"],
               properties: {
                 name: [$("#item_name").val()],
                 url: [$("#item_url").val()]
@@ -232,7 +232,7 @@ $(function(){
 
     $.post("/micropub/postjson", {
       data: JSON.stringify({
-        "type": "h-review",
+        "type": ["h-review"],
         "properties": review
       })
     }, function(response){
