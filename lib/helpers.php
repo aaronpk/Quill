@@ -137,7 +137,7 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $js
 
   if(!$file_path) {
     if($json) {
-      $params['access_token'] = $access_token;
+      // $params['access_token'] = $access_token;
       $httpheaders[] = 'Content-type: application/json';
       $post = json_encode($params);
     } else {
