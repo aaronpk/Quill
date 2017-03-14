@@ -19,13 +19,21 @@ $app->post('/editor/publish', function() use($app) {
 
     if($user->micropub_optin_html_content) {
       $content = ['html' => $content];
-    }
 
-    $micropub_request = array(
-      'h' => 'entry',
-      'name' => $params['name'],
-      'content' => $content
-    );
+      $micropub_request = array(
+        'name' => [$params['name']],
+        'content' => [$content]
+      );
+      $json = true;
+    } else {
+      $json = false;
+
+      $micropub_request = array(
+        'h' => 'entry',
+        'name' => [$params['name']],
+        'content' => [$content]
+      );
+    }
 
     if(array_key_exists('category', $params) && $params['category'])
       $micropub_request['category'] = $params['category'];
@@ -42,7 +50,14 @@ $app->post('/editor/publish', function() use($app) {
       $micropub_request['published'] = $params['publish'];
     }
 
-    $r = micropub_post_for_user($user, $micropub_request);
+    if($json) {
+      $micropub_request = [
+        'type' => ['h-entry'],
+        'properties' => $micropub_request
+      ];
+    }
+
+    $r = micropub_post_for_user($user, $micropub_request, null, $json);
 
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode([
