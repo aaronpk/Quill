@@ -1,5 +1,6 @@
 <?php
 use Abraham\TwitterOAuth\TwitterOAuth;
+use IndieWeb\DateFormatter;
 
 function require_login(&$app, $redirect=true) {
   $params = $app->request()->params();
@@ -581,8 +582,35 @@ $app->get('/reply/preview', function() use($app) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($xray));
     $response = curl_exec($ch);
     $data = @json_decode($response, true);
-    if($data && isset($data['data']) && $data['data']['type'] == 'entry') {
-      $entry = $data['data'];
+    if($data && isset($data['data'])) {
+      if($data['data']['type'] == 'entry') {
+        $entry = $data['data'];
+      } elseif($data['data']['type'] == 'event') {
+        $entry = $data['data'];
+        $content = '';
+        if(isset($entry['start']) && isset($entry['end'])) {
+          $formatted = DateFormatter::format($entry['start'], $entry['end'], false);
+          if($formatted)
+            $content .= $formatted;
+          else {
+            $start = new DateTime($entry['start']);
+            $end = new DateTime($entry['end']);
+            if($start && $end)
+              $content .= 'from '.$start->format('Y-m-d g:ia').' to '.$end->format('Y-m-d g:ia');
+          }
+        } elseif(isset($entry['start'])) {
+          $formatted = DateFormatter::format($entry['start'], false, false);
+          if($formatted)
+            $content .= $formatted;
+          else {
+            $start = new DateTime($entry['start']);
+            if($start)
+              $content .= $start->format('Y-m-d g:ia');
+          }
+        }
+
+        $entry['content']['text'] = $content;
+      }
       // Create a nickname based on the author URL
       if(array_key_exists('author', $entry)) {
         if($entry['author']['url']) {
@@ -599,10 +627,12 @@ $app->get('/reply/preview', function() use($app) {
         $mentions[] = strtolower($entry['author']['nickname']);
       }
 
-      if(preg_match_all('/(^|(?<=[\s\/]))@([a-z0-9_]+([a-z0-9_\.]*)?)/i', $entry['content']['text'], $matches)) {
-        foreach($matches[0] as $nick) {
-          if(trim($nick,'@') != $user->twitter_username && trim($nick,'@') != display_url($user->url))
-            $mentions[] = strtolower(trim($nick,'@'));
+      if(isset($entry['content']) && $entry['content'] && isset($entry['content']['text'])) {
+        if(preg_match_all('/(^|(?<=[\s\/]))@([a-z0-9_]+([a-z0-9_\.]*)?)/i', $entry['content']['text'], $matches)) {
+          foreach($matches[0] as $nick) {
+            if(trim($nick,'@') != $user->twitter_username && trim($nick,'@') != display_url($user->url))
+              $mentions[] = strtolower(trim($nick,'@'));
+          }
         }
       }
 

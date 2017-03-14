@@ -25,6 +25,17 @@
           <a href="" id="expand-reply" class="btn btn-xs btn-info">Reply</a>
         </div>
 
+        <div class="form-group hidden" id="form_rsvp">
+          <label for="note_rsvp">RSVP</label>
+          <select id="note_rsvp" class="form-control">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="maybe">Maybe</option>
+            <option value="interested">Interested</option>
+            <option value=""></option>
+          </select>
+        </div>
+
         <div class="form-group">
           <div id="note_content_remaining" class="pcheck206"><img src="/images/twitter.ico"> <span>140</span></div>
           <label for="note_content">Content</label>
@@ -544,25 +555,37 @@ $(function(){
         $("#note_content").val(mentions);
       }
 
-      $(".reply-context .content").text(data.entry.content.text);
-      if(data.entry.name) {
-        $(".reply-context .post-name").text(data.entry.name).removeClass('hidden');
-      } else {
-        $(".reply-context .post-name").addClass('hidden');
-      }
-      if(data.entry.author) {
-        $(".reply-context .author .name").text(data.entry.author.name);
-        $(".reply-context .author .url").text(data.entry.author.url);
-        $(".reply-context img.author-img").attr('src', data.entry.author.photo);
-      }
-      if(data.entry.photo) {
-        $(".reply-context img.post-img").attr('src', data.entry.photo[0]).removeClass('hidden');
-      } else {
-        $(".reply-context img.post-img").addClass('hidden');
+      if(data.entry) {
+        $(".reply-context .content").text(data.entry.content.text);
+        if(data.entry.name) {
+          $(".reply-context .post-name").text(data.entry.name).removeClass('hidden');
+        } else {
+          $(".reply-context .post-name").addClass('hidden');
+        }
+        if(data.entry.author) {
+          $(".reply-context .author .name").text(data.entry.author.name);
+          $(".reply-context .author .url").text(data.entry.author.url);
+          $(".reply-context img.author-img").attr('src', data.entry.author.photo);
+          $(".reply-context .reply-author").removeClass("hidden");
+        } else {
+          $(".reply-context .reply-author").addClass("hidden");
+        }
+        if(data.entry.photo) {
+          $(".reply-context img.post-img").attr('src', data.entry.photo[0]).removeClass('hidden');
+        } else {
+          $(".reply-context img.post-img").addClass('hidden');
+        }
+        if(data.entry.type == "event") {
+          $("#form_rsvp").removeClass("hidden");
+        } else {
+          $("#form_rsvp").addClass("hidden");
+        }
+
+        $(".reply-context").removeClass("hidden");
       }
 
       $(".reply-section .loading").addClass("hidden");
-      $(".reply-context").removeClass("hidden");
+
     });
   });
 
@@ -623,6 +646,10 @@ $(function(){
     if(v=$("#note_slug").val()) {
       formData.append("<?= $this->user->micropub_slug_field ?>", v);
       entry["<?= $this->user->micropub_slug_field ?>"] = v;
+    }
+    if(!$("#form_rsvp").hasClass("hidden") && $("#note_rsvp").val()) {
+      formData.append("rsvp", $("#note_rsvp").val());
+      entry["rsvp"] = $("#note_rsvp").val();
     }
 
     function appendPhotoToFormData(photo, prop) {

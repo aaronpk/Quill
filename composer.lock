@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7a5b281de45ad549d11a38464bdfb24",
+    "content-hash": "ea8898cc230a54e15b78444d0454961e",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -317,20 +317,24 @@
         },
         {
             "name": "indieweb/date-formatter",
-            "version": "0.1.6",
+            "version": "0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/date-formatter-php.git",
-                "reference": "9c12e0fda95f4b3119fcaf271d141305870c4350"
+                "reference": "282946ebae0efa5f9c00be88553d76d7a39824ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/date-formatter-php/zipball/9c12e0fda95f4b3119fcaf271d141305870c4350",
-                "reference": "9c12e0fda95f4b3119fcaf271d141305870c4350",
+                "url": "https://api.github.com/repos/indieweb/date-formatter-php/zipball/282946ebae0efa5f9c00be88553d76d7a39824ab",
+                "reference": "282946ebae0efa5f9c00be88553d76d7a39824ab",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "mf2/mf2": ">=0.2.12",
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
             "autoload": {
@@ -356,7 +360,7 @@
                 "microformats",
                 "microformats2"
             ],
-            "time": "2015-10-28T00:32:39+00:00"
+            "time": "2016-04-05T15:13:00+00:00"
         },
         {
             "name": "indieweb/link-rel-parser",
