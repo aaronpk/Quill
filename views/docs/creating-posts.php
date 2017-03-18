@@ -10,6 +10,7 @@
     <li><a href="/docs/editor">Rich Editor</a></li>
     <li><a href="/docs/note">Note</a></li>
     <li><a href="/docs/bookmark">Bookmark</a></li>
+    <li><a href="/docs/favorite">Favorite</a></li>
     <li>... more documentation soon!</li>
   </ul>
 
