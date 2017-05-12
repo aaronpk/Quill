@@ -117,7 +117,7 @@ foreach($flights as $flight) {
                   ]
                 ]
               ],
-              'route' => ['http://quill.dev/flight/'.$flight->id.'/'.$flightData['faFlightID'].'/route.json']
+              'route' => [Config::$base_url.'flight/'.$flight->id.'/'.$flightData['faFlightID'].'/route.json']
             ]
           ];
 
