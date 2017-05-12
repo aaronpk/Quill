@@ -85,7 +85,7 @@
           <input type="checkbox" id="note_location_chk" value="">
           <img src="/images/spinner.gif" id="note_location_loading" style="display: none;">
 
-          <input type="text" id="note_location_msg" value="" class="form-control" placeholder="" readonly="readonly">
+          <input type="text" name="note_location_msg" id="note_location_msg" value="" class="form-control" placeholder="" readonly="readonly">
           <input type="hidden" id="note_location">
           <input type="hidden" id="location_enabled" value="<?= $this->location_enabled ?>">
 
