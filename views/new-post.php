@@ -140,7 +140,9 @@
           <input type="url" id="note_photo_url" class="form-control" placeholder="Paste image URL">
         </div>
 
-        <input type="text" id="note_photo_alt" class="form-control" placeholder="Image alt text">
+        <?php if($this->media_endpoint): ?>
+          <input type="text" id="note_photo_alt" class="form-control" placeholder="Image alt text">
+        <?php endif ?>
 
       </div>
       <div class="modal-footer">
