@@ -46,7 +46,7 @@ foreach($flights as $flight) {
             'date' => date('Y-m-d H:i:s'), 
             'lat' => $flightData['latitude'], 
             'lng' => $flightData['longitude'],
-            'altitude' => $flightData['altitude'],
+            'altitude' => $flightData['altitude']*100*0.3048,
             'heading' => $flightData['heading'],
             'speed' => $flightData['groundspeed'],
           ];
