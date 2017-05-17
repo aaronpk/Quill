@@ -512,12 +512,9 @@ $app->get('/settings/html-content', function() use($app) {
 });
 
 function create_favorite(&$user, $url) {
-  $micropub_request = array(
-    'like-of' => $url
-  );
-  $r = micropub_post_for_user($user, $micropub_request);
 
   $tweet_id = false;
+  $twitter_syndication = false;
 
   // POSSE favorites to Twitter
   if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
@@ -527,7 +524,18 @@ function create_favorite(&$user, $url) {
     $result = $twitter->post('favorites/create', array(
       'id' => $tweet_id
     ));
+    if(property_exists($result, 'id_str')) {
+      $twitter_syndication = 'https://twitter.com/'.$user->twitter_username.'/status/'.$result->id_str;
+    }
   }
+
+  $micropub_request = array(
+    'like-of' => $url
+  );
+  if($twitter_syndication) {
+    $micropub_request['syndication'] = $twitter_syndication;
+  }
+  $r = micropub_post_for_user($user, $micropub_request);
 
   return $r;
 }
@@ -545,19 +553,27 @@ function edit_favorite(&$user, $post_url, $like_of) {
 }
 
 function create_repost(&$user, $url) {
-  $micropub_request = array(
-    'repost-of' => $url
-  );
-  $r = micropub_post_for_user($user, $micropub_request);
 
   $tweet_id = false;
+  $twitter_syndication = false;
 
   if($user->twitter_access_token && preg_match('/https?:\/\/(?:www\.)?twitter\.com\/[^\/]+\/status(?:es)?\/(\d+)/', $url, $match)) {
     $tweet_id = $match[1];
     $twitter = new TwitterOAuth(Config::$twitterClientID, Config::$twitterClientSecret,
       $user->twitter_access_token, $user->twitter_token_secret);
     $result = $twitter->post('statuses/retweet/'.$tweet_id);
+    if(property_exists($result, 'id_str')) {
+      $twitter_syndication = 'https://twitter.com/'.$user->twitter_username.'/status/'.$result->id_str;
+    }
   }
+
+  $micropub_request = array(
+    'repost-of' => $url
+  );
+  if($twitter_syndication) {
+    $micropub_request['syndication'] = $twitter_syndication;
+  }
+  $r = micropub_post_for_user($user, $micropub_request);
 
   return $r;
 }

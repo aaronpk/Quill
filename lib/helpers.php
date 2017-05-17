@@ -151,7 +151,7 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $js
     $multipart->addArray($params);
     $multipart->addFile($file_prop, $file_path, $mimetype);
     $post = $multipart->data();
-    array_push($httpheaders, 'Content-Type: ' . $multipart->contentType());
+    $httpheaders[] = 'Content-Type: ' . $multipart->contentType();
   }
 
   curl_setopt($ch, CURLOPT_HTTPHEADER, $httpheaders);
