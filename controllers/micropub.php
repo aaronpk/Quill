@@ -26,7 +26,7 @@ $app->post('/micropub/post', function() use($app) {
     $app->response()->body(json_encode(array(
       'request' => htmlspecialchars($r['request']),
       'response' => htmlspecialchars($r['response']),
-      'location' => (isset($r['location']) ? Mf2\resolveUrl($r['location'], $user->micropub_endpoint) : null),
+      'location' => (isset($r['location']) ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
       'error' => $r['error'],
       'curlinfo' => $r['curlinfo']
     )));
@@ -69,7 +69,7 @@ $app->post('/micropub/multipart', function() use($app) {
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'response' => (isset($r['response']) ? htmlspecialchars($r['response']) : null),
-      'location' => (isset($r['location']) ? Mf2\resolveUrl($r['location'], $user->micropub_endpoint) : null),
+      'location' => (isset($r['location']) ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
       'error' => (isset($r['error']) ? $r['error'] : null),
     )));
   }
