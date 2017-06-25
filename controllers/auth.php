@@ -29,9 +29,9 @@ $app->get('/auth/start', function() use($app) {
     $_SESSION['reply'] = $params['reply'];
   }
 
-  $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($me);
-  $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
-  $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
+  $authorizationEndpoint = Mf2\resolveUrl($me, IndieAuth\Client::discoverAuthorizationEndpoint($me));
+  $tokenEndpoint = Mf2\resolveUrl($me, IndieAuth\Client::discoverTokenEndpoint($me));
+  $micropubEndpoint = Mf2\resolveUrl($me, IndieAuth\Client::discoverMicropubEndpoint($me));
 
   $defaultScope = 'create update';
 
@@ -185,8 +185,8 @@ $app->get('/auth/callback', function() use($app) {
   // An authorization code is in the query string, and we want to exchange that for an access token at the token endpoint.
 
   // Discover the endpoints
-  $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
-  $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
+  $micropubEndpoint = Mf2\resolveUrl($me, IndieAuth\Client::discoverMicropubEndpoint($me));
+  $tokenEndpoint = Mf2\resolveUrl($me, IndieAuth\Client::discoverTokenEndpoint($me));
 
   if($tokenEndpoint) {
     $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $params['me'], buildRedirectURI(), Config::$base_url, k($params,'state'), true);
