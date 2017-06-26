@@ -700,6 +700,12 @@ $(function(){
       }
       request.send(formData);
     } else {
+      // Convert all single-value properties to arrays
+      for(var k in entry) {
+        if(typeof entry[k] == "string") {
+          entry[k] = [entry[k]];
+        }
+      }
       $.post("/micropub/postjson", {
         data: JSON.stringify({
           "type": ["h-entry"],
