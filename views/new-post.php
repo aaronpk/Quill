@@ -677,7 +677,7 @@ $(function(){
     if(photos.length == 1) {
       entry['photo'] = [];
       appendPhotoToFormData(photos[0], "photo");
-    } else {
+    } else if(photos.length > 1) {
       entry['photo'] = [];
       for(i=0; i<photos.length; i++) {
         appendPhotoToFormData(photos[i], "photo[]");
