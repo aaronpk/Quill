@@ -26,7 +26,7 @@ $app->post('/micropub/post', function() use($app) {
     $app->response()->body(json_encode(array(
       'request' => htmlspecialchars($r['request']),
       'response' => htmlspecialchars($r['response']),
-      'location' => (isset($r['location']) ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
+      'location' => (isset($r['location']) && $r['location'] ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
       'error' => $r['error'],
       'curlinfo' => $r['curlinfo']
     )));
@@ -69,7 +69,7 @@ $app->post('/micropub/multipart', function() use($app) {
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'response' => (isset($r['response']) ? htmlspecialchars($r['response']) : null),
-      'location' => (isset($r['location']) ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
+      'location' => (isset($r['location']) && $r['location'] ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
       'error' => (isset($r['error']) ? $r['error'] : null),
     )));
   }
@@ -108,10 +108,10 @@ $app->post('/micropub/postjson', function() use($app) {
     $r = micropub_post_for_user($user, json_decode($params['data'], true), null, true);
 
     $app->response()['Content-type'] = 'application/json';
-    $app->response()->body(json_encode(array(
-      'location' => $r['location'],
+    $app->response()->body(json_encode([
+      'location' => (isset($r['location']) && $r['location'] ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
       'error' => $r['error'],
       'response' => $r['response']
-    )));
+    ]));
   }
 });
