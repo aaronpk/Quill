@@ -3,7 +3,7 @@
     "slim/slim": "2.2.*",
     "saltybeagle/savant3": "dev-master",
     "j4mie/idiorm": "1.4.*",
-    "mf2/mf2": "0.3.*",
+    "mf2/mf2": "^0.3.2",
     "indieweb/date-formatter": "0.3.*",
     "indieauth/client": ">=0.2.0",
     "mpratt/relativetime": ">=1.0",
