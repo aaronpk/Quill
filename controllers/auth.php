@@ -29,6 +29,8 @@ $app->get('/auth/start', function() use($app) {
     $_SESSION['reply'] = $params['reply'];
   }
 
+  $_SESSION['attempted_me'] = $me;
+
   $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($me);
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
   $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
@@ -127,22 +129,6 @@ $app->get('/auth/callback', function() use($app) {
   $req = $app->request();
   $params = $req->params();
 
-  // Double check there is a "me" parameter
-  // Should only fail for really hacked up requests
-  if(!array_key_exists('me', $params) || !($me = IndieAuth\Client::normalizeMeURL($params['me']))) {
-    if(array_key_exists('me', $params))
-      $error = 'The ID you entered, <strong>' . $params['me'] . '</strong> is not valid.';
-    else
-      $error = 'There was no "me" parameter in the callback.';
-    $html = render('auth_error', array(
-      'title' => 'Auth Callback',
-      'error' => 'Invalid "me" Parameter',
-      'errorDescription' => $error
-    ));
-    $app->response()->body($html);
-    return;
-  }
-
   // If there is no state in the session, start the login again
   if(!array_key_exists('auth_state', $_SESSION)) {
     $app->redirect('/auth/start?me='.urlencode($params['me']));
@@ -165,7 +151,7 @@ $app->get('/auth/callback', function() use($app) {
     $html = render('auth_error', array(
       'title' => 'Auth Callback',
       'error' => 'Missing state parameter',
-      'errorDescription' => 'No state parameter was provided in the request. This shouldn\'t happen. It is possible this is a malicious authorization attempt.'
+      'errorDescription' => 'No state parameter was provided in the request. This shouldn\'t happen. It is possible this is a malicious authorization attempt, or your authorization server failed to pass back the "state" parameter.'
     ));
     $app->response()->body($html);
     return;
@@ -181,6 +167,17 @@ $app->get('/auth/callback', function() use($app) {
     return;
   }
 
+  if(!isset($_SESSION['attempted_me'])) {
+    $html = render('auth_error', [
+      'title' => 'Auth Callback',
+      'error' => 'Missing data',
+      'errorDescription' => 'We forgot who was logging in. It\'s possible you took too long to finish signing in, or something got mixed up by signing in in another tab.'
+    ]);
+    $app->response()->body($html);
+    return;
+  }
+  $me = $_SESSION['attempted_me'];
+
   // Now the basic sanity checks have passed. Time to start providing more helpful messages when there is an error.
   // An authorization code is in the query string, and we want to exchange that for an access token at the token endpoint.
 
@@ -189,7 +186,7 @@ $app->get('/auth/callback', function() use($app) {
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
 
   if($tokenEndpoint) {
-    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $params['me'], buildRedirectURI(), Config::$base_url, k($params,'state'), true);
+    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $me, buildRedirectURI(), Config::$base_url, k($params,'state'), true);
 
   } else {
     $token = array('auth'=>false, 'response'=>false);
@@ -199,8 +196,19 @@ $app->get('/auth/callback', function() use($app) {
 
   // If a valid access token was returned, store the token info in the session and they are signed in
   if(k($token['auth'], array('me','access_token','scope'))) {
+    // Double check that the domain of the returned "me" matches the expected
+    if(parse_url($token['auth']['me'], PHP_URL_HOST) != parse_url($me, PHP_URL_HOST)) {
+      $html = render('auth_error', [
+        'title' => 'Error Signing In',
+        'error' => 'Invalid user',
+        'errorDescription' => 'The user URL that was returned in the access token did not match the domain of the user signing in.'
+      ]);
+      $app->response()->body($html);
+      return;
+    }
+
     $_SESSION['auth'] = $token['auth'];
-    $_SESSION['me'] = $params['me'];
+    $_SESSION['me'] = $me = $token['auth']['me'];
 
     $user = ORM::for_table('users')->where('url', $me)->find_one();
     if($user) {
@@ -228,6 +236,7 @@ $app->get('/auth/callback', function() use($app) {
   }
 
   unset($_SESSION['auth_state']);
+  unset($_SESSION['attempted_me']);
 
   if($redirectToDashboardImmediately || k($_SESSION, 'dontask')) {
     unset($_SESSION['dontask']);
