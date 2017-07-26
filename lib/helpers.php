@@ -5,7 +5,7 @@ if(isset(Config::$dbType) && Config::$dbType == 'sqlite') {
 } else {
   ORM::configure('mysql:host=' . Config::$dbHost . ';dbname=' . Config::$dbName);
   ORM::configure('username', Config::$dbUsername);
-  ORM::configure('password', Config::$dbPassword);  
+  ORM::configure('password', Config::$dbPassword);
 }
 
 function render($page, $data) {
@@ -83,15 +83,15 @@ if(!function_exists('http_build_url')) {
   }
 }
 
-function micropub_post_for_user(&$user, $params, $file_path = NULL, $json = false) {
+function micropub_post_for_user(&$user, $params, $file = NULL, $json = false) {
   // Now send to the micropub endpoint
-  $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token, $file_path, $json);
+  $r = micropub_post($user->micropub_endpoint, $params, $user->micropub_access_token, $file, $json);
 
   $user->last_micropub_response = substr(json_encode($r), 0, 1024);
   $user->last_micropub_response_date = date('Y-m-d H:i:s');
 
   // Check the response and look for a "Location" header containing the URL
-  if($r['response'] && ($r['code'] == 201 || $r['code'] == 202) 
+  if($r['response'] && ($r['code'] == 201 || $r['code'] == 202)
     && isset($r['headers']['Location'])) {
     $r['location'] = $r['headers']['Location'][0];
     $user->micropub_success = 1;
@@ -104,9 +104,9 @@ function micropub_post_for_user(&$user, $params, $file_path = NULL, $json = fals
   return $r;
 }
 
-function micropub_media_post_for_user(&$user, $file_path) {
+function micropub_media_post_for_user(&$user, $file) {
   // Send to the media endpoint
-  $r = micropub_post($user->micropub_media_endpoint, [], $user->micropub_access_token, $file_path, true, 'file');
+  $r = micropub_post($user->micropub_media_endpoint, [], $user->micropub_access_token, $file, true, 'file');
 
   // Check the response and look for a "Location" header containing the URL
   if($r['response'] && preg_match('/Location: (.+)/', $r['response'], $match)) {
@@ -118,10 +118,14 @@ function micropub_media_post_for_user(&$user, $file_path) {
   return $r;
 }
 
-function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $json = false, $file_prop = 'photo') {
+function micropub_post($endpoint, $params, $access_token, $file = NULL, $json = false, $file_prop = 'photo') {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $endpoint);
   curl_setopt($ch, CURLOPT_POST, true);
+
+  $file_path = $file['tmp_name'];
+  $file_content = file_get_contents($file_path) . self::EOL;
+  $filename = $file['name'];
 
   // Send the access token in both the header and post body to support more clients
   // https://github.com/aaronpk/Quill/issues/4
@@ -149,7 +153,7 @@ function micropub_post($endpoint, $params, $access_token, $file_path = NULL, $js
     $mimetype = finfo_file($finfo, $file_path);
     $multipart = new p3k\Multipart();
     $multipart->addArray($params);
-    $multipart->addFile($file_prop, $file_path, $mimetype);
+    $multipart->addFile($file_prop, $filename, $mimetype, $file_content);
     $post = $multipart->data();
     $httpheaders[] = 'Content-Type: ' . $multipart->contentType();
   }
@@ -323,7 +327,7 @@ function validate_photo(&$file) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && count($_POST) < 1 ) {
       throw new RuntimeException('File upload size exceeded.');
     }
-   
+
     // Undefined | Multiple Files | $_FILES Corruption Attack
     // If this request falls under any of them, treat it invalid.
     if (
@@ -436,7 +440,7 @@ function sanitize_editor_html($html) {
   $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
   $def->addElement('figcaption', 'Inline', 'Flow', 'Common');
 
-  // Allow data: URIs 
+  // Allow data: URIs
   $config->set('URI.AllowedSchemes', array('data' => true, 'http' => true, 'https' => true));
 
   // Strip all classes from elements

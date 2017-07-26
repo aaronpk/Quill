@@ -52,7 +52,7 @@ $app->post('/micropub/multipart', function() use($app) {
       if(!$error) {
         $file_path = $file['tmp_name'];
         correct_photo_rotation($file_path);
-        $r = micropub_post_for_user($user, $_POST, $file_path);
+        $r = micropub_post_for_user($user, $_POST, $file);
       } else {
         $r = array('error' => $error);
       }
