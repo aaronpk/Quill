@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb7207a1208cf0bb8877ca18f8a1fe65",
+    "content-hash": "349372b9e3a8017912dde4df82c46eb3",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -574,16 +574,16 @@
         },
         {
             "name": "p3k/multipart",
-            "version": "0.1.1",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/php-multipart-encoder.git",
-                "reference": "f5400011b20046cebbdfed686d051fb2aa600a14"
+                "reference": "c190b4692b872a359868faba11251ead842ac20f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/php-multipart-encoder/zipball/f5400011b20046cebbdfed686d051fb2aa600a14",
-                "reference": "f5400011b20046cebbdfed686d051fb2aa600a14",
+                "url": "https://api.github.com/repos/aaronpk/php-multipart-encoder/zipball/c190b4692b872a359868faba11251ead842ac20f",
+                "reference": "c190b4692b872a359868faba11251ead842ac20f",
                 "shasum": ""
             },
             "require": {
@@ -606,7 +606,7 @@
                 }
             ],
             "description": "Multipart Encoding Library",
-            "time": "2015-07-16T19:28:02+00:00"
+            "time": "2016-12-28T14:50:41+00:00"
         },
         {
             "name": "p3k/timezone",
