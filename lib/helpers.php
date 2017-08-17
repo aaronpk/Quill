@@ -123,9 +123,13 @@ function micropub_post($endpoint, $params, $access_token, $file = NULL, $json = 
   curl_setopt($ch, CURLOPT_URL, $endpoint);
   curl_setopt($ch, CURLOPT_POST, true);
 
-  $file_path = $file['tmp_name'];
-  $file_content = file_get_contents($file_path) . self::EOL;
-  $filename = $file['name'];
+  if($file) {
+    $file_path = $file['tmp_name'];
+    $file_content = file_get_contents($file_path);
+    $filename = $file['name'];
+  } else {
+    $file_path = false;
+  }
 
   // Send the access token in both the header and post body to support more clients
   // https://github.com/aaronpk/Quill/issues/4
