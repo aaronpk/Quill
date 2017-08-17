@@ -131,7 +131,7 @@ $app->get('/auth/callback', function() use($app) {
 
   // If there is no state in the session, start the login again
   if(!array_key_exists('auth_state', $_SESSION)) {
-    $app->redirect('/auth/start?me='.urlencode($params['me']));
+    $app->redirect('/?error=missing_session_state');
     return;
   }
 
