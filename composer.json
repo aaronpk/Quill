@@ -11,7 +11,7 @@
     "abraham/twitteroauth": "*",
     "andreyco/instagram": "3.*",
     "ezyang/htmlpurifier": "4.*",
-    "p3k/multipart": "*",
+    "p3k/multipart": ">=0.2.0",
     "tantek/cassis": "*",
     "p3k/timezone": "*",
     "gajus/dindent": "^2.0"
