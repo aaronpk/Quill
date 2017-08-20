@@ -50,8 +50,7 @@ $app->post('/micropub/multipart', function() use($app) {
       unset($_POST['null']);
 
       if(!$error) {
-        $file_path = $file['tmp_name'];
-        correct_photo_rotation($file_path);
+        correct_photo_rotation($file['tmp_name']);
         $r = micropub_post_for_user($user, $_POST, $file);
       } else {
         $r = array('error' => $error);
@@ -82,9 +81,8 @@ $app->post('/micropub/media', function() use($app) {
     unset($_POST['null']);
 
     if(!$error) {
-      $file_path = $file['tmp_name'];
-      correct_photo_rotation($file_path);
-      $r = micropub_media_post_for_user($user, $file_path);
+      correct_photo_rotation($file['tmp_name']);
+      $r = micropub_media_post_for_user($user, $file);
     } else {
       $r = array('error' => $error);
     }
