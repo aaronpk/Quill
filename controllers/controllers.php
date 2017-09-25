@@ -767,14 +767,38 @@ $app->get('/reply/preview', function() use($app) {
       }
 
       $mentions = array_values(array_unique($mentions));
+    }
 
-    }    
+    $syndications = [];
+    if($entry && isset($entry['syndication'])) {
+      foreach($entry['syndication'] as $s) {
+        $host = parse_url($s, PHP_URL_HOST);
+        switch($host) {
+          case 'twitter.com':
+          case 'www.twitter.com':
+            $icon = 'twitter.ico'; break;
+          case 'facebook.com':
+          case 'www.facebook.com':
+            $icon = 'facebook.ico'; break;
+          case 'github.com':
+          case 'www.github.com':
+            $icon = 'github.ico'; break;
+          default:
+            $icon = 'default.png'; break;
+        }
+        $syndications[] = [
+          'url' => $s,
+          'icon' => $icon
+        ];
+      }
+    }
 
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode([
       'canonical_reply_url' => $reply_url,
       'entry' => $entry,
-      'mentions' => $mentions
+      'mentions' => $mentions,
+      'syndications' => $syndications,
     ]));
   }
 });

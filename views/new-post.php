@@ -16,7 +16,7 @@
               </div>
               <div class="reply-content">
                 <img src="" class="post-img hidden">
-                <div class="author"><span class="name"></span> <span class="url"></span></div>
+                <div class="author"><div class="syndications"></div><span class="name"></span> <span class="url"></span></div>
                 <h4 class="post-name hidden"></h4>
                 <span class="content"></span>
               </div>
@@ -243,6 +243,13 @@
   border-radius: 4px;
   width: 48px;
   margin-right: 4px;
+}
+.reply-context .syndications {
+  float: right;
+  padding-right: 4px;
+}
+.reply-context .syndications img {
+  width: 16px;
 }
 .reply-context .author {
   color: #777;
@@ -581,6 +588,13 @@ $(function(){
           $("#form_rsvp").removeClass("hidden");
         } else {
           $("#form_rsvp").addClass("hidden");
+        }
+        if(data.syndications) {
+          $(".reply-context .syndications").html('');
+          for(var i in data.syndications) {
+            var syn = data.syndications[i];
+            $(".reply-context .syndications").append('<a href="'+syn.url+'"><img src="/images/services/'+syn.icon+'"></a>');
+          }
         }
 
         $(".reply-context").removeClass("hidden");
