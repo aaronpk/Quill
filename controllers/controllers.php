@@ -727,7 +727,7 @@ $app->get('/reply/preview', function() use($app) {
         $entry['content']['text'] = $content;
       }
       // Create a nickname based on the author URL
-      if(array_key_exists('author', $entry)) {
+      if($entry && array_key_exists('author', $entry)) {
         if($entry['author']['url']) {
           if(!isset($entry['author']['nickname']) || !$entry['author']['nickname'])
             $entry['author']['nickname'] = display_url($entry['author']['url']);
