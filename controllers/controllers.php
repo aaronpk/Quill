@@ -511,6 +511,25 @@ $app->get('/settings/html-content', function() use($app) {
   }
 });
 
+$app->get('/view', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $xray = new p3k\XRay();
+    $result = $xray->parse($params['url']);
+    if(isset($result['data']))
+      $entry = $result['data'];
+    else
+      $entry = [];
+
+    render('view-post', array(
+      'title' => 'View',
+      'entry' => $entry,
+      'authorizing' => false
+    ));
+  }
+});
+
 function create_favorite(&$user, $url) {
 
   $tweet_id = false;
@@ -678,25 +697,21 @@ $app->get('/reply/preview', function() use($app) {
 
     $entry = false;
 
-    $xray = [
-      'url' => $reply_url
-    ];
+    $xray_opts = [];
 
     if(preg_match('/twitter\.com\/(?:[^\/]+)\/statuse?s?\/(.+)/', $reply_url, $match)) {
       if($user->twitter_access_token) {
-        $xray['twitter_api_key'] = Config::$twitterClientID;
-        $xray['twitter_api_secret'] = Config::$twitterClientSecret;
-        $xray['twitter_access_token'] = $user->twitter_access_token;
-        $xray['twitter_access_token_secret'] = $user->twitter_token_secret;
+        $xray_opts['twitter_api_key'] = Config::$twitterClientID;
+        $xray_opts['twitter_api_secret'] = Config::$twitterClientSecret;
+        $xray_opts['twitter_access_token'] = $user->twitter_access_token;
+        $xray_opts['twitter_access_token_secret'] = $user->twitter_token_secret;
       }
     }
 
     // Pass to X-Ray to see if it can expand the entry
-    $ch = curl_init('https://xray.p3k.io/parse');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($xray));
-    $response = curl_exec($ch);
-    $data = @json_decode($response, true);
+    $xray = new p3k\XRay();
+    $xray->http = new p3k\HTTP('Quill ('.Config::$base_url.')');
+    $data = $xray->parse($reply_url, $xray_opts);
     if($data && isset($data['data'])) {
       if($data['data']['type'] == 'entry') {
         $entry = $data['data'];

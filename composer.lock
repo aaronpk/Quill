@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "349372b9e3a8017912dde4df82c46eb3",
+    "content-hash": "26d324e17ac5eeecdeaae4ff4e279213",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -142,6 +142,108 @@
             ],
             "description": "Cleans up microformats2 array structures",
             "time": "2014-10-06T23:11:15+00:00"
+        },
+        {
+            "name": "cebe/markdown",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cebe/markdown.git",
+                "reference": "25b28bae8a6f185b5030673af77b32e1163d5c6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cebe/markdown/zipball/25b28bae8a6f185b5030673af77b32e1163d5c6e",
+                "reference": "25b28bae8a6f185b5030673af77b32e1163d5c6e",
+                "shasum": ""
+            },
+            "require": {
+                "lib-pcre": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "cebe/indent": "*",
+                "facebook/xhprof": "*@dev",
+                "phpunit/phpunit": "4.1.*"
+            },
+            "bin": [
+                "bin/markdown"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "cebe\\markdown\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc",
+                    "homepage": "http://cebe.cc/",
+                    "role": "Creator"
+                }
+            ],
+            "description": "A super fast, highly extensible markdown parser for PHP",
+            "homepage": "https://github.com/cebe/markdown#readme",
+            "keywords": [
+                "extensible",
+                "fast",
+                "gfm",
+                "markdown",
+                "markdown-extra"
+            ],
+            "time": "2017-07-16T21:13:23+00:00"
+        },
+        {
+            "name": "dg/twitter-php",
+            "version": "v3.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dg/twitter-php.git",
+                "reference": "dd872ad12121ff919b358989e61f7f08ba6cc7a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dg/twitter-php/zipball/dd872ad12121ff919b358989e61f7f08ba6cc7a8",
+                "reference": "dd872ad12121ff919b358989e61f7f08ba6cc7a8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                }
+            ],
+            "description": "Small and easy Twitter library for PHP",
+            "homepage": "https://github.com/dg/twitter-php",
+            "keywords": [
+                "oauth",
+                "twitter"
+            ],
+            "time": "2016-08-15T16:46:22+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -573,6 +675,44 @@
             "time": "2015-12-24T12:43:04+00:00"
         },
         {
+            "name": "p3k/http",
+            "version": "0.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aaronpk/p3k-http.git",
+                "reference": "3740fe135e6d58457d7528e7c05a67b68e020a79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/3740fe135e6d58457d7528e7c05a67b68e020a79",
+                "reference": "3740fe135e6d58457d7528e7c05a67b68e020a79",
+                "shasum": ""
+            },
+            "require": {
+                "indieweb/link-rel-parser": "0.1.*",
+                "mf2/mf2": "0.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "p3k\\": "src/p3k"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Parecki",
+                    "homepage": "https://aaronparecki.com"
+                }
+            ],
+            "description": "A simple wrapper API around the PHP curl functions",
+            "homepage": "https://github.com/aaronpk/p3k-http",
+            "time": "2017-04-29T17:43:29+00:00"
+        },
+        {
             "name": "p3k/multipart",
             "version": "0.2.0",
             "source": {
@@ -651,6 +791,52 @@
             "time": "2017-01-12T17:30:08+00:00"
         },
         {
+            "name": "p3k/xray",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aaronpk/XRay.git",
+                "reference": "a37ed3bbaeec5ddb51d6a6ae285c5ab608d31978"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/a37ed3bbaeec5ddb51d6a6ae285c5ab608d31978",
+                "reference": "a37ed3bbaeec5ddb51d6a6ae285c5ab608d31978",
+                "shasum": ""
+            },
+            "require": {
+                "cebe/markdown": "1.1.*",
+                "dg/twitter-php": "3.6.*",
+                "ezyang/htmlpurifier": "4.*",
+                "indieweb/link-rel-parser": "0.1.*",
+                "mf2/mf2": "^0.3.2",
+                "p3k/http": "0.1.*",
+                "p3k/timezone": "*"
+            },
+            "require-dev": {
+                "league/plates": "3.*",
+                "league/route": "1.*",
+                "phpunit/phpunit": "4.8.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "p3k\\XRay\\": "lib/XRay"
+                },
+                "files": [
+                    "lib/helpers.php",
+                    "lib/XRay.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "X-Ray returns structured data from any URL",
+            "homepage": "https://github.com/aaronpk/XRay",
+            "time": "2017-09-22T19:35:08+00:00"
+        },
+        {
             "name": "saltybeagle/savant3",
             "version": "dev-master",
             "source": {
@@ -683,7 +869,7 @@
                 }
             ],
             "description": "Savant3 template engine",
-            "time": "2014-01-07 17:10:32"
+            "time": "2014-01-07T17:10:32+00:00"
         },
         {
             "name": "slim/slim",
