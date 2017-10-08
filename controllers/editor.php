@@ -55,6 +55,11 @@ $app->post('/editor/publish', function() use($app) {
         'type' => ['h-entry'],
         'properties' => $micropub_request
       ];
+      // Convert all values to arrays
+      foreach($micropub_request['properties'] as $k=>$v) {
+        if(!is_array($v))
+          $micropub_request['properties'][$k] = [$v];
+      }
     }
 
     $r = micropub_post_for_user($user, $micropub_request, null, $json);
