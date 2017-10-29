@@ -340,6 +340,18 @@ function addNewPhoto() {
 }
 
 $(function(){
+  // Check if there's a pending file at the media endpoint
+  $.getJSON("/new/last-photo.json", function(response){
+    if(response.url) {
+      photos.push({
+        url: response.url,
+        alt: null,
+        external: true
+      });
+      refreshPhotoPreviews();
+    }
+  });
+
   $("#note_photo").on("change", function(e){
 
     // If the user has a media endpoint, upload the photo to it right now

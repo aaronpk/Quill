@@ -90,6 +90,25 @@ $app->get('/new', function() use($app) {
   }
 });
 
+$app->get('/new/last-photo.json', function() use($app) {
+  if($user=require_login($app)) {
+    $url = null;
+
+    if($user->micropub_media_endpoint) {
+      // Request the last file uploaded from the media endpoint
+      $response = micropub_get($user->micropub_media_endpoint, ['q'=>'last'], $user->micropub_access_token);
+      if(isset($response['data']['url'])) {
+        $url = $response['data']['url'];
+      }
+    }
+
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'url' => $url
+    )));
+  }
+});
+
 $app->get('/bookmark', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
