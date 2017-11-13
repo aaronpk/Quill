@@ -124,9 +124,15 @@ function micropub_post($endpoint, $params, $access_token, $file = NULL, $json = 
   curl_setopt($ch, CURLOPT_POST, true);
 
   if($file) {
-    $file_path = $file['tmp_name'];
-    $file_content = file_get_contents($file_path);
-    $filename = $file['name'];
+    if(is_string($file)) {
+      $file_path = $file;
+      $file_content = file_get_contents($file_path);
+      $filename = 'file';
+    } else {
+      $file_path = $file['tmp_name'];
+      $file_content = file_get_contents($file_path);
+      $filename = $file['name'];
+    }
   } else {
     $file_path = false;
   }
