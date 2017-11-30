@@ -771,7 +771,7 @@ $app->get('/reply/preview', function() use($app) {
 
     $mentions = [];
     if($entry) {
-      if(array_key_exists('author', $entry)) {
+      if(array_key_exists('author', $entry) && isset($entry['author']['nickname'])) {
         // Find all @-names in the post, as well as the author name
         $mentions[] = strtolower($entry['author']['nickname']);
       }
