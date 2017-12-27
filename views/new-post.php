@@ -36,6 +36,11 @@
           </select>
         </div>
 
+        <div class="form-group hidden" id="note-name">
+          <label for="note_name">Issue Title</label>
+          <input type="text" id="note_name" value="" class="form-control" placeholder="">
+        </div>
+
         <div class="form-group">
           <div id="note_content_remaining" class="pcheck206"><img src="/images/twitter.ico"> <span>280</span></div>
           <label for="note_content">Content</label>
@@ -312,7 +317,7 @@ function restoreNoteState() {
 
 function expandReplySection() {
   $("#expand-reply").click();
-  $("#note_in_reply_to").change();  
+  $("#note_in_reply_to").change();
 }
 
 function activateTokenField() {
@@ -550,8 +555,16 @@ $(function(){
     if(reply_to == "") {
       $(".reply-section").addClass("hidden");
       $(".reply-context").addClass("hidden");
+      $("#note-name").addClass("hidden");
+      $("#note_content").siblings("label").text("Content");
       $("#expand-reply").removeClass("hidden");
       return;
+    }
+
+    if($("#note_in_reply_to").val().match(/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)$/)) {
+      // Add the "name" field for issues
+      $("#note-name").removeClass("hidden");
+      $("#note_content").siblings("label").text("Description");
     }
 
     $(".reply-section .loading").removeClass("hidden");
@@ -650,6 +663,10 @@ $(function(){
     var doMultipart = false;
     var hasAltText = false;
 
+    if(v=$("#note-name").val()) {
+      formData.append("name", v);
+      entry['name'] = [v];
+    }
     if(v=$("#note_content").val()) {
       formData.append("content", v);
       entry['content'] = [v];
