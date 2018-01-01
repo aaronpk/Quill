@@ -663,7 +663,7 @@ $(function(){
     var doMultipart = false;
     var hasAltText = false;
 
-    if(v=$("#note-name").val()) {
+    if(v=$("#note_name").val()) {
       formData.append("name", v);
       entry['name'] = [v];
     }
