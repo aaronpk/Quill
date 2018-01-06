@@ -202,6 +202,11 @@ body {
     margin-top: 20px;
   }
 
+  textarea.code-snippet {
+    font-size: 12px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  }
+
 
 /** 
  * nicer file upload

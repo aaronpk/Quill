@@ -694,6 +694,108 @@ $app->post('/repost', function() use($app) {
   }
 });
 
+$app->get('/code', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $edit_data = ['content'=>'','name'=>''];
+
+    if(array_key_exists('edit', $params)) {
+      $source = get_micropub_source($user, $params['edit'], ['content','name']);
+      if(isset($source['content']) && is_array($source['content']) && isset($source['content'][0]))
+        $edit_data['content'] = $source['content'][0];
+      if(isset($source['name']) && is_array($source['name']) && isset($source['name'][0]))
+        $edit_data['name'] = $source['name'][0];
+      $url = $params['edit'];
+    } else {
+      $url = false;
+    }
+
+    $languages = [
+      'php' => ['php'],
+      'ruby' => ['rb'],
+      'python' => ['py'],
+      'perl' => ['pl'],
+      'javascript' => ['js'],
+      'html' => ['html','htm'],
+      'css' => ['css'],
+      'bash' => ['sh'],
+      'nginx' => ['conf'],
+      'apache' => [],
+      'text' => ['txt'],
+    ]; 
+    ksort($languages);
+    $language_map = [];
+    foreach($languages as $lang=>$exts) {
+      foreach($exts as $ext)
+        $language_map[$ext] = $lang;
+    }
+
+    render('new-code', array(
+      'title' => 'New Code Snippet',
+      'url' => $url,
+      'edit_data' => $edit_data,
+      'token' => generate_login_token(),
+      'languages' => $languages,
+      'language_map' => $language_map,
+      'my_hostname' => parse_url($user->url, PHP_URL_HOST),
+      'authorizing' => false,
+    ));
+  }
+});
+
+$app->post('/code', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $error = false;
+
+    if(isset($params['edit']) && $params['edit']) {
+      $micropub_request = [
+        'action' => 'update',
+        'url' => $params['edit'],
+        'replace' => [
+          'content' => [$params['content']]
+        ]
+      ];
+      if(isset($params['name']) && $params['name']) {
+        $micropub_request['replace']['name'] = [$params['name']];
+      }
+      $r = micropub_post_for_user($user, $micropub_request, null, true);
+
+      if(isset($r['location']) && $r['location'])
+        $location = $r['location'];
+      elseif(in_array($r['code'], [200,201,204]))
+        $location = $params['edit'];
+      elseif(in_array($r['code'], [401,403])) {
+        $location = false;
+        $error = 'Your Micropub endpoint denied the request. Check that Quill is authorized to update posts.';
+      } else {
+        $location = false;
+        $error = 'Your Micropub endpoint did not return a location header or a recognized response code';
+      }
+    } else {
+      $micropub_request = array(
+        'p3k-content-type' => 'code/' . $params['language'],
+        'content' => $params['content'],
+      );
+      if(isset($params['name']) && $params['name'])
+        $micropub_request['name'] = $params['name'];
+
+      $r = micropub_post_for_user($user, $micropub_request);
+
+      $location = $r['location'];
+    }
+
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'location' => $location,
+      'error' => $r['error'],
+      'error_details' => $error,
+    )));
+  }
+});
+
 $app->get('/reply/preview', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
