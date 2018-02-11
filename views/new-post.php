@@ -47,6 +47,14 @@
           <textarea id="note_content" value="" class="form-control" style="height: 4em;"></textarea>
         </div>
 
+        <div class="form-group hidden" id="content-type-selection">
+          <label for="note_content_type">Content Type</label>
+          <select class="form-control" id="note_content_type">
+            <option value="text/plain">Text</option>
+            <option value="text/markdown">Markdown</option>
+          </select>
+        </div>
+
         <div class="form-group" id="form_tags">
           <label for="note_category">Tags</label>
           <input type="text" id="note_category" value="" class="form-control" placeholder="e.g. web, personal">
@@ -438,6 +446,13 @@ $(function(){
     saveNoteState();
   });
 
+  // Easter egg: press ctrl+shift+c to reveal a content type selection
+  $(document).bind('keydown', function(e){
+    if(e.keyCode == 67 && e.ctrlKey && e.shiftKey) {
+      $("#content-type-selection").removeClass("hidden");
+    }
+  });
+
 });
 
 function refreshPhotoPreviews() {
@@ -728,6 +743,11 @@ $(function(){
       for(i=0; i<photos.length; i++) {
         appendPhotoToFormData(photos[i], "photo[]");
       }
+    }
+
+    if(!$("#content-type-selection").hasClass("hidden")) {
+      entry['p3k-content-type'] = $("#note_content_type").val();
+      formData.append('p3k-content-type', $("#note_content_type").val());
     }
 
     // Need to append a placeholder field because if the file size max is hit, $_POST will
