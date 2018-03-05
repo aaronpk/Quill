@@ -12,7 +12,7 @@
             </div>
             <div class="reply-context hidden">
               <div class="reply-author">
-                <img src="" width="48" class="author-img"> 
+                <img src="" width="48" class="author-img">
               </div>
               <div class="reply-content">
                 <img src="" class="post-img hidden">
@@ -218,7 +218,7 @@
 
   position: relative;
   overflow: hidden;
-  display: inline-block;  
+  display: inline-block;
 }
 #photo-previews img {
   position: absolute;
@@ -320,7 +320,7 @@ function restoreNoteState() {
     } else {
       activateTokenField();
     }
-  });  
+  });
 }
 
 function expandReplySection() {
@@ -446,9 +446,14 @@ $(function(){
     saveNoteState();
   });
 
-  // Easter egg: press ctrl+shift+c to reveal a content type selection
   $(document).bind('keydown', function(e){
+    // Easter egg: press ctrl+shift+c to reveal a content type selection
     if(e.keyCode == 67 && e.ctrlKey && e.shiftKey) {
+      $("#content-type-selection").removeClass("hidden");
+    }
+    // Easter egg: press ctrl+shift+m to switch to markdown
+    if(e.keyCode == 77 && e.ctrlKey && e.shiftKey) {
+      $("#content-type-selection select").val("text/markdown");
       $("#content-type-selection").removeClass("hidden");
     }
   });
@@ -879,7 +884,7 @@ $(function(){
   if($("#note_in_reply_to").val() != "") {
     $("#note_in_reply_to").change();
   } else {
-    restoreNoteState();    
+    restoreNoteState();
   }
 
 });
