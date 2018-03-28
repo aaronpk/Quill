@@ -316,6 +316,9 @@ function restoreNoteState() {
         }
       });
       $("#note_content").change();
+      if($("#note_content").val().match(/`/)) {
+        switchToMarkdown();
+      }
       activateTokenField();
     } else {
       activateTokenField();
@@ -453,12 +456,16 @@ $(function(){
     }
     // Easter egg: press ctrl+shift+m to switch to markdown
     if(e.keyCode == 77 && e.ctrlKey && e.shiftKey) {
-      $("#content-type-selection select").val("text/markdown");
-      $("#content-type-selection").removeClass("hidden");
+      switchToMarkdown();
     }
   });
 
 });
+
+function switchToMarkdown() {
+  $("#content-type-selection select").val("text/markdown");
+  $("#content-type-selection").removeClass("hidden");
+}
 
 function refreshPhotoPreviews() {
   $("#photo-previews").html("");
@@ -534,11 +541,17 @@ $(function(){
     saveNoteState();
   });
 
-  $("#note_content").on('keyup', function(){
+  $("#note_content").on('keyup', function(e){
     var scrollHeight = document.getElementById("note_content").scrollHeight;
     var currentHeight = parseInt($("#note_content").css("height"));
     if(Math.abs(scrollHeight - currentHeight) > 20) {
       $("#note_content").css("height", (scrollHeight+30)+"px");
+    }
+    // If you type a backtick in the content, and are replying to a github issue, switch to markdown
+    if(e.key == '`') {
+      if($("#note_in_reply_to").val().match(/github\.com/)) {
+        switchToMarkdown();
+      }
     }
   });
 
