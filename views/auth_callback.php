@@ -43,7 +43,7 @@
 
         <?php if(!k($this->auth, 'scope')): ?>
           <h4>Missing <code>scope</code></h4>
-          <p>The token endpoint did not return a "scope" parameter. The <code>scope</code> parameter lets this client what permission the token represents.</p>
+          <p>The token endpoint did not return a "scope" parameter. The <code>scope</code> parameter lets this client know what permission the token represents.</p>
         <?php endif; ?>
 
       <?php endif; ?>
