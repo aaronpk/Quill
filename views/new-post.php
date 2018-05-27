@@ -689,7 +689,7 @@ $(function(){
       syndications.push($(btn).data('syndicate-to'));
     });
 
-    var category = csv_to_array($("#note_category").val());
+    var category = tokenfieldToArray("#note_category");
 
     var formData = new FormData();
     var entry = {};

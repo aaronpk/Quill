@@ -72,7 +72,7 @@ $(function() {
     $('#publish-in-progress').removeClass('hidden');
     $('#publish-fields').addClass('hidden');
 
-    var category = csv_to_array($("#post-tags").tokenfield('getTokensList'));
+    var category = $("#note_category").tokenfield("getTokens").map(function(t){ return t.value});
 
     $.post('/editor/publish', {
       name: $("#post-name").val(),
@@ -147,14 +147,6 @@ function reset_page() {
   $("#draft-status").text("New");
   $("#publish-confirm").hide();
   return localforage.setItem('currentdraft', {});
-}
-
-function csv_to_array(val) {
-  if(val.length > 0) {
-    return val.split(/[, ]+/);
-  } else {
-    return [];
-  }
 }
 
 /* ************************************************ */

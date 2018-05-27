@@ -73,7 +73,7 @@
       name: $("#event_name").val(),
       start: event_start,
       location: $("#event_location").val(),
-      category: csv_to_array($("#note_category").val())
+      category: tokenfieldToArray("#note_category")
     };
 
     if(event_end) {

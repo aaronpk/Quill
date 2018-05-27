@@ -89,7 +89,7 @@ $(function(){
       'bookmark-of': $("#note_bookmark").val(),
       name: $("#note_name").val(),
       content: $("#note_content").val(),
-      category: csv_to_array($("#note_category").val()),
+      category: tokenfieldToArray("#note_category"),
       '<?= $this->user->micropub_syndicate_field ?>': syndications
     }, function(response){
       if(response.location != false) {

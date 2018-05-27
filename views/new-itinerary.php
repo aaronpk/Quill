@@ -180,7 +180,7 @@ $(function(){
       });
     });
 
-    var category = csv_to_array($("#note_category").val());
+    var category = tokenfieldToArray("#note_category");
 
     properties = {
       itinerary: itinerary

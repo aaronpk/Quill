@@ -14,14 +14,9 @@
     return num;
   }
 
-  function csv_to_array(val) {
-    if(val.length > 0) {
-      return val.split(/[, ]+/);
-    } else {
-      return [];
-    }
+  function tokenfieldToArray(sel) {
+    return $(sel).tokenfield("getTokens").map(function(t){ return t.value});
   }
-
 
 $(function(){
 
