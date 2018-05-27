@@ -142,7 +142,7 @@
       <div class="modal-body">
 
         <div id="modal_photo_preview" class="hidden">
-          <img style="width:100%;">
+          <img>
         </div>
 
         <label id="note_photo_button" class="btn btn-default btn-file" style="margin-bottom: 1em;">
@@ -177,7 +177,7 @@
       <div class="modal-body">
 
         <div id="modal_edit_photo_preview" style="margin-bottom: 4px;">
-          <img style="width:100%;">
+          <img>
         </div>
 
         <input type="text" id="note_edit_photo_alt" class="form-control" placeholder="Image alt text">
@@ -205,8 +205,14 @@
   font-weight: bold;
 }
 
+#modal_photo_preview {
+  text-align: center;
+}
+#modal_photo_preview img {
+  max-height: 40vh;
+}
 #modal_photo_preview img, #modal_edit_photo_preview img {
-  width: 100%;
+  max-width: 100%;
   border-radius: 4px;
   margin-bottom: 4px;
 }
