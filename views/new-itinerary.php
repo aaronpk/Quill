@@ -111,7 +111,7 @@ $(function(){
   $("#note_category").tokenfield({
     createTokensOnBlur: true,
     beautify: true
-  });  
+  });
 
   $("#btn_add_leg").click(function(){
     add_leg();

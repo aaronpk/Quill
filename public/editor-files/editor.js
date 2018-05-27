@@ -36,7 +36,7 @@ $(function() {
       $('.publish-dropdown .action-signin').addClass('hidden');
     } else {
       $('.publish-dropdown .action-publish').addClass('hidden');
-      $('.publish-dropdown .action-signin').removeClass('hidden');      
+      $('.publish-dropdown .action-signin').removeClass('hidden');
     }
   });
 
@@ -97,7 +97,7 @@ $(function() {
         $('#publish-success').addClass('hidden');
         $('#publish-fields').removeClass('hidden');
       }
-    });    
+    });
   });
 
   $("#micropub-html-btn").click(function(){
@@ -202,8 +202,8 @@ $(function(){
 
 // Not sure why this isn't working
 // editor.subscribe('editableInput', function(ev, editable) {
-//   console.log("stuff changed");  
-// });  
+//   console.log("stuff changed");
+// });
 
 // This one works okay tho, but misses changes from the image uploader
 editor.on(document.getElementById('content'), 'input', function(){

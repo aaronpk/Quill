@@ -31,7 +31,7 @@
     <script src="/libs/awesomplete/awesomplete.min.js"></script>
     <link rel="stylesheet" href="/libs/awesomplete/awesomplete.css">
     -->
-    
+
     <link rel="stylesheet" href="/css/style.css">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/images/quill-icon-57.png">

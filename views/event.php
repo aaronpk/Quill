@@ -59,7 +59,7 @@
   $("#note_category").tokenfield({
     createTokensOnBlur: true,
     beautify: true
-  });  
+  });
 
   $("#btn_post").click(function(){
 
