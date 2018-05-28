@@ -72,7 +72,7 @@ $(function() {
     $('#publish-in-progress').removeClass('hidden');
     $('#publish-fields').addClass('hidden');
 
-    var category = $("#note_category").tokenfield("getTokens").map(function(t){ return t.value});
+    var category = $("#post-tags").tokenfield("getTokens").map(function(t){ return t.value});
 
     $.post('/editor/publish', {
       name: $("#post-name").val(),
