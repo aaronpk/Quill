@@ -278,6 +278,8 @@ $app->get('/signout', function() use($app) {
 
 $app->post('/auth/reset', function() use($app) {
   if($user=require_login($app, false)) {
+    revoke_micropub_token($user->micropub_access_token, $user->token_endpoint);
+
     $user->authorization_endpoint = '';
     $user->token_endpoint = '';
     $user->micropub_endpoint = '';
@@ -286,7 +288,7 @@ $app->post('/auth/reset', function() use($app) {
     $user->micropub_scope = '';
     $user->micropub_access_token = '';
     $user->save();
-    
+
     unset($_SESSION['auth']);
     unset($_SESSION['me']);
     unset($_SESSION['auth_state']);

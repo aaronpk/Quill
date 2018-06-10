@@ -223,6 +223,17 @@ function micropub_get($endpoint, $params, $access_token) {
   );
 }
 
+function revoke_micropub_token($access_token, $token_endpoint) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $token_endpoint);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+    'action' => 'revoke',
+    'token' => $access_token,
+  ]));
+  curl_exec($ch);
+}
+
 function parse_headers($headers) {
   $retVal = array();
   $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $headers));

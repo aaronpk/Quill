@@ -29,7 +29,7 @@
         <input type="button" class="btn btn-default" value="Reset Login" id="reset-login">
       </td>
       <td>
-        Clicking this button will erase the access token Quill has stored for you, forget all cached endpoints, and sign you out. If you sign back in, you will start over and see the debugging screens and scope options again.
+        Clicking this button will tell your token endpoint to revoke the token, Quill will forget the access token stored, forget all cached endpoints, and sign you out. If you sign back in, you will start over and see the debugging screens and scope options again.
       </td>
     </tr>
   </table>
