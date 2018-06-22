@@ -1005,3 +1005,23 @@ $app->get('/edit', function() use($app) {
     $app->redirect($url . '?edit=' . $params['url'], 302);
   }
 });
+
+$app->get('/airport-info', function() use($app){
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+    if(!isset($params['code'])) return;
+
+    $ch = curl_init('https://atlas.p3k.io/api/timezone?airport='.urlencode($params['code']));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $data = json_decode(curl_exec($ch), true);
+
+    if(!$data)
+      $response = ['error' => 'unknown'];
+    else {
+      $response = $data;
+    }
+
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode($response));
+  }
+});

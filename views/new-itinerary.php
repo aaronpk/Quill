@@ -44,7 +44,7 @@
                 <div class="form-group leg-departure">
                   <input type="text" class="form-control leg-departure-date date" style="max-width:160px; float:left; margin-right: 4px;" value="">
                   <input type="text" class="form-control leg-departure-time time" style="max-width:85px; float:left; margin-right: 4px;" value="">
-                  <input type="text" class="form-control leg-departure-tz tz" style="max-width:75px;" value="">
+                  <span><input type="text" class="form-control leg-departure-tz tz" style="max-width:75px;" value=""></span>
                 </div>
               </div>
             </div>
@@ -58,7 +58,7 @@
                 <div class="form-group leg-arrival">
                   <input type="text" class="form-control leg-arrival-date date" style="max-width:160px; float:left; margin-right: 4px;" value="">
                   <input type="text" class="form-control leg-arrival-time time" style="max-width:85px; float:left; margin-right: 4px;" value="">
-                  <input type="text" class="form-control leg-arrival-tz tz" style="max-width:75px;" value="">
+                  <span><input type="text" class="form-control leg-arrival-tz tz" style="max-width:75px;" value=""></span>
                 </div>
               </div>
             </div>
@@ -127,6 +127,27 @@ $(function(){
     });
   }
 
+  function timezone_for_airport(code, callback) {
+    $.getJSON("/airport-info?code="+code, function(data){
+      callback(data.offset);
+    });
+  }
+
+  function bind_leg_timezone() {
+    $(".itinerary-leg .leg-origin").unbind("change").change(function(el){
+      timezone_for_airport($(this).val(), function(offset){
+        $(el.target).parents(".itinerary-leg").find(".leg-departure-tz").val(offset);
+        $(el.target).parents(".itinerary-leg").find(".leg-departure-tz").parent().addClass("has-success");
+      });
+    });
+    $(".itinerary-leg .leg-destination").unbind("change").change(function(el){
+      timezone_for_airport($(this).val(), function(offset){
+        $(el.target).parents(".itinerary-leg").find(".leg-arrival-tz").val(offset);
+        $(el.target).parents(".itinerary-leg").find(".leg-arrival-tz").parent().addClass("has-success");
+      });
+    });
+  }
+
   function add_leg() {
     $("#itinerary-legs-container").append($("#leg-template").html());
 
@@ -152,6 +173,7 @@ $(function(){
     */
 
     bind_leg_x();
+    bind_leg_timezone();
   }
 
   add_leg();
