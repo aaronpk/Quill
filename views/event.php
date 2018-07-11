@@ -34,8 +34,10 @@
       <div class="form-group" style="margin-top: 18px;">
         <label>Location</label>
         <input type="text" class="form-control" id="event_location" placeholder="" value="">
+        <span class="help-block" id="location_preview"></span>
       </div>
 
+      <div id="map" class="hidden" style="width: 100%; height: 180px; border-radius: 4px; border: 1px #ccc solid;"></div>
 
       <div class="form-group" style="margin-top: 18px;">
         <label for="note_category">Tags</label>
@@ -50,10 +52,127 @@
 
 </div>
 
+<link rel="stylesheet" href="/libs/bootstrap-typeahead/typeahead.css">
+<script src="/libs/bootstrap-typeahead/typeahead.min.js"></script>
+<?php if(Config::$googleMapsAPIKey): ?>
+<script src="https://maps.googleapis.com/maps/api/js?key=<?= Config::$googleMapsAPIKey ?>&libraries=places"></script>
+<?php endif ?>
 <script>
+  <?php if(Config::$googleMapsAPIKey): ?>
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: new google.maps.LatLng(-45,122),
+    zoom: 15
+  });
+  <?php else: ?>
+  var map = null;
+  <?php endif ?>
+
+  var selectedPlace;
+  if(map) {
+    var gservice = new google.maps.places.AutocompleteService();
+    var gplaces = new google.maps.places.PlacesService(map);
+    var selectedPlacePin;
+  }
+
   $(function(){
     var d = new Date();
     $("#start_date .timezone").val(tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1));
+    /* $("#end_date .timezone").val(tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1)); */
+
+    if(map) {
+      $("#event_location").typeahead({
+        minLength: 3,
+        highlight: true
+      }, {
+        limit: 5,
+        async: true,
+        source: function(query, sync, async) {
+          gservice.getPlacePredictions({ input: query }, function(predictions, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+              async(predictions);
+            }
+          });
+        },
+        display: function(item) {
+          return item.description;
+        },
+        templates: {
+          suggestion: function(item) {
+            return '<span>'+item.description+'</span>';
+          }
+        }
+      }).bind('typeahead:select', function(ev, suggestion) {
+
+        gplaces.getDetails({
+          placeId: suggestion.place_id,
+          fields: ["geometry", "name", "address_component", "url"]
+        }, function(result, status) {
+          if(status != google.maps.places.PlacesServiceStatus.OK) {
+            alert('Cannot find address');
+            return;
+          }
+
+          map.setCenter(result.geometry.location);
+
+          if(selectedPlacePin) {
+            selectedPlacePin.setMap(null);
+            selectedPlacePin = null;
+          }
+          selectedPlacePin = new google.maps.Marker({
+            position: result.geometry.location,
+            map: map
+          });
+
+          selectedPlace = {
+            type: ["h-card"],
+            properties: {
+              name: [result.name],
+              latitude: [result.geometry.location.lat()],
+              longitude: [result.geometry.location.lng()],
+            }
+          };
+
+          address = '';
+          locality = '';
+          region = '';
+          country = '';
+          for(var i in result.address_components) {
+
+            if(result.address_components[i].types.includes('street_number')) {
+              address += ' '+result.address_components[i].short_name;
+            }
+            if(result.address_components[i].types.includes('route')) {
+              address += ' '+result.address_components[i].short_name;
+            }
+
+            if(result.address_components[i].types.includes('locality')) {
+              locality = result.address_components[i].long_name;
+            }
+            if(result.address_components[i].types.includes('administrative_area_level_1')) {
+              region = result.address_components[i].long_name;
+            }
+            if(result.address_components[i].types.includes('country')) {
+              country = result.address_components[i].short_name;
+            }
+          }
+          if(address) {
+            selectedPlace['properties']['street-address'] = [address.trim()];
+          }
+          if(locality) {
+            selectedPlace['properties']['locality'] = [locality];
+          }
+          if(region) {
+            selectedPlace['properties']['region'] = [region];
+          }
+          if(country) {
+            selectedPlace['properties']['country-name'] = [country];
+          }
+
+          $("#map").removeClass("hidden");
+          $("#location_preview").text('');
+        });
+      });
+    }
   });
 
   $("#note_category").tokenfield({
@@ -63,16 +182,22 @@
 
   $("#btn_post").click(function(){
 
-    var event_start = $("#start_date .date").val()+"T"+$("#start_date .time").val()+$("#start_date .timezone").val();
+    var event_start = $("#start_date .date").val();
+    if($("#start_date .time").val()) {
+      event_start += "T"+$("#start_date .time").val()+$("#start_date .timezone").val();
+    }
     var event_end;
     if($("#end_date .date").val()) {
-      event_end = $("#end_date .date").val()+"T"+$("#end_date .time").val()+$("#end_date .timezone").val();
+      event_end = $("#end_date .date").val();
+      if($("#end_date .time").val()) {
+        event_end += "T"+$("#end_date .time").val()+$("#end_date .timezone").val();
+      }
     }
 
     var properties = {
-      name: $("#event_name").val(),
-      start: event_start,
-      location: $("#event_location").val(),
+      name: [$("#event_name").val()],
+      start: [event_start],
+      location: (selectedPlace ? selectedPlace : $("#event_location").val()),
       category: tokenfieldToArray("#note_category")
     };
 
@@ -83,7 +208,7 @@
 
     $.post("/micropub/postjson", {
       data: JSON.stringify({
-        "type": "h-event",
+        "type": ["h-event"],
         "properties": properties
       })
     }, function(response){

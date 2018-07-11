@@ -19,5 +19,8 @@ class Config {
 
   public static $twitterClientID = '';
   public static $twitterClientSecret = '';
+
+  // https://developers.google.com/maps/documentation/javascript/get-api-key
+  public static $googleMapsAPIKey = '';
 }
 
