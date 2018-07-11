@@ -13,6 +13,14 @@
         <input type="text" class="form-control" id="event_name" placeholder="" value="">
       </div>
 
+      <div class="form-group" style="margin-top: 18px;">
+        <label>Location</label>
+        <input type="text" class="form-control" id="event_location" placeholder="" value="">
+        <span class="help-block" id="location_preview"></span>
+      </div>
+
+      <div id="map" class="hidden" style="width: 100%; height: 180px; border-radius: 4px; border: 1px #ccc solid;"></div>
+
       <div class="form-group" id="start_date" style="margin-top: 18px;">
         <label>Start Date/Time</label>
         <div class="form-group">
@@ -30,14 +38,6 @@
           <input type="text" class="form-control timezone" placeholder="-08:00" style="max-width: 15%;">
         </div>
       </div>
-
-      <div class="form-group" style="margin-top: 18px;">
-        <label>Location</label>
-        <input type="text" class="form-control" id="event_location" placeholder="" value="">
-        <span class="help-block" id="location_preview"></span>
-      </div>
-
-      <div id="map" class="hidden" style="width: 100%; height: 180px; border-radius: 4px; border: 1px #ccc solid;"></div>
 
       <div class="form-group" style="margin-top: 18px;">
         <label for="note_category">Tags</label>
@@ -67,6 +67,9 @@
   var map = null;
   <?php endif ?>
 
+  var d = new Date();
+  var tzOffset = tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1);
+
   var selectedPlace;
   if(map) {
     var gservice = new google.maps.places.AutocompleteService();
@@ -75,9 +78,17 @@
   }
 
   $(function(){
-    var d = new Date();
-    $("#start_date .timezone").val(tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1));
-    /* $("#end_date .timezone").val(tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1)); */
+    // Start the event timezone offset in the browser's timezone
+    $("#start_date .timezone").attr("placeholder", tzOffset);
+    $("#end_date .timezone").attr("placeholder", tzOffset);
+
+    // As soon as a time is entered, move the placeholder offset to the value
+    $("#start_date .time").on("keydown", function(){
+      $("#start_date .timezone").val($("#start_date .timezone").attr("placeholder"));
+    });
+    $("#end_date .time").on("keydown", function(){
+      $("#end_date .timezone").val($("#end_date .timezone").attr("placeholder"));
+    });
 
     if(map) {
       $("#event_location").typeahead({
@@ -105,12 +116,13 @@
 
         gplaces.getDetails({
           placeId: suggestion.place_id,
-          fields: ["geometry", "name", "address_component", "url"]
+          fields: ["geometry", "name", "address_component", "url", "utc_offset"]
         }, function(result, status) {
           if(status != google.maps.places.PlacesServiceStatus.OK) {
             alert('Cannot find address');
             return;
           }
+          console.log(result);
 
           map.setCenter(result.geometry.location);
 
@@ -166,6 +178,18 @@
           }
           if(country) {
             selectedPlace['properties']['country-name'] = [country];
+          }
+
+          if(result.utc_offset) {
+            tzOffset = tz_seconds_to_offset(result.utc_offset * 60);
+            $("#start_date .timezone").attr("placeholder", tzOffset);
+            $("#end_date .timezone").attr("placeholder", tzOffset);
+            if($("#start_date .timezone").val()) {
+              $("#start_date .timezone").val($("#start_date .timezone").attr("placeholder"));
+            }
+            if($("#end_date .timezone").val()) {
+              $("#end_date .timezone").val($("#end_date .timezone").attr("placeholder"));
+            }
           }
 
           $("#map").removeClass("hidden");
