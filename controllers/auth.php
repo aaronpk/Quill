@@ -35,7 +35,7 @@ $app->get('/auth/start', function() use($app) {
   $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
   $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
 
-  $defaultScope = 'create update';
+  $defaultScope = 'create update media';
 
   if($tokenEndpoint && $micropubEndpoint && $authorizationEndpoint) {
     // Generate a "state" parameter for the request
