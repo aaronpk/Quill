@@ -3,6 +3,8 @@
 
       <form role="form" style="margin-top: 20px;" id="note_form">
 
+        <?php if(supports_post_type($this->user, 'reply')): ?>
+
         <div id="reply">
           <div class="reply-section hidden">
             <div class="form-group has-feedback">
@@ -35,6 +37,8 @@
             <option value=""></option>
           </select>
         </div>
+
+        <?php endif ?>
 
         <div class="form-group hidden" id="note-name">
           <label for="note_name">Issue Title</label>
