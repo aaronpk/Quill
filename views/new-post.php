@@ -65,10 +65,14 @@
           <input type="text" id="note_slug" value="" class="form-control">
         </div>
 
+        <?php if(supports_post_type($this->user, 'photo')): ?>
+
         <div class="form-group hidden" id="photo-previews">
         </div>
 
         <a href="javascript:addNewPhoto();" id="expand-photo-section"><i class="glyphicon glyphicon-camera" style="color: #aaa; font-size: 36px;"></i></a>
+
+        <?php endif ?>
 
         <div class="form-group" style="margin-top: 1em;">
           <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">(refresh list)</a></label>

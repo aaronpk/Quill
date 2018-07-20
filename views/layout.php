@@ -77,10 +77,18 @@
       <ul class="nav navbar-nav">
 
         <?php if(session('me')) { ?>
-          <li><a href="/editor">📄 Editor</a></li>
-          <li><a href="/new">✏️ Note</a></li>
-          <li><a href="/bookmark">🔖 Bookmark</a></li>
-          <li><a href="/favorite">👍 Favorite</a></li>
+          <?php if(supports_post_type($this->user, 'article')): ?>
+            <li><a href="/editor">📄 Editor</a></li>
+          <?php endif; ?>
+          <?php if(supports_post_type($this->user, 'note')): ?>
+            <li><a href="/new">✏️ Note</a></li>
+          <?php endif; ?>
+          <?php if(supports_post_type($this->user, 'bookmark')): ?>
+            <li><a href="/bookmark">🔖 Bookmark</a></li>
+          <?php endif; ?>
+          <?php if(supports_post_type($this->user, 'like')): ?>
+            <li><a href="/favorite">👍 Favorite</a></li>
+          <?php endif; ?>
         <?php } ?>
 
         <li><a href="/docs">Docs</a></li>

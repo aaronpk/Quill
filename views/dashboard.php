@@ -3,14 +3,30 @@
 
   <div style="  margin-top: 4em; margin-bottom: 4em;">
     <ul class="post-type-icons">
-      <li><a href="/editor">📄</a></li>
-      <li><a href="/new">✏️</a></li>
-      <li><a href="/event">📅</a></li>
-      <li><a href="/bookmark">🔖</a></li>
-      <li><a href="/favorite">👍</a></li>
-      <li><a href="/repost">♺</a></li>
-      <li><a href="/itinerary">✈️</a></li>
-      <li><a href="/review">⭐️</a></li>
+      <?php if(supports_post_type($this->user, 'article')): ?>
+        <li><a href="/editor">📄</a></li>
+      <?php endif; ?>
+      <?php if(supports_post_type($this->user, 'note')): ?>
+        <li><a href="/new">✏️</a></li>
+      <?php endif; ?>
+      <?php if(supports_post_type($this->user, 'event')): ?>
+        <li><a href="/event">📅</a></li>
+      <?php endif; ?>
+      <?php if(supports_post_type($this->user, 'bookmark')): ?>
+        <li><a href="/bookmark">🔖</a></li>
+      <?php endif; ?>
+      <?php if(supports_post_type($this->user, 'like')): ?>
+        <li><a href="/favorite">👍</a></li>
+      <?php endif; ?>
+      <?php if(supports_post_type($this->user, 'repost')): ?>
+        <li><a href="/repost">♺</a></li>
+      <?php endif; ?>
+      <?php if(supports_post_type($this->user, 'itinerary')): ?>
+        <li><a href="/itinerary">✈️</a></li>
+      <?php endif; ?>
+      <?php if(supports_post_type($this->user, 'review')): ?>
+        <li><a href="/review">⭐️</a></li>
+      <?php endif; ?>
       <li><a href="/email">✉️</a></li>
       <li><a href="/settings">⚙</a></li>
     </ul>

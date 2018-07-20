@@ -20,6 +20,21 @@
       <td>media endpoint</td>
       <td><?= $this->user->micropub_media_endpoint ? '<code>'.$this->user->micropub_media_endpoint.'</code>' : '<a href="https://www.w3.org/TR/micropub/#media-endpoint">no media endpoint</a>' ?></td>
     </tr>
+    <?php if($this->user->supported_post_types): ?>
+    <tr>
+      <td>supported post types</td>
+      <td>
+        <ul>
+        <?php
+        $types = json_decode($this->user->supported_post_types, true);
+        foreach($types as $type) {
+          echo '<li>'.htmlspecialchars($type['name']).' ('.$type['type'].')</li>';
+        }
+        ?>
+        </ul>
+      </td>
+    </tr>
+    <?php endif ?>
     <tr>
       <td width="140">access token</td>
       <td><code style="word-break: break-word; white-space: pre-wrap;"><?= $this->user->micropub_access_token ?></code></td>

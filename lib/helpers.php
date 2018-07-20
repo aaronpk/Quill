@@ -288,12 +288,19 @@ function get_micropub_config(&$user, $query=[]) {
     $user->syndication_targets = json_encode($targets);
 
   $media_endpoint = false;
-  if($r['data'] && is_array($r['data']) && array_key_exists('media-endpoint', $r['data'])) {
-    $media_endpoint = $r['data']['media-endpoint'];
-    $user->micropub_media_endpoint = $media_endpoint;
+  $supported_post_types = false;
+  if($r['data'] && is_array($r['data'])) {
+    if(isset($r['data']['media-endpoint'])) {
+      $media_endpoint = $r['data']['media-endpoint'];
+      $user->micropub_media_endpoint = $media_endpoint;
+    }
+    if(isset($r['data']['post-types'])) {
+      $supported_post_types = json_encode($r['data']['post-types']);
+      $user->supported_post_types = $supported_post_types;
+    }
   }
 
-  if(count($targets) || $media_endpoint) {
+  if(count($targets) || $media_endpoint || $supported_post_types) {
     $user->save();
   }
 
@@ -301,6 +308,23 @@ function get_micropub_config(&$user, $query=[]) {
     'targets' => $targets,
     'response' => $r
   ];
+}
+
+function supports_post_type(&$user, $type) {
+  if(!$user->supported_post_types)
+    return true;
+
+  $types = json_decode($user->supported_post_types, true);
+  if(!is_array($types))
+    return true;  // syntax error in response, fail safely
+
+  foreach($types as $t) {
+    if(is_array($t) && isset($t['type']) && $t['type'] == $type) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function get_micropub_source(&$user, $url, $properties) {

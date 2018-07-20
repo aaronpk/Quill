@@ -47,7 +47,8 @@ $app->get('/dashboard', function() use($app) {
   if($user=require_login($app)) {
     render('dashboard', array(
       'title' => 'Dashboard',
-      'authorizing' => false
+      'authorizing' => false,
+      'user' => $user,
     ));
   }
 });

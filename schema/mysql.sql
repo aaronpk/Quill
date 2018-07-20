@@ -24,5 +24,6 @@ CREATE TABLE `users` (
   `instagram_access_token` text,
   `email_username` varchar(255) DEFAULT NULL,
   `default_timezone` varchar(255) DEFAULT NULL,
+  `supported_post_types` longtext,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
