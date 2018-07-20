@@ -71,7 +71,7 @@
     <div class="nav">
       <ul class="nav navbar-nav">
 
-        <?php if(session('me')) { ?>
+        <?php if(session('me') && isset($this->user)) { ?>
           <?php if(supports_post_type($this->user, 'article')): ?>
             <li><a href="/editor">📄 Editor</a></li>
           <?php endif; ?>
