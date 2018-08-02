@@ -724,7 +724,7 @@ $app->get('/code', function() use($app) {
       'nginx' => ['conf'],
       'apache' => [],
       'text' => ['txt'],
-    ]; 
+    ];
     ksort($languages);
     $language_map = [];
     foreach($languages as $lang=>$exts) {
@@ -989,18 +989,18 @@ $app->get('/edit', function() use($app) {
         'error' => 'There was a problem!',
         'error_description' => $error
       ]);
-      return;      
+      return;
     }
 
     // Until all interfaces are complete, show an error here for unsupported ones
-    if(!in_array($url, ['/favorite','/repost'])) {
+    if(!in_array($url, ['/favorite','/repost','/code'])) {
       render('edit/error', [
         'title' => 'Not Yet Supported',
         'summary' => '',
         'error' => 'Not Yet Supported',
         'error_description' => 'Editing is not yet supported for this type of post.'
       ]);
-      return;      
+      return;
     }
 
     $app->redirect($url . '?edit=' . $params['url'], 302);

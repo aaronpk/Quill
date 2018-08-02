@@ -11,7 +11,7 @@ function doc_pages($page=null) {
     'syndication' => 'Syndication',
     'post-status' => 'Post Status',
   ];
-  if($page == null) 
+  if($page == null)
     return $pages;
   else
     return $pages[$page];
@@ -28,7 +28,7 @@ $app->get('/', function($format='html') use($app) {
   render('index', array(
     'title' => 'Quill',
     'meta' => '',
-    'authorizing' => false
+    'authorizing' => false,
   ));
 });
 
@@ -42,7 +42,7 @@ $app->get('/creating-a-micropub-endpoint', function() use($app) {
 
 $app->get('/docs', function() use($app) {
   render('docs/index', array(
-    'title' => 'Documentation', 
+    'title' => 'Documentation',
     'authorizing' => false,
     'pages' => doc_pages()
   ));
@@ -51,7 +51,7 @@ $app->get('/docs', function() use($app) {
 $app->get('/docs/:page', function($page) use($app) {
   if(file_exists('views/docs/'.$page.'.php'))
     render('docs/'.$page, array(
-      'title' => doc_pages($page).' - Quill Documentation', 
+      'title' => doc_pages($page).' - Quill Documentation',
       'authorizing' => false
     ));
   else

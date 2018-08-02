@@ -54,11 +54,15 @@
 
   <h3>Token endpoint response</h3>
 
-  <p>Below is the raw response from your token endpoint (<?= $this->tokenEndpoint ?>):</p>
-  <div class="bs-callout bs-callout-info pre">
-    <?= $this->curl_error ?>
-    <?= htmlspecialchars($this->response) ?>
-  </div>
+  <p>Below is the raw response from your token endpoint (<code><?= $this->tokenEndpoint ?></code>):</p>
+
+  <?php if($this->curl_error): ?>
+    <div class="bs-callout bs-callout-info pre"><?= $this->curl_error ?></div>
+  <?php endif ?>
+
+  <?php if($this->response): ?>
+    <div class="bs-callout bs-callout-info pre"><?= htmlspecialchars($this->response) ?></div>
+  <?php endif ?>
 
 
 <?php else: ?>

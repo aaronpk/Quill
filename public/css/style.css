@@ -108,6 +108,8 @@ body {
   font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
   word-break: break-all;
   word-wrap: break-word;
+  overflow: scroll;
+  white-space: pre;
 }
 
 
@@ -208,7 +210,7 @@ body {
   }
 
 
-/** 
+/**
  * nicer file upload
  */
 .btn-file {
@@ -229,7 +231,7 @@ body {
   background: white;
   cursor: inherit;
   display: block;
-} 
+}
 
 
 .glyphicon-spin {

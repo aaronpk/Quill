@@ -31,9 +31,11 @@ $app->get('/auth/start', function() use($app) {
 
   $_SESSION['attempted_me'] = $me;
 
-  $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($me);
-  $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
-  $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
+  $_SESSION['indieauth'] = [
+    'authorization_endpoint' => ($authorizationEndpoint=IndieAuth\Client::discoverAuthorizationEndpoint($me)),
+    'token_endpoint' => ($tokenEndpoint=IndieAuth\Client::discoverTokenEndpoint($me)),
+    'micropub_endpoint' => ($micropubEndpoint=IndieAuth\Client::discoverMicropubEndpoint($me)),
+  ];
 
   $defaultScope = 'create update media';
 
@@ -73,16 +75,6 @@ $app->get('/auth/start', function() use($app) {
     $app->redirect($authorizationURL, 302);
 
   } else {
-
-    if(!$user)
-      $user = ORM::for_table('users')->create();
-    $user->url = $me;
-    $user->date_created = date('Y-m-d H:i:s');
-    $user->micropub_endpoint = $micropubEndpoint;
-    $user->authorization_endpoint = $authorizationEndpoint;
-    $user->token_endpoint = $tokenEndpoint;
-    $user->micropub_access_token = ''; // blank out the access token if they attempt to sign in again
-    $user->save();
 
     if(k($params, 'dontask') && $params['dontask']) {
       // Request whatever scope was previously granted
@@ -131,7 +123,12 @@ $app->get('/auth/callback', function() use($app) {
 
   // If there is no state in the session, start the login again
   if(!array_key_exists('auth_state', $_SESSION)) {
-    $app->redirect('/?error=missing_session_state');
+    $html = render('auth_error', array(
+      'title' => 'Auth Callback',
+      'error' => 'Missing session state',
+      'errorDescription' => 'Something went wrong, please try signing in again, and make sure cookies are enabled for this domain.'
+    ));
+    $app->response()->body($html);
     return;
   }
 
@@ -182,12 +179,11 @@ $app->get('/auth/callback', function() use($app) {
   // An authorization code is in the query string, and we want to exchange that for an access token at the token endpoint.
 
   // Discover the endpoints
-  $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($me);
-  $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($me);
+  $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'];
+  $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'];
 
   if($tokenEndpoint) {
-    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $me, buildRedirectURI(), Config::$base_url, k($params,'state'), true);
-
+    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $me, buildRedirectURI(), Config::$base_url, true);
   } else {
     $token = array('auth'=>false, 'response'=>false);
   }
@@ -197,11 +193,11 @@ $app->get('/auth/callback', function() use($app) {
   // If a valid access token was returned, store the token info in the session and they are signed in
   if(k($token['auth'], array('me','access_token','scope'))) {
     // Double check that the domain of the returned "me" matches the expected
-    if(parse_url($token['auth']['me'], PHP_URL_HOST) != parse_url($me, PHP_URL_HOST)) {
+    if(!\p3k\url\host_matches($token['auth']['me'], $me)) {
       $html = render('auth_error', [
         'title' => 'Error Signing In',
         'error' => 'Invalid user',
-        'errorDescription' => 'The user URL that was returned in the access token did not match the domain of the user signing in.'
+        'errorDescription' => 'The user URL that was returned from the token endpoint (<code>'.$token['auth']['me'].'</code>) did not match the domain of the user signing in (<code>'.$me.'</code>).'
       ]);
       $app->response()->body($html);
       return;
@@ -223,6 +219,8 @@ $app->get('/auth/callback', function() use($app) {
       $user->url = $me;
       $user->date_created = date('Y-m-d H:i:s');
     }
+    $user->authorization_endpoint = $_SESSION['indieauth']['authorization_endpoint'];
+    $user->token_endpoint = $tokenEndpoint;
     $user->micropub_endpoint = $micropubEndpoint;
     $user->micropub_access_token = $token['auth']['access_token'];
     $user->micropub_scope = $token['auth']['scope'];
@@ -237,6 +235,7 @@ $app->get('/auth/callback', function() use($app) {
 
   unset($_SESSION['auth_state']);
   unset($_SESSION['attempted_me']);
+  unset($_SESSION['indieauth']);
 
   if($redirectToDashboardImmediately || k($_SESSION, 'dontask')) {
     unset($_SESSION['dontask']);
@@ -253,6 +252,11 @@ $app->get('/auth/callback', function() use($app) {
       $app->redirect('/new?' . http_build_query($query), 302);
     }
   } else {
+    $tokenResponse = $token['response'];
+    $parsed = @json_decode($tokenResponse);
+    if($parsed)
+      $tokenResponse = json_encode($parsed, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
+
     $html = render('auth_callback', array(
       'title' => 'Sign In',
       'me' => $me,
@@ -260,7 +264,7 @@ $app->get('/auth/callback', function() use($app) {
       'meParts' => parse_url($me),
       'tokenEndpoint' => $tokenEndpoint,
       'auth' => $token['auth'],
-      'response' => $token['response'],
+      'response' => $tokenResponse,
       'curl_error' => (array_key_exists('error', $token) ? $token['error'] : false),
       'destination' => (k($_SESSION, 'redirect_after_login') ?: '/new')
     ));
