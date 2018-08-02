@@ -117,19 +117,14 @@
         <button class="btn btn-success" id="btn_post">Post</button>
       </form>
 
-      <div class="alert alert-success hidden" id="test_success"><strong>Success! We found a Location header in the response!</strong><br>Your post should be on your website now!<br><a href="" id="post_href">View your post</a></div>
-      <div class="alert alert-danger hidden" id="test_error"><strong>Your endpoint did not return a Location header.</strong><br>See <a href="/creating-a-micropub-endpoint">Creating a Micropub Endpoint</a> for more information.</div>
+      <div class="alert alert-success hidden" id="test_success"><strong>Success! </strong><a href="" id="post_href">View your post</a></div>
+      <div class="alert alert-danger hidden" id="test_error"><strong>Something went wrong!</strong><br>Your Micropub endpoint indicated that something went wrong creating the post.</div>
 
-
-      <div id="last_request_container" style="display: none;">
-        <h4>Request made to your Micropub endpoint</h4>
-        <pre id="test_request" style="width: 100%; min-height: 140px;"></pre>
+      <div id="test_response_container" class="hidden">
+        <h4>Micropub Response</h4>
+        <p>Below is the response from your Micropub endpoint. This may contain helpful information that can be used to troubleshoot the issue.</p>
+        <pre id="test_response" style="width: 100%; min-height: 240px;"></pre>
       </div>
-
-      <?php if($this->test_response): ?>
-        <h4>Last response from your Micropub endpoint <span id="last_response_date">(<?= relative_time($this->response_date) ?>)</span></h4>
-      <?php endif; ?>
-      <pre id="test_response" class="<?= $this->test_response ? '' : 'hidden' ?>" style="width: 100%; min-height: 240px;"><?= htmlspecialchars($this->test_response) ?></pre>
 
       <hr>
       <div style="text-align: right;">
@@ -825,7 +820,8 @@ $(function(){
         window.location = response.location;
         // console.log(response.location);
       } else {
-        $("#test_response").html(response.response).removeClass('hidden');
+        $("#test_response").html(response.response);
+        $("#test_response_container").removeClass('hidden');
         $("#test_success").addClass('hidden');
         $("#test_error").removeClass('hidden');
       }

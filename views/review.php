@@ -2,8 +2,8 @@
   <?= partial('partials/header') ?>
 
     <div style="clear: both;">
-      <div class="alert alert-success hidden" id="post_success"><strong>Success! Your post should be on your website now!</strong><br><a href="" id="post_href">View your post</a></div>
-      <div class="alert alert-danger hidden" id="post_error"><strong>There was a problem saving your post. Your endpoint did not return a Location header.</strong><br>See <a href="/creating-a-micropub-endpoint">Creating a Micropub Endpoint</a> for more information.</div>
+      <div class="alert alert-success hidden" id="test_success"><strong>Success! </strong><a href="" id="post_href">View your post</a></div>
+      <div class="alert alert-danger hidden" id="test_error"><strong>Something went wrong!</strong><br>Your Micropub endpoint indicated that something went wrong creating the post.</div>
     </div>
 
     <form role="form" style="margin-top: 20px;" id="note_form">
@@ -35,7 +35,7 @@
       <div class="row review-content hidden">
         <div class="col-xs-12">
           <div class="form-group">
-            <textarea id="review_content" value="" class="form-control" style="height: 4em;" placeholder="Write your review here"></textarea>          
+            <textarea id="review_content" value="" class="form-control" style="height: 4em;" placeholder="Write your review here"></textarea>
             <div id="review-html-note">
               <input type="checkbox" id="review_is_html" value="1"> Post as HTML
             </div>

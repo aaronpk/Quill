@@ -19,11 +19,4 @@
     <p>If you attach a photo to your email or MMS, it will be sent to your Micropub endpoint. (Only one photo is currently supported.)</p>
   </div>
 
-  <div>
-    <?php if($this->test_response): ?>
-      <h4>Last response from your Micropub endpoint</h4>
-      <pre id="test_response" style="width: 100%; min-height: 280px;"><?= htmlspecialchars($this->test_response) ?></pre>
-    <?php endif; ?>
-  </div>
-
 </div>

@@ -63,17 +63,6 @@ $app->get('/new', function() use($app) {
     if(array_key_exists('reply', $params))
        $in_reply_to = $params['reply'];
 
-    $test_response = '';
-    if($user->last_micropub_response) {
-      try {
-        if(@json_decode($user->last_micropub_response)) {
-          $d = json_decode($user->last_micropub_response);
-          $test_response = $d->response;
-        }
-      } catch(Exception $e) {
-      }
-    }
-
     render('new-post', array(
       'title' => 'New Post',
       'in_reply_to' => $in_reply_to,
@@ -83,7 +72,6 @@ $app->get('/new', function() use($app) {
       'micropub_access_token' => $user->micropub_access_token,
       'response_date' => $user->last_micropub_response_date,
       'syndication_targets' => json_decode($user->syndication_targets, true),
-      'test_response' => $test_response,
       'location_enabled' => $user->location_enabled,
       'user' => $user,
       'authorizing' => false
@@ -452,17 +440,6 @@ $app->get('/add-to-home', function() use($app) {
 $app->get('/email', function() use($app) {
   if($user=require_login($app)) {
 
-    $test_response = '';
-    if($user->last_micropub_response) {
-      try {
-        if(@json_decode($user->last_micropub_response)) {
-          $d = json_decode($user->last_micropub_response);
-          $test_response = $d->response;
-        }
-      } catch(Exception $e) {
-      }
-    }
-
     if(!$user->email_username) {
       $host = parse_url($user->url, PHP_URL_HOST);
       $user->email_username = $host . '.' . rand(100000,999999);
@@ -472,7 +449,6 @@ $app->get('/email', function() use($app) {
     render('email', array(
       'title' => 'Post-by-Email',
       'micropub_endpoint' => $user->micropub_endpoint,
-      'test_response' => $test_response,
       'user' => $user
     ));
   }
