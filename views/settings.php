@@ -85,7 +85,7 @@
 
   <h3>Backwards Compatibility</h3>
 
-  <p>You can customize some of the properties that are sent in the Micropub request to work with your specific endpoint.</p>
+  <p>You can customize some of the properties that are sent in the Micropub request to work with older software.</p>
 
   <table class="table table-condensed" width="100%">
     <tr>
@@ -94,7 +94,7 @@
         <div style="margin-bottom:4px;"><input type="text" id="slug-field-name" value="<?= $this->user->micropub_slug_field ?>" placeholder="mp-slug" class="form-control"></div>
         <div><input type="button" class="btn btn-primary" value="Save" id="save-slug-field"></div>
       </td>
-      <td>Choose the name of the field that the slug will be sent in. This should be set to <code>mp-slug</code> unless your endpoint is using a custom property or the deprecated <code>slug</code> property.</td>
+      <td>Choose the name of the field that the slug will be sent in. This should be set to <code>mp-slug</code> unless your software is using a custom property or the deprecated <code>slug</code> property.</td>
     </tr>
     <tr>
       <td>Syndication</td>
@@ -107,7 +107,7 @@
         </div>
         <div><input type="button" class="btn btn-primary" value="Save" id="save-syndicate-to-field"></div>
       </td>
-      <td>Choose the name of the field that the syndication values will be sent in. This should be set to <code>mp-syndicate-to</code> unless your endpoint is using the deprecated <code>syndicate-to</code> property.</td>
+      <td>Choose the name of the field that the syndication values will be sent in. This should be set to <code>mp-syndicate-to</code> unless your software is using the deprecated <code>syndicate-to</code> property.</td>
     </tr>
     <tr>
       <td>Send HTML Content</td>
