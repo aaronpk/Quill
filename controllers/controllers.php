@@ -483,6 +483,7 @@ $app->get('/settings', function() use($app) {
     render('settings', [
       'title' => 'Settings',
       'user' => $user,
+      'syndication_targets' => json_decode($user->syndication_targets, true),
       'authorizing' => false
     ]);
   }

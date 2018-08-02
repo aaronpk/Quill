@@ -32,11 +32,11 @@
           <input type="text" id="note_category" value="<?= $this->bookmark_tags ?>" class="form-control" placeholder="e.g. web, personal">
         </div>
 
+        <?php if($this->syndication_targets): ?>
         <div class="form-group">
           <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">refresh</a></label>
           <div id="syndication-container">
             <?php
-            if($this->syndication_targets) {
               echo '<ul>';
               foreach($this->syndication_targets as $syn) {
                 echo '<li>'
@@ -47,13 +47,11 @@
                . '</li>';
               }
               echo '</ul>';
-            } else {
-              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site.
-              You can provide a <a href="/docs#syndication">list of supported syndication targets</a> that will appear as checkboxes here.</div><?php
-            }
             ?>
           </div>
         </div>
+        <?php endif ?>
+
       </form>
 
 

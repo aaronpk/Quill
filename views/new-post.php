@@ -78,11 +78,12 @@
 
         <?php endif ?>
 
+
+        <?php if($this->syndication_targets): ?>
         <div class="form-group" style="margin-top: 1em;">
           <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">(refresh list)</a></label>
           <div id="syndication-container">
             <?php
-            if($this->syndication_targets) {
               echo '<ul>';
               foreach($this->syndication_targets as $syn) {
                 echo '<li>'
@@ -93,13 +94,10 @@
                . '</li>';
               }
               echo '</ul>';
-            } else {
-              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site.
-              You can provide a <a href="/docs#syndication">list of supported syndication targets</a> that will appear as checkboxes here.</div><?php
-            }
             ?>
           </div>
         </div>
+        <?php endif ?>
 
         <div class="form-group">
           <label for="note_location">Location</label>

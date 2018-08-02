@@ -50,9 +50,37 @@
   </table>
 
 
+  <h3>Syndication Targets</h3>
+
+        <div class="form-group">
+          <label for="note_syndicate-to"><a href="javascript:reload_syndications()">Reload</a></label>
+          <div id="syndication-container">
+            <?php
+            if($this->syndication_targets) {
+              echo '<ul>';
+              foreach($this->syndication_targets as $syn) {
+                echo '<li>'
+                 . '<button data-syndicate-to="'.(isset($syn['uid']) ? htmlspecialchars($syn['uid']) : htmlspecialchars($syn['target'])).'" class="btn btn-default btn-block">'
+                   . ($syn['favicon'] ? '<img src="'.htmlspecialchars($syn['favicon']).'" width="16" height="16"> ' : '')
+                   . htmlspecialchars($syn['target'])
+                 . '</button>'
+               . '</li>';
+              }
+              echo '</ul>';
+            } else {
+              ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site.
+              Your server can provide a <a href="/docs#syndication">list of supported syndication targets</a> that will appear as checkboxes here.</div><?php
+            }
+            ?>
+          </div>
+        </div>
+
+
+
   <h3>Twitter</h3>
   <p>Connecting a Twitter account will automatically "favorite" and "retweet" tweets on Twitter when you favorite and retweet a Twitter URL in Quill.</p>
   <input type="button" id="twitter-button" value="Checking" class="btn">
+
 
 
   <h3>Backwards Compatibility</h3>
@@ -139,5 +167,25 @@ $(function(){
     });
   });
 
+
+
 });
+
+function reload_syndications() {
+  $.getJSON("/micropub/syndications", function(data){
+    if(data.targets) {
+      $("#syndication-container").html('<ul></ul>');
+      for(var i in data.targets) {
+        var target = data.targets[i].target;
+        var uid = data.targets[i].uid;
+        var favicon = data.targets[i].favicon;
+        $("#syndication-container ul").append('<li><button data-syndicate-to="'+htmlspecialchars(uid ? uid : target)+'" class="btn btn-default btn-block">'+(favicon ? '<img src="'+htmlspecialchars(favicon)+'" width="16" height="16"> ':'')+htmlspecialchars(target)+'</button></li>');
+      }
+      bind_syndication_buttons();
+    } else {
+
+    }
+    console.log(data);
+  });
+}
 </script>
