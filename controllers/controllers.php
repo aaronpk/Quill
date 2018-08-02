@@ -532,25 +532,6 @@ $app->get('/settings/html-content', function() use($app) {
   }
 });
 
-$app->get('/view', function() use($app) {
-  if($user=require_login($app)) {
-    $params = $app->request()->params();
-
-    $xray = new p3k\XRay();
-    $result = $xray->parse($params['url']);
-    if(isset($result['data']))
-      $entry = $result['data'];
-    else
-      $entry = [];
-
-    render('view-post', array(
-      'title' => 'View',
-      'entry' => $entry,
-      'authorizing' => false
-    ));
-  }
-});
-
 function create_favorite(&$user, $url) {
 
   $tweet_id = false;
