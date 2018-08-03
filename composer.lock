@@ -744,16 +744,16 @@
         },
         {
             "name": "mf2/mf2",
-            "version": "v0.4.4",
+            "version": "v0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/php-mf2.git",
-                "reference": "463351e3a3620663cfa335849ce904da39ef1314"
+                "reference": "35fee8b6481695438a44f336534b4cd782bcd518"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/463351e3a3620663cfa335849ce904da39ef1314",
-                "reference": "463351e3a3620663cfa335849ce904da39ef1314",
+                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/35fee8b6481695438a44f336534b4cd782bcd518",
+                "reference": "35fee8b6481695438a44f336534b4cd782bcd518",
                 "shasum": ""
             },
             "require": {
@@ -796,7 +796,7 @@
                 "parser",
                 "semantic"
             ],
-            "time": "2018-08-01T20:02:45+00:00"
+            "time": "2018-08-02T17:12:58+00:00"
         },
         {
             "name": "mpratt/relativetime",
@@ -1063,16 +1063,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.6.5",
+            "version": "v1.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "fcbbbf219dcd89cf9322973a2b12b8392cafc33b"
+                "reference": "feee49364bd943a17583e6bf9ae0b705da728b9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/fcbbbf219dcd89cf9322973a2b12b8392cafc33b",
-                "reference": "fcbbbf219dcd89cf9322973a2b12b8392cafc33b",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/feee49364bd943a17583e6bf9ae0b705da728b9e",
+                "reference": "feee49364bd943a17583e6bf9ae0b705da728b9e",
                 "shasum": ""
             },
             "require": {
@@ -1108,7 +1108,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-08-01T20:25:25+00:00"
+            "time": "2018-08-02T17:17:19+00:00"
         },
         {
             "name": "saltybeagle/savant3",
