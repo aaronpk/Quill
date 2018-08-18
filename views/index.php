@@ -1,6 +1,6 @@
 <div class="narrow">
 
-  <div class="jumbotron h-x-app">
+  <div class="jumbotron h-app h-x-app">
     <h1><img src="/images/quill-logo-144.png" height="72" style="margin-bottom: 13px;" class="u-logo p-name" alt="Quill">Quill</h1>
 
     <p class="tagline">Quill is a simple app for posting text notes to your website.</p>
