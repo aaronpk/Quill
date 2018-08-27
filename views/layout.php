@@ -7,7 +7,6 @@
     <link rel="pingback" href="https://webmention.io/aaronpk/xmlrpc" />
     <link rel="webmention" href="https://webmention.io/aaronpk/webmention" />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
     <!-- standard viewport tag to set the viewport to the device's width
       , Android 2.3 devices need this so 100% width works properly and
       doesn't allow children to blow up the viewport width-->
@@ -33,6 +32,7 @@
     <link rel="apple-touch-icon" sizes="72x72" href="/images/quill-icon-72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="/images/quill-icon-114.png">
     <link rel="apple-touch-icon" sizes="144x144" href="/images/quill-icon-144.png">
+    <link rel="apple-touch-icon" sizes="196x196" href="/images/quill-icon-196.png">
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" sizes="196x196" href="/images/quill-icon-196.png">
@@ -40,6 +40,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#428bca">
+
+    <link rel="manifest" href="/js/manifest.json">
 
     <script src="/js/script.js"></script>
     <script src="/js/date.js"></script>
