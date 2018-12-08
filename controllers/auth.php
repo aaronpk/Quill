@@ -291,6 +291,8 @@ $app->post('/auth/reset', function() use($app) {
     $user->micropub_media_endpoint = '';
     $user->micropub_scope = '';
     $user->micropub_access_token = '';
+    $user->syndication_targets = '';
+    $user->supported_post_types = '';
     $user->save();
 
     unset($_SESSION['auth']);

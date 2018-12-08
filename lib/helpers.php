@@ -284,6 +284,11 @@ function get_micropub_config(&$user, $query=[]) {
     }
   }
 
+  // Reset the values so they can be overwritten
+  $user->syndication_targets = '';
+  $user->supported_post_types = '';
+  $user->micropub_media_endpoint = '';
+
   if(count($targets))
     $user->syndication_targets = json_encode($targets);
 
@@ -300,9 +305,7 @@ function get_micropub_config(&$user, $query=[]) {
     }
   }
 
-  if(count($targets) || $media_endpoint || $supported_post_types) {
-    $user->save();
-  }
+  $user->save();
 
   return [
     'targets' => $targets,
