@@ -1,52 +1,70 @@
 <?php
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-function buildRedirectURI() {
-  return Config::$base_url . 'auth/callback';
-}
+IndieAuth\Client::$clientID = Config::$base_url;
+IndieAuth\Client::$redirectURL = Config::$base_url.'auth/callback';
 
 $app->get('/auth/start', function() use($app) {
   $req = $app->request();
 
   $params = $req->params();
 
-  // the "me" parameter is user input, and may be in a couple of different forms:
-  // aaronparecki.com http://aaronparecki.com http://aaronparecki.com/
-  if(!array_key_exists('me', $params) || !($me = IndieAuth\Client::normalizeMeURL($params['me']))) {
-    $html = render('auth_error', array(
+  $defaultScope = 'create update media';
+
+  list($authorizationURL, $error) = IndieAuth\Client::begin($params['me'], $defaultScope);
+
+  // Double check for a micropub endpoint here for debugging purposes
+  if(!$error) {
+    $me = $_SESSION['indieauth_url']; // set by IndieAuth\Client::begin(), will be the normalized and resolved URL
+    $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
+    if(!$micropubEndpoint) {
+      $error['error'] = 'missing_micropub_endpoint';
+    }
+  }
+
+  if($error && in_array($error['error'], ['missing_authorization_endpoint','missing_token_endpoint','missing_micropub_endpoint'])) {
+    // Display debug info for these particular errors
+
+    $me = $_SESSION['indieauth_url']; // set by IndieAuth\Client::begin(), will be the normalized and resolved URL
+    $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
+    $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'] = IndieAuth\Client::discoverTokenEndpoint($me);
+    $authorizationEndpoint = $_SESSION['indieauth']['authorization_endpoint'] = IndieAuth\Client::discoverAuthorizationEndpoint($me);
+
+    $html = render('auth_start', array(
       'title' => 'Sign In',
-      'error' => 'Invalid "me" Parameter',
-      'errorDescription' => 'The URL you entered, "<strong>' . $params['me'] . '</strong>" is not valid.'
+      'me' => $me,
+      'authorizing' => $me,
+      'meParts' => parse_url($me),
+      'tokenEndpoint' => $tokenEndpoint,
+      'micropubEndpoint' => $micropubEndpoint,
+      'authorizationEndpoint' => $authorizationEndpoint,
+      'authorizationURL' => false
     ));
     $app->response()->body($html);
     return;
   }
+
+  // Handle other errors like connection errors by showing a generic error page
+  if($error) {
+    $html = render('auth_error', array(
+      'title' => 'Sign In',
+      'error' => $error['error'],
+      'errorDescription' => $error['error_description'],
+    ));
+    $app->response()->body($html);
+    return;
+  }
+
+  $me = $_SESSION['indieauth_url']; // set by IndieAuth\Client::begin(), will be the normalized and resolved URL
+  $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
+  $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'] = IndieAuth\Client::discoverTokenEndpoint($me);
+  $authorizationEndpoint = $_SESSION['indieauth']['authorization_endpoint'] = IndieAuth\Client::discoverAuthorizationEndpoint($me);
 
   if(k($params, 'redirect')) {
     $_SESSION['redirect_after_login'] = $params['redirect'];
   }
   if(k($params, 'reply')) {
     $_SESSION['reply'] = $params['reply'];
-  }
-
-  $_SESSION['attempted_me'] = $me;
-
-  $_SESSION['indieauth'] = [
-    'authorization_endpoint' => ($authorizationEndpoint=IndieAuth\Client::discoverAuthorizationEndpoint($me)),
-    'token_endpoint' => ($tokenEndpoint=IndieAuth\Client::discoverTokenEndpoint($me)),
-    'micropub_endpoint' => ($micropubEndpoint=IndieAuth\Client::discoverMicropubEndpoint($me)),
-  ];
-
-  $defaultScope = 'create update media';
-
-  if($tokenEndpoint && $micropubEndpoint && $authorizationEndpoint) {
-    // Generate a "state" parameter for the request
-    $state = IndieAuth\Client::generateStateParameter();
-    $_SESSION['auth_state'] = $state;
-
-    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $me, buildRedirectURI(), Config::$base_url, $state, $defaultScope);
-  } else {
-    $authorizationURL = false;
   }
 
   // If the user has already signed in before and has a micropub access token,
@@ -59,13 +77,6 @@ $app->get('/auth/start', function() use($app) {
     && $user->token_endpoint == $tokenEndpoint
     && $user->authorization_endpoint == $authorizationEndpoint
     && !array_key_exists('restart', $params)) {
-
-    // TODO: fix this by caching the endpoints maybe in the session instead of writing them to the DB here.
-    // Then remove the line below that blanks out the access token
-    $user->micropub_endpoint = $micropubEndpoint;
-    $user->authorization_endpoint = $authorizationEndpoint;
-    $user->token_endpoint = $tokenEndpoint;
-    $user->save();
 
     // Request whatever scope was previously granted
     $authorizationURL = parse_url($authorizationURL);
@@ -104,6 +115,8 @@ $app->get('/auth/redirect', function() use($app) {
   $req = $app->request();
   $params = $req->params();
 
+  // Override scope from the form the user selects
+
   if(!isset($params['scope']))
     $params['scope'] = '';
 
@@ -121,87 +134,28 @@ $app->get('/auth/callback', function() use($app) {
   $req = $app->request();
   $params = $req->params();
 
-  // If there is no state in the session, start the login again
-  if(!array_key_exists('auth_state', $_SESSION)) {
-    $html = render('auth_error', array(
-      'title' => 'Auth Callback',
-      'error' => 'Missing session state',
-      'errorDescription' => 'Something went wrong, please try signing in again, and make sure cookies are enabled for this domain.'
-    ));
-    $app->response()->body($html);
-    return;
-  }
+  list($token, $error) = IndieAuth\Client::complete($params, true);
 
-  if(!array_key_exists('code', $params) || trim($params['code']) == '') {
-    $html = render('auth_error', array(
-      'title' => 'Auth Callback',
-      'error' => 'Missing authorization code',
-      'errorDescription' => 'No authorization code was provided in the request.'
-    ));
-    $app->response()->body($html);
-    return;
-  }
-
-  // Verify the state came back and matches what we set in the session
-  // Should only fail for malicious attempts, ok to show a not as nice error message
-  if(!array_key_exists('state', $params)) {
-    $html = render('auth_error', array(
-      'title' => 'Auth Callback',
-      'error' => 'Missing state parameter',
-      'errorDescription' => 'No state parameter was provided in the request. This shouldn\'t happen. It is possible this is a malicious authorization attempt, or your authorization server failed to pass back the "state" parameter.'
-    ));
-    $app->response()->body($html);
-    return;
-  }
-
-  if($params['state'] != $_SESSION['auth_state']) {
-    $html = render('auth_error', array(
-      'title' => 'Auth Callback',
-      'error' => 'Invalid state',
-      'errorDescription' => 'The state parameter provided did not match the state provided at the start of authorization. This is most likely caused by a malicious authorization attempt.'
-    ));
-    $app->response()->body($html);
-    return;
-  }
-
-  if(!isset($_SESSION['attempted_me'])) {
+  if($error) {
     $html = render('auth_error', [
       'title' => 'Auth Callback',
-      'error' => 'Missing data',
-      'errorDescription' => 'We forgot who was logging in. It\'s possible you took too long to finish signing in, or something got mixed up by signing in in another tab.'
+      'error' => $error['error'],
+      'errorDescription' => $error['error_description'],
     ]);
     $app->response()->body($html);
     return;
   }
-  $me = $_SESSION['attempted_me'];
 
-  // Now the basic sanity checks have passed. Time to start providing more helpful messages when there is an error.
-  // An authorization code is in the query string, and we want to exchange that for an access token at the token endpoint.
+  $me = $token['me'];
 
-  // Discover the endpoints
+  // Use the discovered endpoints saved in the session
   $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'];
   $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'];
-
-  if($tokenEndpoint) {
-    $token = IndieAuth\Client::getAccessToken($tokenEndpoint, $params['code'], $me, buildRedirectURI(), Config::$base_url, true);
-  } else {
-    $token = array('auth'=>false, 'response'=>false);
-  }
 
   $redirectToDashboardImmediately = false;
 
   // If a valid access token was returned, store the token info in the session and they are signed in
   if(k($token['auth'], array('me','access_token','scope'))) {
-    // Double check that the domain of the returned "me" matches the expected
-    if(!\p3k\url\host_matches($token['auth']['me'], $me)) {
-      $html = render('auth_error', [
-        'title' => 'Error Signing In',
-        'error' => 'Invalid user',
-        'errorDescription' => 'The user URL that was returned from the token endpoint (<code>'.$token['auth']['me'].'</code>) did not match the domain of the user signing in (<code>'.$me.'</code>).'
-      ]);
-      $app->response()->body($html);
-      return;
-    }
 
     $_SESSION['auth'] = $token['auth'];
     $_SESSION['me'] = $me = $token['auth']['me'];
@@ -233,8 +187,6 @@ $app->get('/auth/callback', function() use($app) {
     get_micropub_config($user, ['q'=>'config']);
   }
 
-  unset($_SESSION['auth_state']);
-  unset($_SESSION['attempted_me']);
   unset($_SESSION['indieauth']);
 
   if($redirectToDashboardImmediately || k($_SESSION, 'dontask')) {
