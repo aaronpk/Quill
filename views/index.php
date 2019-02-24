@@ -5,7 +5,15 @@
 
     <p class="tagline">Quill is a simple app for posting text notes to your website.</p>
 
-    <? if(session('me')): ?>
+<? if(session('me')): 
+        if ( profile('photo') ) {
+		?>   		<img src="<?php echo profile('photo'); ?>" height="125" alt="Profile Image" />
+<?php }
+        if ( profile('name') ) {
+	?>  <p><?php echo profile('name'); ?></p>
+<?php	}
+    ?>
+      
       <p>You're already signed in!<p>
       <p><a href="/dashboard" class="btn btn-primary">Continue</a></p>
     <? else: ?>
