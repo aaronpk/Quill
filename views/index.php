@@ -5,16 +5,18 @@
 
     <p class="tagline">Quill is a simple app for posting text notes to your website.</p>
 
-<? if(session('me')): 
-        if ( profile('photo') ) {
-		?>   		<img src="<?php echo profile('photo'); ?>" height="125" alt="Profile Image" />
-<?php }
-        if ( profile('name') ) {
-	?>  <p><?php echo profile('name'); ?></p>
-<?php	}
-    ?>
-      
-      <p>You're already signed in!<p>
+    <? if(session('me')): ?>
+
+      <? if(profile('photo')): ?>
+        <img src="<?php echo profile('photo'); ?>" height="125" alt="Profile Image" style="border: 1px #bbb solid; border-radius: 12px;" />
+      <? endif ?>
+      <? if(profile('name')): ?>
+        <p>Signed in as: <?= htmlspecialchars(profile('name')); ?></p>
+      <? endif ?>
+      <? if(!profile('name') && !profile('photo')): ?>
+        <p>You're already signed in!</p>
+      <? endif ?>
+
       <p><a href="/dashboard" class="btn btn-primary">Continue</a></p>
     <? else: ?>
       <p>To use Quill, sign in with your domain. Your website will need to support <a href="https://indieweb.org/micropub">Micropub</a> for creating new posts.</p>

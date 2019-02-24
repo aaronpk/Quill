@@ -8,13 +8,18 @@
       <td>me</td>
       <td><code><?= $this->user->url; ?></code> (should be your URL)</td>
     </tr>
-   <?php if ( profile('name') ) { 
-    ?> 
+    <?php if(profile('name')) { ?>
     <tr>
-      <td>User Name</td>
+      <td>Name</td>
       <td><code><?= profile('name'); ?></code> </td>
      </tr>
-   <?php } ?>
+    <?php } ?>
+    <?php if(profile('photo')) { ?>
+    <tr>
+      <td>Photo</td>
+      <td><code><?= profile('photo'); ?></code> </td>
+     </tr>
+    <?php } ?>
     <tr>
       <td>scope</td>
       <td><code><?= $this->user->micropub_scope ?></code> (should be a space-separated list of permissions including "create")</td>
