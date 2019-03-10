@@ -43,15 +43,15 @@ function session($key) {
 }
 
 function profile($key) {
-    if ( ! session('auth') ) {
-	    return null;
-    }
-    $auth = session('auth');
-    if ( array_key_exists('profile', $auth) && array_key_exists($key, $auth['profile'] ) ) {
-	    return $auth['profile'][$key];
-    }
+  if(!session('auth')) {
     return null;
- }
+  }
+  $auth = session('auth');
+  if(isset($auth['profile'][$key])) {
+    return $auth['profile'][$key];
+  }
+  return null;
+}
 
 function k($a, $k, $default=null) {
   if(is_array($k)) {
