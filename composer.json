@@ -5,7 +5,7 @@
     "j4mie/idiorm": "1.4.*",
     "mf2/mf2": "^0.4",
     "indieweb/date-formatter": "0.3.*",
-    "indieauth/client": ">=0.4.0",
+    "indieauth/client": ">=0.5.0",
     "mpratt/relativetime": ">=1.0",
     "firebase/php-jwt": "2.*",
     "abraham/twitteroauth": "*",

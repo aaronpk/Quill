@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba9a9e78ffbc647f0609e84b08957ee1",
+    "content-hash": "f16f420e819dd988b7c5eea73aa21504",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -441,16 +441,16 @@
         },
         {
             "name": "indieauth/client",
-            "version": "0.4.1",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/indieauth-client-php.git",
-                "reference": "3e47004ccfccddc5760639f4faf9ed5ceadb460e"
+                "reference": "7ebd16c82eaf20343b25898b554eda50f6ee2da5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/3e47004ccfccddc5760639f4faf9ed5ceadb460e",
-                "reference": "3e47004ccfccddc5760639f4faf9ed5ceadb460e",
+                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/7ebd16c82eaf20343b25898b554eda50f6ee2da5",
+                "reference": "7ebd16c82eaf20343b25898b554eda50f6ee2da5",
                 "shasum": ""
             },
             "require": {
@@ -479,7 +479,7 @@
                 }
             ],
             "description": "IndieAuth Client Library",
-            "time": "2018-03-13T23:39:55+00:00"
+            "time": "2019-03-10T19:23:02+00:00"
         },
         {
             "name": "indieweb/date-formatter",
