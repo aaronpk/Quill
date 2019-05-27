@@ -815,16 +815,17 @@ $(function(){
       if(typeof response == "string") {
         response = JSON.parse(response);
       }
-      localforage.removeItem('current-note');
-      if(response.location) {
-        window.location = response.location;
-        // console.log(response.location);
-      } else {
-        $("#test_response").html(response.response);
-        $("#test_response_container").removeClass('hidden');
-        $("#test_success").addClass('hidden');
-        $("#test_error").removeClass('hidden');
-      }
+      localforage.removeItem('current-note', function(){
+        if(response.location) {
+          window.location = response.location;
+          // console.log(response.location);
+        } else {
+          $("#test_response").html(response.response);
+          $("#test_response_container").removeClass('hidden');
+          $("#test_success").addClass('hidden');
+          $("#test_error").removeClass('hidden');
+        }
+      });
     } catch(e) {
       $("#test_success").addClass('hidden');
       $("#test_error").removeClass('hidden');
