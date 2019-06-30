@@ -24,5 +24,5 @@ CREATE TABLE users (
   instagram_access_token TEXT,
   email_username TEXT,
   default_timezone TEXT,
-  supported_post_types TEXT,
+  supported_post_types TEXT
 );
