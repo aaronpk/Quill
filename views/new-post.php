@@ -79,8 +79,23 @@
         <?php endif ?>
 
 
+        <?php if($this->supported_visibility): ?>
+          <div class="form-group" style="margin-top: 1em;">
+            <label for="visibility">Visibility</label>
+            <select class="form-control" id="visibility">
+              <?php
+                foreach(['Public','Unlisted','Private'] as $v):
+                  if(in_array(strtolower($v), $this->supported_visibility)):
+                    echo '<option value="'.strtolower($v).'">'.$v.'</option>';
+                  endif;
+                endforeach;
+              ?>
+            </select>
+          </div>
+        <?php endif ?>
+
         <?php if($this->syndication_targets): ?>
-        <div class="form-group" style="margin-top: 1em;">
+        <div id="syndication-targets" class="form-group" style="margin-top: 1em;">
           <label for="note_syndicate-to">Syndicate <a href="javascript:reload_syndications()">(refresh list)</a></label>
           <div id="syndication-container">
             <?php
@@ -562,6 +577,14 @@ $(function(){
     }
   });
 
+  $("#visibility").on('change', function(e){
+    if($(this).val() == 'private') {
+      $("#syndication-targets").addClass('hidden');
+    } else {
+      $("#syndication-targets").removeClass('hidden');
+    }
+  });
+
   $("#expand-reply").click(function(){
     $('.reply-section').removeClass('hidden');
     $(this).addClass('hidden');
@@ -738,6 +761,11 @@ $(function(){
     if(!$("#form_rsvp").hasClass("hidden") && $("#note_rsvp").val()) {
       formData.append("rsvp", $("#note_rsvp").val());
       entry["rsvp"] = $("#note_rsvp").val();
+    }
+
+    if($("#visibility").val()) {
+      formData.append("visibility", $("#visibility").val());
+      entry["visibility"] = $("#visibility").val();
     }
 
     function appendPhotoToFormData(photo, prop) {

@@ -25,5 +25,6 @@ CREATE TABLE `users` (
   `email_username` varchar(255) DEFAULT NULL,
   `default_timezone` varchar(255) DEFAULT NULL,
   `supported_post_types` longtext,
+  `supported_visibility` longtext,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

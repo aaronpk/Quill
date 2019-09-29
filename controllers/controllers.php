@@ -72,6 +72,7 @@ $app->get('/new', function() use($app) {
       'micropub_access_token' => $user->micropub_access_token,
       'response_date' => $user->last_micropub_response_date,
       'syndication_targets' => json_decode($user->syndication_targets, true),
+      'supported_visibility' => json_decode($user->supported_visibility, true),
       'location_enabled' => $user->location_enabled,
       'user' => $user,
       'authorizing' => false

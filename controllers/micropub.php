@@ -2,7 +2,7 @@
 
 $app->get('/micropub/syndications', function() use($app) {
   if($user=require_login($app)) {
-    $data = get_micropub_config($user, ['q'=>'syndicate-to']);
+    $data = get_micropub_config($user);
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
       'targets' => $data['targets'],
