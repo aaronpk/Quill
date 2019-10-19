@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2869253e9c190f261651037122249e6f",
+    "content-hash": "9676d488b166fb91835dc9f7746c9d30",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -59,49 +59,6 @@
                 "twitter"
             ],
             "time": "2017-06-30T22:02:01+00:00"
-        },
-        {
-            "name": "andreyco/instagram",
-            "version": "3.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Andreyco/Instagram-for-PHP.git",
-                "reference": "47b322bd3be98ca24f9ca637f14632996dc2e7dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Andreyco/Instagram-for-PHP/zipball/47b322bd3be98ca24f9ca637f14632996dc2e7dc",
-                "reference": "47b322bd3be98ca24f9ca637f14632996dc2e7dc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Andreyco\\Instagram\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-4-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Andrej Badin",
-                    "email": "contact@andrejbadin.com",
-                    "homepage": "http://andrejbadin.com"
-                }
-            ],
-            "description": "An easy-to-use PHP Class for accessing Instagram's API.",
-            "homepage": "https://github.com/Andreyco/Instagram-for-PHP",
-            "keywords": [
-                "api",
-                "instagram"
-            ],
-            "time": "2017-04-13T10:32:53+00:00"
         },
         {
             "name": "barnabywalters/mf-cleaner",

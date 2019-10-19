@@ -377,15 +377,6 @@ function relative_time($date) {
   return $rel->timeAgo($date);
 }
 
-function instagram_client() {
-  return new Andreyco\Instagram\Client(array(
-    'apiKey'      => Config::$instagramClientID,
-    'apiSecret'   => Config::$instagramClientSecret,
-    'apiCallback' => Config::$base_url . 'auth/instagram/callback',
-    'scope'       => array('basic','likes'),
-  ));
-}
-
 function validate_photo(&$file) {
   try {
 

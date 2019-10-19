@@ -21,7 +21,6 @@ CREATE TABLE users (
   twitter_access_token TEXT,
   twitter_token_secret TEXT,
   twitter_username TEXT,
-  instagram_access_token TEXT,
   email_username TEXT,
   default_timezone TEXT,
   supported_post_types TEXT,
