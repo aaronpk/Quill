@@ -17,7 +17,6 @@ CREATE TABLE `users` (
   `last_micropub_response_date` datetime DEFAULT NULL,
   `location_enabled` tinyint(4) NOT NULL DEFAULT '0',
   `syndication_targets` text,
-  `facebook_access_token` text,
   `twitter_access_token` text,
   `twitter_token_secret` text,
   `twitter_username` varchar(255) DEFAULT NULL,
