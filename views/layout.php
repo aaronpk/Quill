@@ -49,6 +49,7 @@
   </head>
 
 <body role="document">
+<?php if(Config::$gaid): ?>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -62,6 +63,7 @@
   })();
 
 </script>
+<?php endif ?>
 
 <div class="page">
 
