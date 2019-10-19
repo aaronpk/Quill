@@ -256,6 +256,14 @@ $app->post('/auth/reset', function() use($app) {
 });
 
 $app->post('/auth/twitter', function() use($app) {
+  if(!Config::$twitterClientID) {
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'result' => 'error'
+    )));
+    return;
+  }
+
   if($user=require_login($app, false)) {
     $params = $app->request()->params();
     // User just auth'd with twitter, store the access token
@@ -284,6 +292,14 @@ function getTwitterLoginURL(&$twitter) {
 }
 
 $app->get('/auth/twitter', function() use($app) {
+  if(!Config::$twitterClientID) {
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'result' => 'error'
+    )));
+    return;
+  }
+
   $params = $app->request()->params();
   if($user=require_login($app, false)) {
 

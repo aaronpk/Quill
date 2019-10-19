@@ -88,11 +88,11 @@
         </div>
 
 
-
-  <h3>Twitter</h3>
-  <p>Connecting a Twitter account will automatically "favorite" and "retweet" tweets on Twitter when you favorite and retweet a Twitter URL in Quill.</p>
-  <input type="button" id="twitter-button" value="Checking" class="btn">
-
+  <?php if(!Config::$twitterClientID) ?>
+    <h3>Twitter</h3>
+    <p>Connecting a Twitter account will automatically "favorite" and "retweet" tweets on Twitter when you favorite and retweet a Twitter URL in Quill.</p>
+    <input type="button" id="twitter-button" value="Checking" class="btn">
+  <?php endif ?>
 
 
   <h3>Backwards Compatibility</h3>
@@ -133,6 +133,7 @@
 <script>
 $(function(){
 
+  <?php if(!Config::$twitterClientID): ?>
   $.getJSON("/auth/twitter", function(data){
     // Check if we're already authorized with twitter
     if(data && data.result == 'ok') {
@@ -153,6 +154,7 @@ $(function(){
       });
     }
   });
+  <?php endif ?>
 
   $("#send-html-content").click(function(){
     var enabled = $(this).attr("checked") == "checked";
