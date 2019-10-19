@@ -88,7 +88,7 @@
         </div>
 
 
-  <?php if(!Config::$twitterClientID) ?>
+  <?php if(!Config::$twitterClientID): ?>
     <h3>Twitter</h3>
     <p>Connecting a Twitter account will automatically "favorite" and "retweet" tweets on Twitter when you favorite and retweet a Twitter URL in Quill.</p>
     <input type="button" id="twitter-button" value="Checking" class="btn">
