@@ -63,10 +63,10 @@ $(function(){
     return false;
   });
 
-  <? if($this->autosubmit): ?>
+  <?php if($this->autosubmit): ?>
     $(".footer, #bookmarklet").hide();
     $("#btn_post").click();
-  <? endif ?>
+  <?php endif ?>
 
   bind_syndication_buttons();
 });

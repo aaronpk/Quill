@@ -5,20 +5,20 @@
 
     <p class="tagline">Quill is a simple app for posting text notes to your website.</p>
 
-    <? if(session('me')): ?>
+    <?php if(session('me')): ?>
 
-      <? if(profile('photo')): ?>
-        <img src="<?php echo profile('photo'); ?>" height="125" alt="Profile Image" style="border: 1px #bbb solid; border-radius: 12px;" />
-      <? endif ?>
-      <? if(profile('name')): ?>
+      <?php if(profile('photo')): ?>
+        <img src="<?= profile('photo'); ?>" height="125" alt="Profile Image" style="border: 1px #bbb solid; border-radius: 12px;" />
+      <?php endif ?>
+      <?php if(profile('name')): ?>
         <p>Signed in as: <?= htmlspecialchars(profile('name')); ?></p>
-      <? endif ?>
-      <? if(!profile('name') && !profile('photo')): ?>
+      <?php endif ?>
+      <?php if(!profile('name') && !profile('photo')): ?>
         <p>You're already signed in!</p>
-      <? endif ?>
+      <?php endif ?>
 
       <p><a href="/dashboard" class="btn btn-primary">Continue</a></p>
-    <? else: ?>
+    <?php else: ?>
       <p>To use Quill, sign in with your domain. Your website will need to support <a href="https://indieweb.org/micropub">Micropub</a> for creating new posts.</p>
 
       <form action="/auth/start" method="get" class="form-inline">
@@ -27,7 +27,7 @@
         <input type="hidden" name="client_id" value="<?= Config::$base_url ?>">
         <input type="hidden" name="redirect_uri" value="<?= Config::$base_url ?>auth/callback">
       </form>
-    <? endif; ?>
+    <?php endif; ?>
 
     <a href="" class="u-url"></a>
   </div>

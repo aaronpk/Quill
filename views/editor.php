@@ -49,9 +49,9 @@
 <div class="toolbar">
   <div class="toolbar-left">
     <span class="item"><a href="/"><img src="/editor-files/quill-logo-36.png" width="36" height="31" class="logo"></a></span>
-    <? if($this->user): ?>
+    <?php if($this->user): ?>
       <span class="item text"><b><?= display_url($this->user->url) ?></b></span>
-    <? endif; ?>
+    <?php endif; ?>
     <span class="item text"><span id="draft-status">Draft</span></span>
   </div>
   <div class="toolbar-right">

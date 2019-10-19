@@ -19,7 +19,7 @@
           <textarea id="note_content" value="" class="form-control code-snippet" style="height: 12em;"><?= htmlspecialchars($this->edit_data['content']) ?></textarea>
         </div>
 
-        <? if(!$this->url): ?>
+        <?php if(!$this->url): ?>
         <label for="note_language">Language</label>
         <select class="form-control" id="note_language">
           <?php
@@ -30,7 +30,7 @@
             endforeach;
           ?>
         </select>
-        <? endif; ?>
+        <?php endif; ?>
 
         <div style="float: right; margin-top: 6px;">
           <button class="btn btn-success" id="btn_post"><?= $this->url ? 'Save' : 'Post' ?></button>
