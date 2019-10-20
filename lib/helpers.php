@@ -438,6 +438,11 @@ function correct_photo_rotation($filename) {
   if(class_exists('IMagick')) {
     try {
       $image = new IMagick($filename);
+
+      // Don't try to convert animated images
+      if($image->getImageIterations() == 1)
+        return;
+
       $orientation = $image->getImageOrientation();
       switch($orientation) {
         case IMagick::ORIENTATION_BOTTOMRIGHT:
@@ -449,6 +454,9 @@ function correct_photo_rotation($filename) {
         case IMagick::ORIENTATION_LEFTBOTTOM:
           $image->rotateImage(new ImagickPixel('#00000000'), -90);
           break;
+        default:
+          // Don't overwrite if no orientation header was returned
+          return;
       }
       $image->setImageOrientation(IMagick::ORIENTATION_TOPLEFT);
       $image->writeImage($filename);
