@@ -407,8 +407,8 @@ function validate_photo(&$file) {
     }
 
     // You should also check filesize here.
-    if ($file['size'] > 4000000) {
-        throw new RuntimeException('Exceeded filesize limit.');
+    if ($file['size'] > 12000000) {
+        throw new RuntimeException('Exceeded Quill filesize limit.');
     }
 
     // DO NOT TRUST $file['mime'] VALUE !!
