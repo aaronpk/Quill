@@ -84,7 +84,7 @@
             <label for="visibility">Visibility</label>
             <select class="form-control" id="visibility">
               <?php
-                foreach(['Public','Unlisted','Private'] as $v):
+                foreach(['Public','Unlisted','Protected','Private'] as $v):
                   if(in_array(strtolower($v), $this->supported_visibility)):
                     echo '<option value="'.strtolower($v).'">'.$v.'</option>';
                   endif;
