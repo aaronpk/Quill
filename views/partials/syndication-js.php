@@ -26,3 +26,21 @@ function bind_syndication_buttons() {
     return false;
   });
 }
+
+
+function reload_channels() {
+  $.getJSON("/micropub/channels", function(data){
+    console.log(data);
+    if(data.channels) {
+      $("#channel-container").html('<select class="form-control" name="channel"></select>');
+      for(var i in data.channels) {
+        var channel = data.channels[i];
+        $("#channel-container select").append('<option value="'+htmlspecialchars(channel)+'">'+htmlspecialchars(channel)+'</option>');
+      }
+    } else {
+
+    }
+    console.log(data);
+  });
+}
+

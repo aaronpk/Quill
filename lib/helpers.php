@@ -269,6 +269,7 @@ function parse_headers($headers) {
 
 function get_micropub_config(&$user, $query=[]) {
   $targets = [];
+  $channels = [];
 
   $r = micropub_get($user->micropub_endpoint, $query, $user->micropub_access_token);
   if($r['data'] && is_array($r['data']) && array_key_exists('syndicate-to', $r['data'])) {
@@ -295,14 +296,22 @@ function get_micropub_config(&$user, $query=[]) {
     }
   }
 
+  if($r['data'] && is_array($r['data']) && array_key_exists('channels', $r['data']) && is_array($r['data']['channels'])) {
+    $channels = $r['data']['channels'];
+  }
+
   // Reset the values so they can be overwritten
   $user->syndication_targets = '';
+  $user->channels = '';
   $user->supported_post_types = '';
   $user->supported_visibility = '';
   $user->micropub_media_endpoint = '';
 
   if(count($targets))
     $user->syndication_targets = json_encode($targets);
+
+  if(count($channels))
+    $user->channels = json_encode($channels);
 
   $media_endpoint = false;
   $supported_post_types = false;
@@ -325,6 +334,7 @@ function get_micropub_config(&$user, $query=[]) {
 
   return [
     'targets' => $targets,
+    'channels' => $channels,
     'response' => $r
   ];
 }

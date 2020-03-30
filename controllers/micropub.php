@@ -11,6 +11,17 @@ $app->get('/micropub/syndications', function() use($app) {
   }
 });
 
+$app->get('/micropub/channels', function() use($app) {
+  if($user=require_login($app)) {
+    $data = get_micropub_config($user, ['q'=>'config']);
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'channels' => $data['channels'],
+      'response' => $data['response']
+    )));
+  }
+});
+
 $app->post('/micropub/post', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();

@@ -182,8 +182,11 @@ $app->get('/event', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
+    $channels = $user->channels ? json_decode($user->channels, true) : [];
+
     render('event', array(
       'title' => 'Event',
+      'channels' => $channels,
       'authorizing' => false
     ));
   }
@@ -362,6 +365,7 @@ $app->get('/settings', function() use($app) {
       'title' => 'Settings',
       'user' => $user,
       'syndication_targets' => json_decode($user->syndication_targets, true),
+      'channels' => json_decode($user->channels, true),
       'authorizing' => false
     ]);
   }

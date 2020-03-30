@@ -81,11 +81,35 @@
               echo '</ul>';
             } else {
               ?><div class="bs-callout bs-callout-warning">No syndication targets were found on your site.
-              Your server can provide a <a href="/docs#syndication">list of supported syndication targets</a> that will appear as checkboxes here.</div><?php
+              Your server can provide a <a href="/docs/syndication">list of supported syndication targets</a> that will appear as buttons here.</div><?php
             }
             ?>
           </div>
         </div>
+
+
+  <h3>Channels</h3>
+
+        <div class="form-group">
+          <label for="note_channels"><a href="javascript:reload_channels()">Reload</a></label>
+          <div id="channel-container">
+            <?php
+            if($this->channels) {
+              echo '<select class="form-control" name="channel">';
+              foreach($this->channels as $ch) {
+                echo '<option value="'.htmlspecialchars($ch).'">'
+                   . htmlspecialchars($ch)
+               . '</option>';
+              }
+              echo '</select>';
+            } else {
+              ?><div class="bs-callout bs-callout-warning">No channels were found on your site.
+              Your server can provide a <a href="/docs/channels">list of channels</a> that will appear as buttons here.</div><?php
+            }
+            ?>
+          </div>
+        </div>
+
 
 
   <?php if(!Config::$twitterClientID): ?>
@@ -185,21 +209,6 @@ $(function(){
 
 });
 
-function reload_syndications() {
-  $.getJSON("/micropub/syndications", function(data){
-    if(data.targets) {
-      $("#syndication-container").html('<ul></ul>');
-      for(var i in data.targets) {
-        var target = data.targets[i].target;
-        var uid = data.targets[i].uid;
-        var favicon = data.targets[i].favicon;
-        $("#syndication-container ul").append('<li><button data-syndicate-to="'+htmlspecialchars(uid ? uid : target)+'" class="btn btn-default btn-block">'+(favicon ? '<img src="'+htmlspecialchars(favicon)+'" width="16" height="16"> ':'')+htmlspecialchars(target)+'</button></li>');
-      }
-      bind_syndication_buttons();
-    } else {
+<?= partial('partials/syndication-js') ?>
 
-    }
-    console.log(data);
-  });
-}
 </script>

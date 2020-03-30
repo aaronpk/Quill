@@ -17,6 +17,7 @@ CREATE TABLE users (
   last_micropub_response_date datetime,
   location_enabled INTEGER NOT NULL default 0,
   syndication_targets TEXT,
+  channels TEXT,
   twitter_access_token TEXT,
   twitter_token_secret TEXT,
   twitter_username TEXT,

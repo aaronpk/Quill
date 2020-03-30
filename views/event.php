@@ -44,6 +44,24 @@
         <input type="text" id="note_category" value="" class="form-control">
       </div>
 
+      <?php if($this->channels): ?>
+        <div class="form-group">
+          <label for="note_channel">Channel</label>
+          <div id="channel-container">
+            <?php
+              echo '<select class="form-control" id="note_channel">';
+              echo '<option value="none"></option>';
+              foreach($this->channels as $ch) {
+                echo '<option value="'.htmlspecialchars($ch).'" '.($ch == 'events' ? 'selected' : '').'>'
+                   . htmlspecialchars($ch)
+               . '</option>';
+              }
+              echo '</select>';
+            ?>
+          </div>
+        </div>
+      <?php endif; ?>
+
       <div style="float: right; margin-top: 6px;">
         <button class="btn btn-success" id="btn_post">Post</button>
       </div>
@@ -229,6 +247,9 @@
       properties.end = event_end;
     }
 
+    if($("#note_channel").val()) {
+      properties['p3k-channel'] = $("#note_channel").val();
+    }
 
     $.post("/micropub/postjson", {
       data: JSON.stringify({
