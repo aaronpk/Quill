@@ -39,6 +39,52 @@
         </div>
       </div>
 
+      <div id="presentation-fields" class="hidden">
+
+        <div class="form-group" style="margin-top: 18px;">
+          <label>Link to Slides</label>
+          <input type="url" class="form-control" id="slides">
+        </div>
+
+        <div class="form-group">
+          <label for="slides-embed">Slides Embed Code</label>
+          <textarea id="slides-embed" class="form-control" style="height: 4em;"></textarea>
+        </div>
+
+        <div class="form-group" style="margin-top: 18px;">
+          <label>Link to Video</label>
+          <input type="url" class="form-control" id="video-link">
+        </div>
+
+        <div class="form-group">
+          <label for="video-embed">Video Embed Code</label>
+          <textarea id="video-embed" class="form-control" style="height: 4em;"></textarea>
+        </div>
+
+        <div class="form-group" style="margin-top: 18px;">
+          <label>Conference</label>
+          <div class="form-group">
+            <input type="text" id="conference-name" class="form-control" style="max-width: 48%; margin-right: 4px; float: left;" placeholder="Conference Name">
+            <input type="url" id="conference-url" class="form-control" style="max-width: 48%; margin-right: 4px; float: left;" placeholder="https://example.com">
+          </div>
+          <div style="clear:both;"></div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label for="note_content">Content</label>
+        <textarea id="note_content" value="" class="form-control" rows="6"></textarea>
+      </div>
+
+      <div class="form-group hidden" id="content-type-selection">
+        <label for="note_content_type">Content Type</label>
+        <select class="form-control" id="note_content_type">
+          <option value="text/plain">Text</option>
+          <option value="text/markdown">Markdown</option>
+        </select>
+      </div>
+
       <div class="form-group" style="margin-top: 18px;">
         <label for="note_category">Tags</label>
         <input type="text" id="note_category" value="" class="form-control">
@@ -93,6 +139,30 @@
     var gservice = new google.maps.places.AutocompleteService();
     var gplaces = new google.maps.places.PlacesService(map);
     var selectedPlacePin;
+  }
+
+  $(document).bind('keydown', function(e){
+    // Easter egg: press ctrl+shift+c to reveal a content type selection
+    if(e.keyCode == 67 && e.ctrlKey && e.shiftKey) {
+      $("#content-type-selection").removeClass("hidden");
+    }
+    // Easter egg: press ctrl+shift+m to switch to markdown
+    if(e.keyCode == 77 && e.ctrlKey && e.shiftKey) {
+      switchToMarkdown();
+    }
+    // Enable "presentation mode" which adds a few fields
+    if(e.keyCode == 80 && e.ctrlKey && e.shiftKey) {
+      enablePresentationMode();
+    }
+  });
+
+  function switchToMarkdown() {
+    $("#content-type-selection select").val("text/markdown");
+    $("#content-type-selection").removeClass("hidden");
+  }
+
+  function enablePresentationMode() {
+    $("#presentation-fields").removeClass("hidden");
   }
 
   $(function(){
@@ -240,7 +310,8 @@
       name: [$("#event_name").val()],
       start: [event_start],
       location: (selectedPlace ? selectedPlace : $("#event_location").val()),
-      category: tokenfieldToArray("#note_category")
+      category: tokenfieldToArray("#note_category"),
+      content: $("#note_content").val()
     };
 
     if(event_end) {
@@ -249,6 +320,26 @@
 
     if($("#note_channel").val()) {
       properties['p3k-channel'] = $("#note_channel").val();
+    }
+
+    if(!$("#content-type-selection").hasClass("hidden")) {
+      properties['p3k-content-type'] = $("#note_content_type").val();
+    }
+
+    if(!$("#presentation-fields").hasClass("hidden")) {
+      properties['slides'] = $("#slides").val();
+      properties['slides-embed'] = $("#slides-embed").val();
+      properties['video-link'] = $("#video-link").val();
+      properties['video-embed'] = $("#video-embed").val();
+      if($("#conference-name").val()) {
+        properties['conference'] = {
+          type: 'h-event',
+          properties: {
+            name: $("#conference-name").val(),
+            url: $("#conference-url").val()
+          }
+        };
+      }
     }
 
     $.post("/micropub/postjson", {
