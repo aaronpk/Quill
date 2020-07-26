@@ -86,9 +86,17 @@ $app->get('/new/last-photo.json', function() use($app) {
 
     if($user->micropub_media_endpoint) {
       // Request the last file uploaded from the media endpoint
-      $response = micropub_get($user->micropub_media_endpoint, ['q'=>'last'], $user->micropub_access_token);
-      if(isset($response['data']['url'])) {
-        $url = $response['data']['url'];
+      $response = micropub_get($user->micropub_media_endpoint, ['q'=>'source', 'limit'=>1], $user->micropub_access_token);
+      if(isset($response['data']['items'])) {
+        $items = $response['data']['items'];
+        if(isset($items[0])) {
+          $item = $items[0];
+          // Only show the file if it was uploaded in the last 5 minutes or if no published date available
+          $show = !isset($item['published']) || (strtotime($item['published']) >= (time()-300));
+          if($show && isset($item['url'])) {
+            $url = $item['url'];
+          }
+        }
       }
     }
 
