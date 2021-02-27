@@ -27,7 +27,6 @@
       <?php if(supports_post_type($this->user, 'review')): ?>
         <li><a href="/review">⭐️</a></li>
       <?php endif; ?>
-      <li><a href="/email">✉️</a></li>
       <li><a href="/settings">⚙</a></li>
     </ul>
     <div style="clear:both;"></div>
