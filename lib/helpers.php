@@ -120,8 +120,8 @@ function micropub_media_post_for_user(&$user, $file) {
   $r = micropub_post($user->micropub_media_endpoint, [], $user->micropub_access_token, $file, true, 'file');
 
   // Check the response and look for a "Location" header containing the URL
-  if($r['response'] && preg_match('/Location: (.+)/', $r['response'], $match)) {
-    $r['location'] = trim($match[1]);
+  if($r['headers'] && $r['headers']['Location']) {
+    $r['location'] = $r['headers']['Location'];
   } else {
     $r['location'] = false;
   }
