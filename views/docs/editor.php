@@ -43,12 +43,21 @@ Authorization: Bearer XXXXXXXXXXX
 {
   "type": "h-entry",
   "properties": {
-    "name": ["Post Title"],
-    "content": [
-      "html": "&lt;p&gt;The HTML contents of your post from the editor&lt;/p&gt;"
+    "name": [
+      "Post Title"
     ],
-    "mp-slug": ["slug"],
-    "category": ["foo","bar"]
+    "content": [
+      {
+        "html": "&lt;p&gt;The HTML contents of your post from the editor&lt;/p&gt;"
+      }
+    ],
+    "mp-slug": [
+      "slug"
+    ],
+    "category": [
+      "foo",
+      "bar"
+    ]
   }
 }
   </pre>
