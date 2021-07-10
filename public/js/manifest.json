@@ -2,6 +2,7 @@
   "name": "Quill",
   "short_name": "Quill",
   "description": "Quill is a simple app for posting to your website",
+  "display": "standalone",
   "icons": [
     {
       "src": "/images/quill-icon-57.png",
