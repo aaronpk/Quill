@@ -13,9 +13,10 @@ $app->get('/auth/start', function() use($app) {
 
   list($authorizationURL, $error) = IndieAuth\Client::begin($params['me'], $defaultScope);
 
+  $me = IndieAuth\Client::normalizeMeURL($params['me']);
+
   // Double check for a micropub endpoint here for debugging purposes
   if(!$error) {
-    $me = $_SESSION['indieauth_url']; // set by IndieAuth\Client::begin(), will be the normalized and resolved URL
     $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
     if(!$micropubEndpoint) {
       $error['error'] = 'missing_micropub_endpoint';
@@ -25,7 +26,6 @@ $app->get('/auth/start', function() use($app) {
   if($error && in_array($error['error'], ['missing_authorization_endpoint','missing_token_endpoint','missing_micropub_endpoint'])) {
     // Display debug info for these particular errors
 
-    $me = $_SESSION['indieauth_url']; // set by IndieAuth\Client::begin(), will be the normalized and resolved URL
     $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
     $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'] = IndieAuth\Client::discoverTokenEndpoint($me);
     $authorizationEndpoint = $_SESSION['indieauth']['authorization_endpoint'] = IndieAuth\Client::discoverAuthorizationEndpoint($me);
@@ -55,7 +55,6 @@ $app->get('/auth/start', function() use($app) {
     return;
   }
 
-  $me = $_SESSION['indieauth_url']; // set by IndieAuth\Client::begin(), will be the normalized and resolved URL
   $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
   $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'] = IndieAuth\Client::discoverTokenEndpoint($me);
   $authorizationEndpoint = $_SESSION['indieauth']['authorization_endpoint'] = IndieAuth\Client::discoverAuthorizationEndpoint($me);
@@ -70,7 +69,7 @@ $app->get('/auth/start', function() use($app) {
   // If the user has already signed in before and has a micropub access token,
   // and the endpoints are all the same, skip the debugging screens and redirect
   // immediately to the auth endpoint.
-  // This will still generate a new access token when they finish logging in.
+  // This will still get a new access token when they finish logging in.
   $user = ORM::for_table('users')->where('url', $me)->find_one();
   if($user && $user->micropub_access_token
     && $user->micropub_endpoint == $micropubEndpoint
@@ -155,10 +154,10 @@ $app->get('/auth/callback', function() use($app) {
   $redirectToDashboardImmediately = false;
 
   // If a valid access token was returned, store the token info in the session and they are signed in
-  if(k($token['auth'], array('me','access_token','scope'))) {
+  if(k($token['response'], array('me','access_token','scope'))) {
 
-    $_SESSION['auth'] = $token['auth'];
-    $_SESSION['me'] = $me = $token['auth']['me'];
+    $_SESSION['auth'] = $token['response'];
+    $_SESSION['me'] = $me = $token['me'];
 
     $user = ORM::for_table('users')->where('url', $me)->find_one();
     if($user) {
@@ -176,9 +175,9 @@ $app->get('/auth/callback', function() use($app) {
     $user->authorization_endpoint = $_SESSION['indieauth']['authorization_endpoint'];
     $user->token_endpoint = $tokenEndpoint;
     $user->micropub_endpoint = $micropubEndpoint;
-    $user->micropub_access_token = $token['auth']['access_token'];
-    $user->micropub_scope = $token['auth']['scope'];
-    $user->micropub_response = $token['response'];
+    $user->micropub_access_token = $token['response']['access_token'];
+    $user->micropub_scope = $token['response']['scope'];
+    $user->micropub_response = json_encode($token['response']);
     $user->save();
     $_SESSION['user_id'] = $user->id();
 
