@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9676d488b166fb91835dc9f7746c9d30",
+    "content-hash": "31929d77a3beed9464c673c1fc112bae",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -59,46 +59,6 @@
                 "twitter"
             ],
             "time": "2017-06-30T22:02:01+00:00"
-        },
-        {
-            "name": "barnabywalters/mf-cleaner",
-            "version": "v0.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/barnabywalters/php-mf-cleaner.git",
-                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/barnabywalters/php-mf-cleaner/zipball/ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
-                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
-                "shasum": ""
-            },
-            "require-dev": {
-                "php": ">=5.3",
-                "phpunit/phpunit": "*"
-            },
-            "suggest": {
-                "mf2/mf2": "To parse microformats2 structures from (X)HTML"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/BarnabyWalters/Mf2/Functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Barnaby Walters",
-                    "email": "barnaby@waterpigs.co.uk"
-                }
-            ],
-            "description": "Cleans up microformats2 array structures",
-            "time": "2014-10-06T23:11:15+00:00"
         },
         {
             "name": "cebe/markdown",
@@ -756,6 +716,59 @@
             "time": "2018-08-02T17:12:58+00:00"
         },
         {
+            "name": "michelf/php-markdown",
+            "version": "1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/michelf/php-markdown.git",
+                "reference": "c83178d49e372ca967d1a8c77ae4e051b3a3c75c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/c83178d49e372ca967d1a8c77ae4e051b3a3c75c",
+                "reference": "c83178d49e372ca967d1a8c77ae4e051b3a3c75c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.3 <5.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Michelf\\": "Michelf/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Michel Fortin",
+                    "email": "michel.fortin@michelf.ca",
+                    "homepage": "https://michelf.ca/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "John Gruber",
+                    "homepage": "https://daringfireball.net/"
+                }
+            ],
+            "description": "PHP Markdown",
+            "homepage": "https://michelf.ca/projects/php-markdown/",
+            "keywords": [
+                "markdown"
+            ],
+            "support": {
+                "issues": "https://github.com/michelf/php-markdown/issues",
+                "source": "https://github.com/michelf/php-markdown/tree/1.9.0"
+            },
+            "time": "2019-12-02T02:32:27+00:00"
+        },
+        {
             "name": "mpratt/relativetime",
             "version": "1.5.4",
             "source": {
@@ -1143,6 +1156,10 @@
                 "rest",
                 "router"
             ],
+            "support": {
+                "issues": "https://github.com/slimphp/Slim/issues",
+                "source": "https://github.com/slimphp/Slim/tree/2.2.0"
+            },
             "time": "2012-12-13T02:15:50+00:00"
         },
         {
@@ -1224,5 +1241,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
 }

@@ -9,7 +9,7 @@ it is ready to make requests to create posts.
 
 ### The Request
 
-This is not intended to be a comprehensive guide to Micropub, and only includes the 
+This is not intended to be a comprehensive guide to Micropub, and only includes the
 fields that this client sends.
 
 The request to create a post will be sent with as a standard HTTP form-encoded request
@@ -49,7 +49,7 @@ at hand that can be used to check:
 * `issued_at` - The date the token was issued.
 
 Keep in mind that it may be possible for another user besides yourself to have created
-an access token at your token endpoint, so the first thing you'll do when verifying 
+an access token at your token endpoint, so the first thing you'll do when verifying
 is making sure the "me" parameter matches your own domain. This way you are the only
 one that can create posts on your website.
 
@@ -57,7 +57,7 @@ one that can create posts on your website.
 ### Validating the Request Parameters
 
 A valid request to create a post will contain the parameters listed above. For now,
-you can verify the presence of everything in the list, or you can try to genericize your 
+you can verify the presence of everything in the list, or you can try to genericize your
 micropub endpoint so that it can also create <a href="http://ownyourgram.com/creating-a-micropub-endpoint">photo posts</a>.
 
 At a bare minimum, a Micropub request will contain the following:
@@ -81,7 +81,7 @@ HTTP/1.1 201 Created
 Location: http://example.com/post/100
 </pre>
 
-If there was an error, the response should include an HTTP error code as appropriate, 
+If there was an error, the response should include an HTTP error code as appropriate,
 and optionally an HTML or other body with more information. Below is a list of possible errors.
 
 * `HTTP 401 Unauthorized` - No access token was provided in the request.
@@ -90,5 +90,5 @@ and optionally an HTML or other body with more information. Below is a list of p
 
 
 
-<?= Markdown(ob_get_clean()) ?>
+<?= \Michelf\Markdown::defaultTransform(ob_get_clean()) ?>
 </div>

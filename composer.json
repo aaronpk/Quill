@@ -15,14 +15,14 @@
     "p3k/timezone": "*",
     "gajus/dindent": "^2.0",
     "p3k/xray": ">=1.6.5",
-    "p3k/utils": "^1.2"
+    "p3k/utils": "^1.2",
+    "michelf/php-markdown": "^1.9"
   },
   "autoload": {
     "files": [
       "lib/Savant.php",
       "lib/config.php",
-      "lib/helpers.php",
-      "lib/markdown.php"
+      "lib/helpers.php"
     ]
   }
 }
