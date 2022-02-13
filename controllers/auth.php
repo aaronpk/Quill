@@ -177,7 +177,7 @@ $app->get('/auth/callback', function() use($app) {
     $user->micropub_endpoint = $micropubEndpoint;
     $user->micropub_access_token = $token['response']['access_token'];
     $user->micropub_scope = $token['response']['scope'];
-    $user->micropub_response = json_encode($token['response']);
+    $user->micropub_response = $token['raw_response'];
     $user->save();
     $_SESSION['user_id'] = $user->id();
 
@@ -203,19 +203,14 @@ $app->get('/auth/callback', function() use($app) {
       $app->redirect('/new?' . http_build_query($query), 302);
     }
   } else {
-    $tokenResponse = $token['response'];
-    $parsed = @json_decode($tokenResponse);
-    if($parsed)
-      $tokenResponse = json_encode($parsed, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
-
     $html = render('auth_callback', array(
       'title' => 'Sign In',
       'me' => $me,
       'authorizing' => $me,
       'meParts' => parse_url($me),
       'tokenEndpoint' => $tokenEndpoint,
-      'auth' => $token['auth'],
-      'response' => $tokenResponse,
+      'auth' => $token['response'],
+      'response' => $token['raw_response'],
       'curl_error' => (array_key_exists('error', $token) ? $token['error'] : false),
       'destination' => (k($_SESSION, 'redirect_after_login') ?: '/new')
     ));
