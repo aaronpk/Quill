@@ -9,7 +9,7 @@ $app->get('/auth/start', function() use($app) {
 
   $params = $req->params();
 
-  $defaultScope = 'create update media';
+  $defaultScope = 'create update media profile';
 
   list($authorizationURL, $error) = IndieAuth\Client::begin($params['me'], $defaultScope);
 

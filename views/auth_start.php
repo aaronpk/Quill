@@ -48,8 +48,8 @@
   <form action="/auth/redirect" method="get">
     <p>Choose the scope to request:</p>
     <ul style="list-style-type: none;">
-      <li><input type="radio" name="scope" value="create update media" checked="checked"> create update media (default)</li>
-      <li><input type="radio" name="scope" value="create"> create</li>
+      <li><input type="radio" name="scope" value="profile create update media" checked="checked"> profile create update media (default)</li>
+      <li><input type="radio" name="scope" value="create"> profile create</li>
       <li><input type="radio" name="scope" value="post"> post (legacy)</li>
     </ul>
 
