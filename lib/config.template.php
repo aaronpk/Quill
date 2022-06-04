@@ -20,6 +20,7 @@ class Config {
   public static $twitterClientID = '';
   public static $twitterClientSecret = '';
 
+  public static $atlasToken = '';
   public static $mapTileURL = '';
 
   // https://developers.google.com/maps/documentation/javascript/get-api-key
