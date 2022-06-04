@@ -911,6 +911,7 @@ $app->get('/map-img', function() use($app) {
     'width' => $params['w'],
     'height' => $params['h'],
     'zoom' => $params['z'],
+    'attribution' => 'mapbox',
     'tileurl' => Config::$mapTileURL,
     'token' => Config::$atlasToken,
   ];

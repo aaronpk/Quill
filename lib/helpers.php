@@ -371,13 +371,11 @@ function get_micropub_source(&$user, $url, $properties) {
 
 function static_map($latitude, $longitude, $height=180, $width=700, $zoom=14) {
   $params = [
-    'lat' => $latitude,
-    'lng' => $longitude,
     'h' => $height,
     'w' => $width,
     'z' => $zoom,
   ];
-  return '/map-img?'.http_build_query($params);
+  return '/map-img?lat='.$latitude.'&lng='.$longitude.'&'.http_build_query($params);
 }
 
 function relative_time($date) {
