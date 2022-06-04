@@ -898,3 +898,27 @@ $app->get('/airport-info', function() use($app){
     $app->response()->body(json_encode($response));
   }
 });
+
+$app->get('/map-img', function() use($app) {
+
+  $params = $app->request()->params();
+
+  $app->response()['Content-type'] = 'image/png';
+
+  $params = [
+    'marker[]' => 'lat:'.$params['lat'].';lng:'.$params['lng'].';icon:small-blue-cutout',
+    'basemap' => 'custom',
+    'width' => $params['w'],
+    'height' => $params['h'],
+    'zoom' => $params['z'],
+    'tileurl' => Config::$mapTileURL,
+    'token' => Config::$atlasToken,
+  ];
+
+  $ch = curl_init('https://atlas.p3k.io/map/img');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+  curl_exec($ch);
+
+});
+

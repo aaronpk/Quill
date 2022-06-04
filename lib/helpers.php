@@ -370,7 +370,14 @@ function get_micropub_source(&$user, $url, $properties) {
 }
 
 function static_map($latitude, $longitude, $height=180, $width=700, $zoom=14) {
-  return 'https://atlas.p3k.io/map/img?marker[]=lat:' . $latitude . ';lng:' . $longitude . ';icon:small-blue-cutout&basemap=gray&width=' . $width . '&height=' . $height . '&zoom=' . $zoom;
+  $params = [
+    'lat' => $latitude,
+    'lng' => $longitude,
+    'h' => $height,
+    'w' => $width,
+    'z' => $zoom,
+  ];
+  return '/map-img?'.http_build_query($params);
 }
 
 function relative_time($date) {
