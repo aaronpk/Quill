@@ -234,6 +234,24 @@ $app->get('/review', function() use($app) {
   }
 });
 
+
+$app->get('/twitter', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+    
+    $tweet_url = '';
+    
+    if(array_key_exists('tweet_url', $params))
+      $tweet_url = $params['tweet_url'];
+    
+    render('twitter', array(
+      'title' => 'Import Tweet',
+      'tweet_url' => $tweet_url,
+      'authorizing' => false
+    ));
+  }
+});
+
 $app->get('/repost', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
@@ -421,6 +439,101 @@ $app->get('/settings/html-content', function() use($app) {
     )));
   }
 });
+
+$app->post('/twitter/preview', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+    
+    if($user->twitter_access_token) {
+      $xray_opts['twitter_api_key'] = Config::$twitterClientID;
+      $xray_opts['twitter_api_secret'] = Config::$twitterClientSecret;
+      $xray_opts['twitter_access_token'] = $user->twitter_access_token;
+      $xray_opts['twitter_access_token_secret'] = $user->twitter_token_secret;
+    }
+    
+    $tweet_url = $params['tweet_url'];
+    
+    // Pass to X-Ray to download all the twitter data in a useful format
+    $xray = new p3k\XRay();
+    $xray->http = new p3k\HTTP('Quill ('.Config::$base_url.')');
+    $data = $xray->parse($tweet_url, $xray_opts);
+    
+    $postdata = tweet_to_micropub_request($data['data']);
+    
+    $response = [
+      'json' => json_encode($postdata, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES)
+    ];
+    
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode($response));
+  }
+});
+
+$app->post('/twitter', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    if($user->twitter_access_token) {
+      $xray_opts['twitter_api_key'] = Config::$twitterClientID;
+      $xray_opts['twitter_api_secret'] = Config::$twitterClientSecret;
+      $xray_opts['twitter_access_token'] = $user->twitter_access_token;
+      $xray_opts['twitter_access_token_secret'] = $user->twitter_token_secret;
+    }
+    
+    $tweet_url = $params['tweet_url'];
+    
+    // Pass to X-Ray to download all the twitter data in a useful format
+    $xray = new p3k\XRay();
+    $xray->http = new p3k\HTTP('Quill ('.Config::$base_url.')');
+    $data = $xray->parse($tweet_url, $xray_opts);
+    
+    $location = null;
+    
+    if(isset($data['data']) && $data['data']['type'] == 'entry') {
+      $tweet = $data['data'];
+      
+      $postdata = tweet_to_micropub_request($tweet);
+
+      $r = micropub_post_for_user($user, $postdata, null, true);
+
+      $app->response()['Content-type'] = 'application/json';
+      $app->response()->body(json_encode([
+        'location' => (isset($r['location']) && $r['location'] ? Mf2\resolveUrl($user->micropub_endpoint, $r['location']) : null),
+        'error' => $r['error'],
+        'response' => $r['response']
+      ]));
+    } else {
+      $app->response()['Content-type'] = 'application/json';
+
+      $app->response()->body(json_encode([
+        'location' => null,
+        'error' => 'Error fetching tweet',
+      ]));
+    }
+  }
+});
+
+function tweet_to_micropub_request($tweet) {
+  // Convert to a micropub post
+  $postdata = [
+    'type' => ['h-entry'],
+    'properties' => [
+      'content' => [$tweet['content']['text']],
+      'published' => [$tweet['published']],
+      'syndication' => [$tweet['url']],
+    ]
+  ];
+  if(isset($tweet['in-reply-to']))
+    $postdata['properties']['in-reply-to'] = [$tweet['in-reply-to']];
+  if(isset($tweet['category']))
+    $postdata['properties']['category'] = $tweet['category'];
+  if(isset($tweet['photo']))
+    $postdata['properties']['photo'] = $tweet['photo'];
+  if(isset($tweet['video']))
+    $postdata['properties']['video'] = $tweet['video'];
+    
+  return $postdata;
+}
 
 function create_favorite(&$user, $url) {
 
