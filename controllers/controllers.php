@@ -524,7 +524,7 @@ function tweet_to_micropub_request($tweet) {
     ]
   ];
   if(isset($tweet['in-reply-to']))
-    $postdata['properties']['in-reply-to'] = [$tweet['in-reply-to']];
+    $postdata['properties']['in-reply-to'] = $tweet['in-reply-to'];
   if(isset($tweet['category']))
     $postdata['properties']['category'] = $tweet['category'];
   if(isset($tweet['photo']))
