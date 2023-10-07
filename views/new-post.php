@@ -46,11 +46,18 @@
         </div>
 
         <div class="form-group">
+          <div id="mastodon_content_remaining" class="mcheck500"><img src="/images/mastodon.ico" width="16"> <span>500</span></div>
           <div id="note_content_remaining" class="pcheck206"><img src="/images/twitter.ico"> <span>280</span></div>
+          <div id="bluesky_content_remaining" class="bcheck256"><img src="/images/bluesky.png" width="16"> <span>256</span></div>
           <label for="note_content">Content</label>
           <textarea id="note_content" value="" class="form-control" style="height: 4em;"></textarea>
         </div>
 
+        <div class="form-group hidden" id="published-field">
+          <label for="note_published_date">Published</label>
+          <input type="text" placeholder="YYYY-MM-DD hh:mm:ss +zz:zz" pattern="\d{4}-\d{2}-\d{2}[ T]\d\d:\d\d:\d\d[ ]?[+\-]\d\d:?\d\d" class="form-control" id="note_published_date">
+        </div>
+        
         <div class="form-group hidden" id="content-type-selection">
           <label for="note_content_type">Content Type</label>
           <select class="form-control" id="note_content_type">
@@ -215,10 +222,11 @@
   margin-bottom: 1em;
 }
 
-#note_content_remaining {
+#note_content_remaining, #mastodon_content_remaining, #bluesky_content_remaining {
   float: right;
   font-size: 0.8em;
   font-weight: bold;
+  margin-left: 10px;
 }
 
 #modal_photo_preview {
@@ -259,6 +267,10 @@
 .pcheck207 { color: #c4b404; } /* danger zone, tweet will overflow when RT @username is added */
 .pcheck200,.pcheck208 { color: #59cb3a; } /* exactly fits 280 chars, both with or without RT */
 .pcheck413 { color: #a73b3b; } /* over max tweet length */
+
+.lengthOK   { color: #6ba15c; }
+.lengthWARN { color: #c4b404; }
+.lengthOVER { color: #a73b3b; }
 
 .reply-context {
   display: flex;
@@ -470,11 +482,24 @@ $(function(){
     refreshPhotoPreviews();
     saveNoteState();
   });
+  
+  $("#note_published_date").bind('keyup', function(e) {
+    const valid = document.getElementById("note_published_date").validity;
+    if(valid.patternMismatch) {
+      $("#published-field").addClass("has-error");
+    } else {
+      $("#published-field").removeClass("has-error");
+    }
+  });
 
   $(document).bind('keydown', function(e){
     // Easter egg: press ctrl+shift+c to reveal a content type selection
     if(e.keyCode == 67 && e.ctrlKey && e.shiftKey) {
       $("#content-type-selection").removeClass("hidden");
+    }
+    // Easter egg: press ctrl+shift+d to reveal a datetime field
+    if(e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
+      $("#published-field").removeClass("hidden");
     }
     // Easter egg: press ctrl+shift+m to switch to markdown
     if(e.keyCode == 77 && e.ctrlKey && e.shiftKey) {
@@ -599,9 +624,23 @@ $(function(){
     var tweet_length = tw_text_proxy(text).length;
     var tweet_check = tw_length_check(text, 280, "<?= $this->user->twitter_username ?>");
     var remaining = 280 - tweet_length;
-    $("#note_content_remaining span").html(remaining);
+    $("#note_content_remaining span").text(remaining);
     $("#note_content_remaining").removeClass("pcheck200 pcheck206 pcheck207 pcheck208 pcheck413");
     $("#note_content_remaining").addClass("pcheck"+tweet_check);
+
+    $("#mastodon_content_remaining span").text(500 - text.length);
+    $("#mastodon_content_remaining").removeClass("lengthOK lengthWARN lengthOVER");
+    mastodonLengthCheck = "lengthOK";
+    if(text.length > 490) { mastodonLengthCheck = "lengthWARN"; }
+    if(text.length > 500) { mastodonLengthCheck = "lengthOVER"; }
+    $("#mastodon_content_remaining").addClass(mastodonLengthCheck);
+    
+    $("#bluesky_content_remaining span").text(256 - text.length);
+    $("#bluesky_content_remaining").removeClass("lengthOK lengthWARN lengthOVER");
+    blueskyLengthCheck = "lengthOK";
+    if(text.length > 240) { blueskyLengthCheck = "lengthWARN"; }
+    if(text.length > 256) { blueskyLengthCheck = "lengthOVER"; }
+    $("#bluesky_content_remaining").addClass(blueskyLengthCheck);
 
     // If the user didn't enter any categories, add them from the post
     // if(!userHasSetCategory) {
@@ -801,6 +840,11 @@ $(function(){
     if(!$("#content-type-selection").hasClass("hidden")) {
       entry['p3k-content-type'] = $("#note_content_type").val();
       formData.append('p3k-content-type', $("#note_content_type").val());
+    }
+
+    if(!$("#published-field").hasClass("hidden")) {
+      entry['published'] = $("#note_published_date").val();
+      formData.append('published', $("#note_published_date").val());
     }
 
     // Need to append a placeholder field because if the file size max is hit, $_POST will
