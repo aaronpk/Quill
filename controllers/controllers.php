@@ -1039,7 +1039,7 @@ $app->get('/map-img', function() use($app) {
 
 });
 
-function create_weight(&$user, $weight_num, $weight_unit) {
+function create_weight(&$user, $weight_num, $weight_unit, $published) {
   $micropub_request = array(
     'type' => ['h-entry'],
     'properties' => [
@@ -1052,6 +1052,11 @@ function create_weight(&$user, $weight_num, $weight_unit) {
       ]]
     ]
   );
+  try {
+    $date = new DateTime($published);
+    $micropub_request['properties']['published'] = [$date->format('c')];
+  } catch(Exception $e) {
+  }
   $r = micropub_post_for_user($user, $micropub_request, null, true);
 
   return $r;
@@ -1070,7 +1075,7 @@ $app->post('/weight', function() use($app) {
   if($user=require_login($app)) {
     $params = $app->request()->params();
 
-    $r = create_weight($user, $params['weight_num'], $user->weight_unit);
+    $r = create_weight($user, $params['weight_num'], $user->weight_unit, $params['published']);
     $location = $r['location'];
 
     $app->response()['Content-type'] = 'application/json';

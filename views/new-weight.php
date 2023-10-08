@@ -13,6 +13,11 @@
           <input type="number" id="weight_num" class="form-control">
         </div>
 
+        <div class="form-group">
+          <label for="date">Date and Time</label>
+          <input type="text" id="date" class="form-control" value="<?= date('Y-m-d H:i:s') ?>">
+        </div>
+        
         <div style="float: right; margin-top: 6px;">
           <button class="btn btn-success" id="btn_post">Post</button>
         </div>
@@ -23,11 +28,17 @@
   </div>
 <script>
 $(function(){
+
+  var d = new Date();
+  var tzOffset = tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1);
+  $("#date").val( $("#date").val() + " " + tzOffset);
+  
   $("#btn_post").click(function(){
     $("#btn_post").addClass("loading disabled");
 
     $.post("/weight", {
-      weight_num: $("#weight_num").val()
+      weight_num: $("#weight_num").val(),
+      published: $("#date").val()
     }, function(response){
       if(response.location != false) {
 
