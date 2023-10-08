@@ -24,5 +24,6 @@ CREATE TABLE users (
   email_username TEXT,
   default_timezone TEXT,
   supported_post_types TEXT,
-  supported_visibility TEXT
+  supported_visibility TEXT,
+  weight_unit TEXT default 'kg'
 );

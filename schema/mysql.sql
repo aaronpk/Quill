@@ -25,5 +25,6 @@ CREATE TABLE `users` (
   `default_timezone` varchar(255) DEFAULT NULL,
   `supported_post_types` longtext,
   `supported_visibility` longtext,
+  `weight_unit` varchar(255) DEFAULT 'kg',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

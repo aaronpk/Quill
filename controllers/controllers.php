@@ -412,6 +412,9 @@ $app->post('/settings/save', function() use($app) {
         $user->micropub_syndicate_field = $params['syndicate_field'];
     }
 
+    if(array_key_exists('weight_unit', $params) && $params['weight_unit'])
+      $user->weight_unit = $params['weight_unit'];
+
     $user->save();
     $app->response()['Content-type'] = 'application/json';
     $app->response()->body(json_encode(array(
@@ -1036,3 +1039,44 @@ $app->get('/map-img', function() use($app) {
 
 });
 
+function create_weight(&$user, $weight_num, $weight_unit) {
+  $micropub_request = array(
+    'type' => ['h-entry'],
+    'properties' => [
+      'weight' => [[
+        'type' => ['h-measure'],
+        'properties' => [
+          'num' => [$weight_num],
+          'unit' => [$weight_unit]
+        ]
+      ]]
+    ]
+  );
+  $r = micropub_post_for_user($user, $micropub_request, null, true);
+
+  return $r;
+}
+
+$app->get('/weight', function() use($app){
+  if($user=require_login($app)) {
+    render('new-weight', array(
+      'title' => 'New Weight',
+      'unit' => $user->weight_unit
+    ));
+  }
+});
+
+$app->post('/weight', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $r = create_weight($user, $params['weight_num'], $user->weight_unit);
+    $location = $r['location'];
+
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'location' => $location,
+      'error' => $r['error']
+    )));
+  }
+});
