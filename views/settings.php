@@ -61,6 +61,17 @@
     </tr>
   </table>
 
+  <h3>Post Format Settings</h3>
+  <table class="table table-condensed" width="100%">
+    <tr>
+      <td>Weight Unit</td>
+      <td width="160">
+        <div style="margin-bottom:4px;"><input type="text" id="weight-unit" value="<?= $this->user->weight_unit ?>" class="form-control"></div>
+        <div><input type="button" class="btn btn-primary" value="Save" id="save-weight-unit"></div>
+      </td>
+      <td>The unit to be used for <a href="/weight">weight posts</a>.</td>
+    </tr>
+  </table>
 
   <h3>Syndication Targets</h3>
 
@@ -206,6 +217,11 @@ $(function(){
   });
 
 
+  $("#save-weight-unit").click(function(){
+    $.post("/settings/save", {
+      weight_unit: $("#weight-unit").val()
+    });
+  });
 
 });
 
