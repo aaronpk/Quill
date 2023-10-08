@@ -146,17 +146,30 @@ $(function(){
         $(el.target).parents(".itinerary-leg").find(".leg-arrival-tz").parent().addClass("has-success");
       });
     });
+    $(".leg-departure-date").unbind("change").change(function(el){
+      $(el.target).parents(".itinerary-leg").find(".leg-arrival-date").val($(el.target).val());
+    });
   }
 
   function add_leg() {
+    var last_date = $(".itinerary-leg:last .date").val();
+    var last_airport = $(".itinerary-leg:last .leg-destination").val();
+    var last_operator = $(".itinerary-leg:last .leg-operator").val();
+    
     $("#itinerary-legs-container").append($("#leg-template").html());
 
     $(".itinerary-leg:last .template").val(0);
     var d = new Date();
-    $(".itinerary-leg:last .date").val(d.getFullYear()+"-"+zero_pad(d.getMonth()+1)+"-"+zero_pad(d.getDate()));
+    if(last_date) {
+      $(".itinerary-leg:last .date").val(last_date);
+    } else {
+      $(".itinerary-leg:last .date").val(d.getFullYear()+"-"+zero_pad(d.getMonth()+1)+"-"+zero_pad(d.getDate()));
+    }
     $(".itinerary-leg:last .time").val(zero_pad(d.getHours())+":"+zero_pad(d.getMinutes())+":00");
     $(".itinerary-leg:last .tz").val(tz_seconds_to_offset(d.getTimezoneOffset() * 60 * -1));
-
+    $(".itinerary-leg:last .leg-origin").val(last_airport);
+    $(".itinerary-leg:last .leg-operator").val(last_operator);
+    
     /*
     $('.itinerary-leg:last .date').datepicker({
       'format': 'yyyy-mm-dd',
