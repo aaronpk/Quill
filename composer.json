@@ -8,7 +8,6 @@
     "indieauth/client": ">=0.5.1",
     "mpratt/relativetime": ">=1.0",
     "firebase/php-jwt": "2.*",
-    "abraham/twitteroauth": "*",
     "ezyang/htmlpurifier": "4.*",
     "p3k/multipart": ">=0.2.0",
     "tantek/cassis": "*",
