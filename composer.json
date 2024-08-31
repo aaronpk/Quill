@@ -13,7 +13,7 @@
     "tantek/cassis": "*",
     "p3k/timezone": "*",
     "gajus/dindent": "^2.0",
-    "p3k/xray": ">=1.6.5",
+    "p3k/xray": "^1.15",
     "p3k/utils": "^1.2",
     "michelf/php-markdown": "^1.9"
   },

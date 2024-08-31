@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fc6c4de794e6aad53d8a92145278e4c",
+    "content-hash": "2a27fd2fa5722cb2ae2532839eb67280",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -67,48 +67,6 @@
             "time": "2017-07-16T21:13:23+00:00"
         },
         {
-            "name": "dg/twitter-php",
-            "version": "v3.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dg/twitter-php.git",
-                "reference": "dd872ad12121ff919b358989e61f7f08ba6cc7a8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dg/twitter-php/zipball/dd872ad12121ff919b358989e61f7f08ba6cc7a8",
-                "reference": "dd872ad12121ff919b358989e61f7f08ba6cc7a8",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "David Grudl",
-                    "homepage": "https://davidgrudl.com"
-                }
-            ],
-            "description": "Small and easy Twitter library for PHP",
-            "homepage": "https://github.com/dg/twitter-php",
-            "keywords": [
-                "oauth",
-                "twitter"
-            ],
-            "time": "2016-08-15T16:46:22+00:00"
-        },
-        {
             "name": "ezyang/htmlpurifier",
             "version": "v4.10.0",
             "source": {
@@ -154,64 +112,6 @@
                 "html"
             ],
             "time": "2018-02-23T01:58:20+00:00"
-        },
-        {
-            "name": "facebook/graph-sdk",
-            "version": "5.6.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/facebook/php-graph-sdk.git",
-                "reference": "90e92bd1816fe718e55184ab85910dfcf488432c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/90e92bd1816fe718e55184ab85910dfcf488432c",
-                "reference": "90e92bd1816fe718e55184ab85910dfcf488432c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.4|^7.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": "~5.0",
-                "mockery/mockery": "~0.8",
-                "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client",
-                "paragonie/random_compat": "Provides a better CSPRNG option in PHP 5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Facebook\\": "src/Facebook/"
-                },
-                "files": [
-                    "src/Facebook/polyfills.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Facebook Platform"
-            ],
-            "authors": [
-                {
-                    "name": "Facebook",
-                    "homepage": "https://github.com/facebook/php-graph-sdk/contributors"
-                }
-            ],
-            "description": "Facebook SDK for PHP",
-            "homepage": "https://github.com/facebook/php-graph-sdk",
-            "keywords": [
-                "facebook",
-                "sdk"
-            ],
-            "time": "2018-07-03T02:25:00+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -989,44 +889,42 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.6.9",
+            "version": "v1.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "8b4a38cef75d73c7826ea38e7d08d09e96279564"
+                "reference": "a4cda273d34c56317197511d0f4799f5f00465e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/8b4a38cef75d73c7826ea38e7d08d09e96279564",
-                "reference": "8b4a38cef75d73c7826ea38e7d08d09e96279564",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/a4cda273d34c56317197511d0f4799f5f00465e9",
+                "reference": "a4cda273d34c56317197511d0f4799f5f00465e9",
                 "shasum": ""
             },
             "require": {
-                "cebe/markdown": "1.1.*",
-                "dg/twitter-php": "3.6.*",
-                "ezyang/htmlpurifier": "4.10.*",
-                "facebook/graph-sdk": "^5.5",
-                "indieweb/link-rel-parser": "0.1.*",
+                "cebe/markdown": "^1.1.0",
+                "ezyang/htmlpurifier": "^4.10",
+                "indieweb/link-rel-parser": "^0.1.0",
                 "masterminds/html5": "^2.3",
-                "mf2/mf2": "^0.4",
-                "p3k/http": ">=0.1.7",
-                "p3k/picofeed": ">=0.1.38",
-                "p3k/timezone": "*"
+                "mf2/mf2": "^0.4||^0.5",
+                "p3k/http": "^0.1.0",
+                "p3k/picofeed": "^0.1.0",
+                "p3k/timezone": "^0.1.0"
             },
             "require-dev": {
-                "league/plates": "3.*",
-                "league/route": "1.*",
-                "phpunit/phpunit": "4.8.*"
+                "league/plates": "^3.0",
+                "league/route": "^1.0",
+                "phpunit/phpunit": "^8.0.0|^9.0.0"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "p3k\\XRay\\": "lib/XRay"
-                },
                 "files": [
                     "lib/helpers.php",
                     "lib/XRay.php"
-                ]
+                ],
+                "psr-4": {
+                    "p3k\\XRay\\": "lib/XRay"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1034,7 +932,11 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-08-30T20:12:41+00:00"
+            "support": {
+                "issues": "https://github.com/aaronpk/XRay/issues",
+                "source": "https://github.com/aaronpk/XRay/tree/v1.15.1"
+            },
+            "time": "2024-08-31T16:21:43+00:00"
         },
         {
             "name": "saltybeagle/savant3",
