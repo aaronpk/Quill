@@ -1085,3 +1085,63 @@ $app->post('/weight', function() use($app) {
     )));
   }
 });
+
+
+function create_exercise(&$user, $activity, $minutes, $heartrate, $published) {
+  $micropub_request = array(
+    'type' => ['h-entry'],
+    'properties' => [
+      'workout' => [[
+        'type' => ['h-workout'],
+        'properties' => [
+          'activity' => [$activity],
+          'duration' => [[
+            'type' => ['h-measure'],
+            'properties' => [
+              'num' => [($minutes*60)],
+              'unit' => ['second']
+            ],
+          ]],
+          'heartrate' => [[
+            'type' => 'h-measure',
+            'properties' => [
+              'num' => [$heartrate],
+              'unit' => ['bpm'],
+            ]
+          ]]
+        ]
+      ]]
+    ]
+  );
+  try {
+    $date = new DateTime($published);
+    $micropub_request['properties']['published'] = [$date->format('c')];
+  } catch(Exception $e) {
+  }
+  $r = micropub_post_for_user($user, $micropub_request, null, true);
+
+  return $r;
+}
+
+$app->get('/exercise', function() use($app){
+  if($user=require_login($app)) {
+    render('new-exercise', array(
+      'title' => 'New Exercise',
+    ));
+  }
+});
+
+$app->post('/exercise', function() use($app) {
+  if($user=require_login($app)) {
+    $params = $app->request()->params();
+
+    $r = create_exercise($user, $params['activity'], $params['minutes'], $params['heartrate'], $params['published']);
+    $location = $r['location'];
+
+    $app->response()['Content-type'] = 'application/json';
+    $app->response()->body(json_encode(array(
+      'location' => $location,
+      'error' => $r['error']
+    )));
+  }
+});
