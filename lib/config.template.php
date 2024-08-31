@@ -17,9 +17,6 @@ class Config {
 
   public static $jwtSecret = 'xxx';
 
-  public static $twitterClientID = '';
-  public static $twitterClientSecret = '';
-
   public static $atlasToken = '';
   public static $mapTileURL = '';
 

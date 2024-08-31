@@ -622,7 +622,7 @@ $(function(){
   $("#note_content").on('change keyup', function(e){
     var text = $("#note_content").val();
     var tweet_length = tw_text_proxy(text).length;
-    var tweet_check = tw_length_check(text, 280, "<?= $this->user->twitter_username ?>");
+    var tweet_check = tw_length_check(text, 280, "");
     var remaining = 280 - tweet_length;
     $("#note_content_remaining span").text(remaining);
     $("#note_content_remaining").removeClass("pcheck200 pcheck206 pcheck207 pcheck208 pcheck413");
@@ -682,17 +682,6 @@ $(function(){
       //   }
       // }
       // $("#note_category").val(category.join(", "));
-
-      /*
-      // stop auto-populating usernames in replies, since Twitter no longer requires it
-      if($("#note_content").val() == "" && data.mentions) {
-        var mentions = '';
-        for(var i in data.mentions) {
-          mentions += '@'+data.mentions[i]+' ';
-        }
-        $("#note_content").val(mentions);
-      }
-      */
 
       if(data.entry) {
         $(".reply-context .content").text(data.entry.content.text);

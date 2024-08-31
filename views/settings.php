@@ -123,13 +123,6 @@
 
 
 
-  <?php if(!Config::$twitterClientID): ?>
-    <h3>Twitter</h3>
-    <p>Connecting a Twitter account will automatically "favorite" and "retweet" tweets on Twitter when you favorite and retweet a Twitter URL in Quill.</p>
-    <input type="button" id="twitter-button" value="Checking" class="btn">
-  <?php endif ?>
-
-
   <h3>Backwards Compatibility</h3>
 
   <p>You can customize some of the properties that are sent in the Micropub request to work with older software.</p>
@@ -167,29 +160,6 @@
 </div>
 <script>
 $(function(){
-
-  <?php if(!Config::$twitterClientID): ?>
-  $.getJSON("/auth/twitter", function(data){
-    // Check if we're already authorized with twitter
-    if(data && data.result == 'ok') {
-      $("#twitter-button").val("Connected").addClass("btn-success");
-    } else if(data && data.url) {
-      $("#twitter-button").val("Sign In").data("url", data.url).addClass("btn-warning");
-    } else {
-      $("#twitter-button").val("Error").addClass("btn-danger");
-    }
-  });
-
-  $("#twitter-button").click(function(){
-    if($(this).data('url')) {
-      window.location = $(this).data('url');
-    } else {
-      $.getJSON("/auth/twitter", {login: 1}, function(data){
-        window.location = data.url;
-      });
-    }
-  });
-  <?php endif ?>
 
   $("#send-html-content").click(function(){
     var enabled = $(this).attr("checked") == "checked";

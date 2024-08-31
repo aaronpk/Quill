@@ -18,10 +18,6 @@ Content-type: application/json
 {
   "syndicate-to": [
     {
-      "uid": "https://twitter.com/aaronpk",
-      "name": "twitter.com/aaronpk"
-    },
-    {
       "uid": "https://news.indieweb.org/en",
       "name": "IndieNews"
     }
@@ -29,10 +25,10 @@ Content-type: application/json
 }
 </code></pre>
 
-  <p>The specific values of names and uids are up to your Micropub endpoint, but a good convention is to use the domain name of the service (e.g. https://twitter.com), or domain name and username (e.g. https://twitter.com/aaronpk) for the uid, and a friendly name like "Twitter" or "twitter.com/aaronpk" as the name.</p>
+  <p>The specific values of names and uids are up to your Micropub endpoint, but a good convention is to use the domain name of the service (e.g. https://news.indieweb.org), or domain name and username (e.g. https://mastodon.social/@aaronpk) for the uid, and a friendly name like "IndieNews" or "mastodon.social/@aaronpk" as the name.</p>
 
   <p>Quill will check for your supported syndication targets when you sign in, but there is also a link on the new post screen to manually re-check if you'd like.</p>
 
-  <p>When you create a post and tap one of the syndication options, the value of <code>uid</code> is sent in a property called <code>mp-syndicate-to</code>, which instructs your endpoint to syndicate to that target. Note that Quill doesn't know whether the target is Twitter, Facebook, or something else, and doesn't talk to the service directly. It's just an instruction to your endpoint to syndicate to that destination.</p>
+  <p>When you create a post and tap one of the syndication options, the value of <code>uid</code> is sent in a property called <code>mp-syndicate-to</code>, which instructs your endpoint to syndicate to that target. Note that Quill doesn't know whether the target is Mastodon, IndieNews, or something else, and doesn't talk to the service directly. It's just an instruction to your endpoint to syndicate to that destination.</p>
 
 </div>
