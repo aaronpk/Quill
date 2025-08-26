@@ -175,6 +175,10 @@ $app->get('/auth/callback', function() use($app) {
     $user->token_endpoint = $tokenEndpoint;
     $user->micropub_endpoint = $micropubEndpoint;
     $user->micropub_access_token = $token['response']['access_token'];
+    if(is_numeric($token['response']['expires_in'])) {
+      $expiration = time() + $token['response']['expires_in'];
+      $user->micropub_token_expiration = date('Y-m-d H:i:s', $expiration);
+    }
     $user->micropub_scope = $token['response']['scope'];
     $user->micropub_response = $token['raw_response'];
     $user->save();
@@ -236,6 +240,7 @@ $app->post('/auth/reset', function() use($app) {
     $user->micropub_media_endpoint = '';
     $user->micropub_scope = '';
     $user->micropub_access_token = '';
+    $user->micropub_token_expiration = '';
     $user->syndication_targets = '';
     $user->supported_post_types = '';
     $user->save();

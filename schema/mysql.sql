@@ -6,6 +6,7 @@ CREATE TABLE `users` (
   `micropub_endpoint` varchar(255) DEFAULT NULL,
   `micropub_media_endpoint` varchar(255) DEFAULT NULL,
   `micropub_access_token` text,
+  `micropub_token_expiration` datetime DEFAULT NULL,
   `micropub_scope` varchar(255) DEFAULT NULL,
   `micropub_response` text,
   `micropub_slug_field` varchar(255) NOT NULL DEFAULT 'mp-slug',

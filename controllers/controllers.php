@@ -30,7 +30,17 @@ function require_login(&$app, $redirect=true) {
       $app->redirect('/', 302);
     return false;
   } else {
-    return ORM::for_table('users')->find_one($_SESSION['user_id']);
+    $user = ORM::for_table('users')->find_one($_SESSION['user_id']);
+    if(isset($user->micropub_token_expiration)) {
+      $now = new DateTime();
+      $expiration = new DateTime($user->micropub_token_expiration);
+      if($now > $expiration) {
+        header('X-Error: TokenExpired');
+        $app->redirect('/auth/start?'.http_build_query(array('me' => $user->url)), 302);
+        return false;
+      }
+    }
+    return $user;
   }
 }
 

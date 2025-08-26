@@ -6,6 +6,7 @@ CREATE TABLE users (
   micropub_endpoint TEXT,
   micropub_media_endpoint TEXT,
   micropub_access_token TEXT,
+  micropub_token_expiration datetime,
   micropub_scope TEXT,
   micropub_response TEXT,
   micropub_slug_field TEXT default 'mp-slug',
