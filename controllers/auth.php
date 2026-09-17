@@ -10,6 +10,11 @@ $app->get('/auth/start', function() use($app) {
 
   $defaultScope = 'create update media profile';
 
+  // Clear the issuer discovered by a previous sign-in attempt. begin() only sets this when the
+  // site publishes an indieauth-metadata endpoint, and never resets it, so an abandoned sign-in
+  // to a site with metadata would otherwise make the next sign-in expect an "iss" parameter.
+  unset($_SESSION['indieauth_issuer']);
+
   list($authorizationURL, $error) = IndieAuth\Client::begin($params['me'], $defaultScope);
 
   $me = IndieAuth\Client::normalizeMeURL($params['me']);
@@ -22,9 +27,10 @@ $app->get('/auth/start', function() use($app) {
     }
   }
 
-  if($error && in_array($error['error'], ['missing_authorization_endpoint','missing_token_endpoint','missing_micropub_endpoint'])) {
+  if($error && in_array($error['error'], ['missing_authorization_endpoint','missing_token_endpoint','missing_micropub_endpoint','invalid_issuer'])) {
     // Display debug info for these particular errors
 
+    $metadataEndpoint = $_SESSION['indieauth']['metadata_endpoint'] = IndieAuth\Client::discoverMetadataEndpoint($me);
     $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
     $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'] = IndieAuth\Client::discoverTokenEndpoint($me);
     $authorizationEndpoint = $_SESSION['indieauth']['authorization_endpoint'] = IndieAuth\Client::discoverAuthorizationEndpoint($me);
@@ -35,8 +41,11 @@ $app->get('/auth/start', function() use($app) {
       'authorizing' => $me,
       'meParts' => parse_url($me),
       'tokenEndpoint' => $tokenEndpoint,
+      'metadataEndpoint' => $metadataEndpoint,
       'micropubEndpoint' => $micropubEndpoint,
       'authorizationEndpoint' => $authorizationEndpoint,
+      'error' => $error['error'],
+      'errorDescription' => (isset($error['error_description']) ? $error['error_description'] : ''),
       'authorizationURL' => false
     ));
     $app->response()->body($html);
@@ -54,6 +63,7 @@ $app->get('/auth/start', function() use($app) {
     return;
   }
 
+  $metadataEndpoint = $_SESSION['indieauth']['metadata_endpoint'] = IndieAuth\Client::discoverMetadataEndpoint($me);
   $micropubEndpoint = $_SESSION['indieauth']['micropub_endpoint'] = IndieAuth\Client::discoverMicropubEndpoint($me);
   $tokenEndpoint = $_SESSION['indieauth']['token_endpoint'] = IndieAuth\Client::discoverTokenEndpoint($me);
   $authorizationEndpoint = $_SESSION['indieauth']['authorization_endpoint'] = IndieAuth\Client::discoverAuthorizationEndpoint($me);
@@ -101,8 +111,11 @@ $app->get('/auth/start', function() use($app) {
       'authorizing' => $me,
       'meParts' => parse_url($me),
       'tokenEndpoint' => $tokenEndpoint,
+      'metadataEndpoint' => $metadataEndpoint,
       'micropubEndpoint' => $micropubEndpoint,
       'authorizationEndpoint' => $authorizationEndpoint,
+      'error' => false,
+      'errorDescription' => '',
       'authorizationURL' => $authorizationURL
     ));
     $app->response()->body($html);
@@ -132,7 +145,7 @@ $app->get('/auth/callback', function() use($app) {
   $req = $app->request();
   $params = $req->params();
 
-  list($token, $error) = IndieAuth\Client::complete($params, true);
+  list($token, $error) = IndieAuth\Client::complete($params);
 
   if($error) {
     $html = render('auth_error', [

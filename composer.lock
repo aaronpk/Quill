@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a27fd2fa5722cb2ae2532839eb67280",
+    "content-hash": "2bd7f9a7c078f2e091fb2725363ed084",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -204,31 +204,31 @@
         },
         {
             "name": "indieauth/client",
-            "version": "1.1.5",
+            "version": "1.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/indieauth-client-php.git",
-                "reference": "2ebd8396913ae8c72438dc24f037c8e1717b66ed"
+                "reference": "9f3f9cc71a752c371b44d40a979504ffd7026c7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/2ebd8396913ae8c72438dc24f037c8e1717b66ed",
-                "reference": "2ebd8396913ae8c72438dc24f037c8e1717b66ed",
+                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/9f3f9cc71a752c371b44d40a979504ffd7026c7d",
+                "reference": "9f3f9cc71a752c371b44d40a979504ffd7026c7d",
                 "shasum": ""
             },
             "require": {
                 "indieweb/representative-h-card": "^0.1.2",
-                "mf2/mf2": ">=0.3.2",
-                "p3k/http": ">=0.1.6",
+                "mf2/mf2": "^0.5",
+                "p3k/http": "^0.1",
                 "php": ">5.6.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.8.*"
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "IndieAuth": "src/"
+                "psr-4": {
+                    "IndieAuth\\": "src/IndieAuth/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -244,7 +244,7 @@
             "description": "IndieAuth Client Library",
             "support": {
                 "issues": "https://github.com/indieweb/indieauth-client-php/issues",
-                "source": "https://github.com/indieweb/indieauth-client-php/tree/1.1.5"
+                "source": "https://github.com/indieweb/indieauth-client-php/tree/1.1.6"
             },
             "funding": [
                 {
@@ -252,7 +252,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2021-01-10T00:19:07+00:00"
+            "time": "2022-11-08T21:37:04+00:00"
         },
         {
             "name": "indieweb/date-formatter",
@@ -345,20 +345,24 @@
                 "indieweb",
                 "microformats2"
             ],
+            "support": {
+                "issues": "https://github.com/indieweb/link-rel-parser-php/issues",
+                "source": "https://github.com/indieweb/link-rel-parser-php/tree/master"
+            },
             "time": "2017-01-11T17:14:49+00:00"
         },
         {
             "name": "indieweb/representative-h-card",
-            "version": "0.1.2",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/representative-h-card-php.git",
-                "reference": "b70b01bd0dd7f2a940602137335dbf46ab6e2e38"
+                "reference": "97731c6ccc0838418c775b867bf826aeaa91cd95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/representative-h-card-php/zipball/b70b01bd0dd7f2a940602137335dbf46ab6e2e38",
-                "reference": "b70b01bd0dd7f2a940602137335dbf46ab6e2e38",
+                "url": "https://api.github.com/repos/indieweb/representative-h-card-php/zipball/97731c6ccc0838418c775b867bf826aeaa91cd95",
+                "reference": "97731c6ccc0838418c775b867bf826aeaa91cd95",
                 "shasum": ""
             },
             "require": {
@@ -390,7 +394,11 @@
                 "mf2",
                 "microformats"
             ],
-            "time": "2015-12-23T18:11:19+00:00"
+            "support": {
+                "issues": "https://github.com/indieweb/representative-h-card-php/issues",
+                "source": "https://github.com/indieweb/representative-h-card-php/tree/0.1.3"
+            },
+            "time": "2023-05-24T15:33:06+00:00"
         },
         {
             "name": "j4mie/idiorm",
@@ -517,25 +525,27 @@
         },
         {
             "name": "mf2/mf2",
-            "version": "v0.4.5",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/indieweb/php-mf2.git",
-                "reference": "35fee8b6481695438a44f336534b4cd782bcd518"
+                "url": "https://github.com/microformats/php-mf2.git",
+                "reference": "ddc56de6be62ed4a21f569de9b80e17af678ca50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/35fee8b6481695438a44f336534b4cd782bcd518",
-                "reference": "35fee8b6481695438a44f336534b4cd782bcd518",
+                "url": "https://api.github.com/repos/microformats/php-mf2/zipball/ddc56de6be62ed4a21f569de9b80e17af678ca50",
+                "reference": "ddc56de6be62ed4a21f569de9b80e17af678ca50",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "mf2/tests": "@dev",
-                "phpdocumentor/phpdocumentor": "v2.8.4",
-                "phpunit/phpunit": "4.8.*"
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+                "mf2/tests": "dev-master#e9e2b905821ba0a5b59dab1a8eaf40634ce9cd49",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^5.7",
+                "squizlabs/php_codesniffer": "^3.6.2"
             },
             "suggest": {
                 "barnabywalters/mf-cleaner": "To more easily handle the canonical data php-mf2 gives you",
@@ -569,7 +579,11 @@
                 "parser",
                 "semantic"
             ],
-            "time": "2018-08-02T17:12:58+00:00"
+            "support": {
+                "issues": "https://github.com/microformats/php-mf2/issues",
+                "source": "https://github.com/microformats/php-mf2/tree/v0.5.0"
+            },
+            "time": "2022-02-10T01:05:27+00:00"
         },
         {
             "name": "michelf/php-markdown",
@@ -674,16 +688,16 @@
         },
         {
             "name": "p3k/http",
-            "version": "0.1.7",
+            "version": "0.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/p3k-http.git",
-                "reference": "1826647c4902a18dea5ec532f21509ba4d51210b"
+                "reference": "ae4988ba19f4bc57ca3fe1f6dcd2087478fea53a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/1826647c4902a18dea5ec532f21509ba4d51210b",
-                "reference": "1826647c4902a18dea5ec532f21509ba4d51210b",
+                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/ae4988ba19f4bc57ca3fe1f6dcd2087478fea53a",
+                "reference": "ae4988ba19f4bc57ca3fe1f6dcd2087478fea53a",
                 "shasum": ""
             },
             "require": {
@@ -708,7 +722,11 @@
             ],
             "description": "A simple wrapper API around the PHP curl functions",
             "homepage": "https://github.com/aaronpk/p3k-http",
-            "time": "2018-03-04T15:21:58+00:00"
+            "support": {
+                "issues": "https://github.com/aaronpk/p3k-http/issues",
+                "source": "https://github.com/aaronpk/p3k-http/tree/0.1.13"
+            },
+            "time": "2024-10-20T19:46:46+00:00"
         },
         {
             "name": "p3k/multipart",
@@ -1098,7 +1116,7 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

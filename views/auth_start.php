@@ -2,6 +2,24 @@
   <?= partial('partials/header') ?>
 
 
+<?php if($this->error && !in_array($this->error, ['missing_authorization_endpoint','missing_token_endpoint','missing_micropub_endpoint'])): ?>
+  <div class="bs-callout bs-callout-danger">
+    <strong><?= htmlspecialchars($this->error) ?></strong>
+    <p><?= htmlspecialchars($this->errorDescription) ?></p>
+  </div>
+<?php endif; ?>
+
+<?php if($this->metadataEndpoint): ?>
+  <div id="metadata_endpoint">
+    <h3>IndieAuth Metadata</h3>
+
+    <p><i>Your site publishes an IndieAuth Server Metadata document, which is where this app
+       looked for your authorization and token endpoints.</i></p>
+
+    <div class="bs-callout bs-callout-info"><code><?= htmlspecialchars($this->metadataEndpoint) ?></code></div>
+  </div>
+<?php endif; ?>
+
 <?php if(!$this->authorizationEndpoint): ?>
   <div id="authorization_endpoint">
     <h3>Authorization Endpoint</h3>
@@ -9,7 +27,7 @@
     <p><i>The authorization endpoint tells this app where to direct your browser to sign you in.</i></p>
 
     <div class="bs-callout bs-callout-danger">Could not find your authorization endpoint!</div>
-    <p>You need to set your authorization endpoint in a <code>&lt;link&gt;</code> tag on your home page.</p>
+    <p>You need to declare your authorization endpoint on your home page, either through an IndieAuth Server Metadata document or in a <code>&lt;link&gt;</code> tag.</p>
     <?= partial('partials/auth-endpoint-help') ?>
   </div>
 <?php endif; ?>
@@ -21,7 +39,7 @@
     <p><i>The token endpoint is where this app will make a request to get an access token after obtaining authorization.</i></p>
 
     <div class="bs-callout bs-callout-danger">Could not find your token endpoint!</div>
-    <p>You need to set your token endpoint in a <code>&lt;link&gt;</code> tag on your home page.</p>
+    <p>You need to declare your token endpoint on your home page, either through an IndieAuth Server Metadata document or in a <code>&lt;link&gt;</code> tag.</p>
     <?= partial('partials/token-endpoint-help') ?>
   </div>
 <?php endif; ?>
