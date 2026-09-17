@@ -1,6 +1,6 @@
 <?php
-chdir('..');
-require 'vendor/autoload.php';
+chdir(__DIR__.'/..');
+require __DIR__.'/../vendor/autoload.php';
 
 // Configure the Savant plugin
 \Slim\Extras\Views\Savant::$savantDirectory = 'vendor/saltybeagle/savant3';
