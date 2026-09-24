@@ -32,4 +32,5 @@
     <a href="" class="u-url"></a>
   </div>
 
+<script src="/js/register-sw.js"></script>
 </div>
