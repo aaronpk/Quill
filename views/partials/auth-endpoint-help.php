@@ -4,5 +4,4 @@
        <code>authorization_endpoint</code> and <code>token_endpoint</code> together, along with the
        <code>issuer</code> that this app checks when you sign in.</p>
     <p><pre><code>&lt;link rel="indieauth-metadata" href="https://example.com/.well-known/oauth-authorization-server"&gt;</code></pre></p>
-    <p>You can also declare the authorization endpoint on its own. You can create your own authorization endpoint, but it's easier to use an existing service such as <a href="https://indieauth.com/">IndieAuth.com</a>. To delegate to IndieAuth.com, you can use the markup provided below.</p>
-    <p><pre><code>&lt;link rel="authorization_endpoint" href="https://indieauth.com/auth"&gt;</code></pre></p>
+    <p>You can also declare the authorization endpoint on its own. You can create your own authorization endpoint, but it's easier to use an existing service such as <a href="https://indiekey.id/">IndieKey</a>. Sign up there and paste the provided link rel tag into your home page.</p>
