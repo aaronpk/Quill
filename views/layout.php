@@ -65,6 +65,8 @@
 </script>
 <?php endif ?>
 
+<?= partial('partials/new-quill-banner') ?>
+
 <div class="page">
 
   <div class="container">

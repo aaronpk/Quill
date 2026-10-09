@@ -258,3 +258,15 @@ body {
     transform: rotate(359deg);
   }
 }
+
+.new-quill-banner {
+  margin: -10px 0 15px;
+  padding: 10px 0;
+  background: #fcf8e3;
+  border-bottom: 1px solid #faebcc;
+  color: #6b5a2e;
+}
+.new-quill-banner a {
+  font-weight: bold;
+  text-decoration: underline;
+}
